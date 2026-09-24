@@ -34,11 +34,11 @@ fix(frontend): corrige formato da variação no card
 
 ## Pull requests
 
-- **Pequeno.** PR pequeno é revisado rápido. PR de 2 mil linhas não é revisado de verdade.
+- **Pequeno.** PR pequeno é revisado rápido.
 - **Descrição com três partes:**
   1. O que faz.
   2. Como testar (comandos ou passos).
-  3. Uso de IA: o que foi gerado e o que foi ajustado à mão. Isso alimenta a seção 6 do relatório.
+  3. Qualquer informação adicional que ajude a entender o contexto.
 - **`Closes #N`** na descrição, para a issue fechar sozinha no merge e o quadro se atualizar.
 - **Revisor:** o da tabela da visão geral do Milestone. Quem revisa roda o código, não só lê.
 - Depois do merge, apague a branch e avise no grupo se a tarefa bloqueava alguém.
@@ -50,7 +50,7 @@ Uma tarefa só conta como pronta quando:
 1. O código está na `main`, via pull request revisado por outra pessoa.
 2. Os testes automatizados dela existem e passam no CI.
 3. Roda com `docker compose up --build`, sem passo manual escondido.
-4. Quem abriu o PR sabe explicar o que o código faz, principalmente o que veio de IA.
+4. Quem abriu o PR sabe explicar a tarefa feita.
 
 Testes são feitos **junto** com a funcionalidade, não depois.
 
@@ -59,8 +59,4 @@ Testes são feitos **junto** com a funcionalidade, não depois.
 - Dê contexto: o trecho do DER, o [contrato da API](contrato-api.md) ou o HTML do mockup do Stitch. Sem contexto, a IA inventa.
 - Peça os testes junto com o código.
 - Nunca cole senha, token ou `.env` na IA.
-- Leia e rode antes de abrir o PR. "A IA fez" não é resposta se o professor perguntar.
-
-## Travou?
-
-Avise no grupo no mesmo dia, não na véspera. Quem terminar antes ajuda quem está atolado.
+- Leia e rode antes de abrir o PR. "A IA fez" não é resposta.

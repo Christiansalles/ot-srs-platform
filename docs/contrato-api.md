@@ -89,7 +89,7 @@ Decidir e registrar aqui antes de fechar a E3:
 
 ## Erros
 
-Formato combinado com a base do Express (tarefa da Maria Clara):
+Formato combinado com a base do Express:
 
 ```json
 { "erro": "mensagem legível" }
