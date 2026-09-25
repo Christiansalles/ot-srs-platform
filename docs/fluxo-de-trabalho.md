@@ -7,6 +7,8 @@ Temos duas branches fixas, e nenhuma aceita push direto:
 - **`develop`:** onde o trabalho do dia a dia se junta. Toda branch de tarefa sai da `develop`, e o PR da tarefa volta para ela, com 1 aprovação e CI verde.
 - **`main`:** só recebe versões validadas. Quando a `develop` tem uma versão funcional, testada e aprovada, abrimos um PR `develop → main`, também com 1 aprovação e CI verde. A `main` é o que o professor avalia.
 
+A `develop` é a branch padrão do repositório: é ela que aparece ao abrir o GitHub e é para ela que o PR aponta por padrão, e é por isso que o `Closes #N` fecha a issue no merge da tarefa. Para o professor, o link da entrega aponta direto para a `main` (`https://github.com/Christiansalles/ot-srs-platform/tree/main`).
+
 ```
 feat/E3-14-rotas-indicadores ──PR──► develop ──PR (versão validada)──► main
 ```
