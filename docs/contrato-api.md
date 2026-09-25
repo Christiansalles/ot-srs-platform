@@ -77,7 +77,7 @@ variacao_percentual = (valor_atual - valor_anterior) / valor_anterior * 100
 - Arredondada para 1 casa decimal. No exemplo: (1280 - 1234) / 1234 * 100 = 3,73 → `3.7`.
 - Se não existe medição anterior, ou se o valor anterior é 0, vem `null`.
 
-Os números acima mostram só o formato. Os reais vêm do PDF de referência escolhido pelo grupo (o Relatório OT nº 004/2025 não estará disponível).
+Os números acima mostram só o formato. Os reais vêm do Relatório OT nº 004/2025.
 
 ## Decisões pendentes
 
