@@ -79,13 +79,13 @@ variacao_percentual = (valor_atual - valor_anterior) / valor_anterior * 100
 
 Os números acima mostram só o formato. Os da carga (`backend/prisma/dados/hospedagem.json`) são ilustrativos, tirados dos mockups do Milestone III no Stitch, porque o Relatório OT nº 004/2025 não está disponível para o grupo. Os dados oficiais virão depois da Prefeitura (SMCELT), e aí só esse arquivo muda.
 
-## Decisões pendentes
+## Casos de borda (decididos)
 
-Decidir e registrar aqui antes de fechar a E3:
+Cada item vira um teste da API (#10).
 
-- [ ] `GET /api/indicadores?setor=999` (setor que não existe): lista vazia `[]` ou `404`?
-- [ ] `setor` inválido (ex.: `?setor=abc`): `400` ou ignorar o filtro?
-- [ ] Indicador sem nenhuma medição publicada: aparece com `medicoes: []` ou fica de fora?
+- [x] **Setor que não existe** (`GET /api/indicadores?setor=999`): `200` com lista vazia `[]`. É um filtro sem resultado, não um erro; o front mostra o estado "sem dados".
+- [x] **`setor` inválido** (`?setor=abc`, `?setor=1.5`, `?setor=-1`): `400` com `{ "erro": "setor deve ser um número inteiro positivo" }`. Ignorar o filtro esconderia bug do front, que veria dados de todos os setores.
+- [x] **Indicador sem nenhuma medição publicada:** fica de fora da lista, tanto em `/api/indicadores` quanto em `/api/indicadores/destaques`. Segue a regra de só mostrar o que está publicado e evita linha vazia na tabela e card sem número.
 
 ## Erros
 
