@@ -73,11 +73,11 @@ Um item por indicador, com o valor do período publicado mais recente.
 variacao_percentual = (valor_atual - valor_anterior) / valor_anterior * 100
 ```
 
-- "Anterior" é a medição publicada do mesmo indicador no período imediatamente anterior ao mais recente.
+- "Anterior" é a medição publicada mais recente do mesmo indicador em um período anterior ao atual. Não precisa ser o semestre imediatamente anterior: se o indicador tem 2024/2 e 2025/2, a variação de 2025/2 compara com 2024/2.
 - Arredondada para 1 casa decimal. No exemplo: (1280 - 1234) / 1234 * 100 = 3,73 → `3.7`.
 - Se não existe medição anterior, ou se o valor anterior é 0, vem `null`.
 
-Os números acima mostram só o formato. Os reais vêm do Relatório OT nº 004/2025.
+Os números acima mostram só o formato. Os da carga (`backend/prisma/dados/hospedagem.json`) são ilustrativos, tirados dos mockups do Milestone III no Stitch, porque o Relatório OT nº 004/2025 não está disponível para o grupo. Os dados oficiais virão depois da Prefeitura (SMCELT), e aí só esse arquivo muda.
 
 ## Decisões pendentes
 
