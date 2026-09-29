@@ -32,8 +32,8 @@ model Indicador {
 
 model Periodo {
   id_periodo Int       @id @default(autoincrement())
-  ano        Int
-  semestre   Int
+  ano      Int @db.SmallInt
+  semestre Int @db.SmallInt
 
   medicoes   Medicao[]
 
@@ -74,12 +74,12 @@ model Relatorio {
   id_relatorio      Int       @id @default(autoincrement())
   id_usuario        Int
   titulo            String    @db.VarChar(150)
-  codigo            String    @db.VarChar(40)
+  edicao            String    @db.VarChar(20)
   categoria         String    @db.VarChar(40)
   data_publicacao   DateTime  @db.Date
-  descricao         String?   @db.VarChar(500)
+  descricao         String    @db.VarChar(500)
   arquivo_url       String    @db.VarChar(255)
-  tamanho_kb        Int
+  tamanho_kb        Int?
   status            String    @db.VarChar(10)
 
   usuario           Usuario   @relation(fields: [id_usuario], references: [id_usuario])
