@@ -37,20 +37,23 @@ describe('Schema do banco de dados', () => {
 
     periodo = await prisma.periodo.create({
       data: {
-        ano: 2025,
-        semestre: 2,
+        ano: 2099,
+        semestre: 1,
       },
     });
 
     periodoStatusInvalido = await prisma.periodo.create({
       data: {
-        ano: 2026,
-        semestre: 1,
+        ano: 2099,
+        semestre: 2,
       },
     });
   });
 
   afterAll(async () => {
+
+    if (!usuario) return;
+
     await prisma.medicao.deleteMany({
       where: {
         id_usuario: usuario.id_usuario,
