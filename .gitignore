@@ -1,0 +1,22 @@
+# Dependências
+node_modules/
+
+# Build e cobertura
+dist/
+build/
+coverage/
+
+# Variáveis de ambiente (use o .env.example como modelo)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
