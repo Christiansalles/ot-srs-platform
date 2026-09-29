@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Setor {
+  id_setor    Int          @id @default(autoincrement())
+  nome        String       @unique @db.VarChar(60)
+  descricao   String?      @db.VarChar(200)
+
+  indicadores Indicador[]
+
+  @@map("setor")
+}
+
+model Indicador {
+  id_indicador Int       @id @default(autoincrement())
+  id_setor     Int
+  nome         String    @db.VarChar(80)
+  descricao    String?   @db.VarChar(200)
+  unidade      String    @db.VarChar(20)
+
+  setor        Setor     @relation(fields: [id_setor], references: [id_setor])
+  medicoes     Medicao[]
+
+  @@map("indicador")
+}
+
+model Periodo {
+  id_periodo Int       @id @default(autoincrement())
+  ano        Int
+  semestre   Int
+
+  medicoes   Medicao[]
+
+  @@unique([ano, semestre])
+  @@map("periodo")
+}
+
+model Medicao {
+  id_medicao   Int       @id @default(autoincrement())
+  id_indicador Int
+  id_periodo   Int
+  id_usuario   Int
+  valor        Decimal   @db.Decimal(12, 2)
+  status       String    @db.VarChar(10)
+
+  indicador    Indicador @relation(fields: [id_indicador], references: [id_indicador])
+  periodo      Periodo   @relation(fields: [id_periodo], references: [id_periodo])
+  usuario      Usuario   @relation(fields: [id_usuario], references: [id_usuario])
+
+  @@unique([id_indicador, id_periodo])
+  @@map("medicao")
+}
+
+model Usuario {
+  id_usuario  Int        @id @default(autoincrement())
+  nome        String     @db.VarChar(80)
+  email       String     @unique @db.VarChar(120)
+  senha_hash  String     @db.VarChar(255)
+  ativo       Boolean
+
+  medicoes    Medicao[]
+  relatorios  Relatorio[]
+
+  @@map("usuario")
+}
+
+model Relatorio {
+  id_relatorio      Int       @id @default(autoincrement())
+  id_usuario        Int
+  titulo            String    @db.VarChar(150)
+  codigo            String    @db.VarChar(40)
+  categoria         String    @db.VarChar(40)
+  data_publicacao   DateTime  @db.Date
+  descricao         String?   @db.VarChar(500)
+  arquivo_url       String    @db.VarChar(255)
+  tamanho_kb        Int
+  status            String    @db.VarChar(10)
+
+  usuario           Usuario   @relation(fields: [id_usuario], references: [id_usuario])
+
+  @@map("relatorio")
+}
