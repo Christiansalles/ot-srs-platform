@@ -1,0 +1,47 @@
+name: Docker Compose
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Construir e iniciar serviços
+        run: docker compose up --build -d
+      - name: Verificar banco, API, frontend e Adminer
+        run: |
+          docker compose exec -T db pg_isready -U ot -d ot_srs
+
+          wait_for_http() {
+            local url="$1"
+            for attempt in {1..30}; do
+              if curl --silent --show-error --fail --max-time 2 "$url" -o /dev/null; then
+                echo "Ready: $url"
+                return 0
+              fi
+              echo "Waiting for $url (attempt $attempt/30)"
+              sleep 1
+            done
+
+            echo "Timed out waiting for $url"
+            docker compose ps
+            docker compose logs
+            return 1
+          }
+
+          wait_for_http http://localhost:3000/api/health
+          curl --fail --silent --show-error http://localhost:3000/api/health | grep -q '"status":"ok"'
+          wait_for_http http://localhost:8080/
+          curl --fail --silent --show-error http://localhost:8080/ | grep -q 'id="root"'
+          wait_for_http http://localhost:8081/
+          curl --fail --silent --show-error http://localhost:8081/ | grep -qi 'adminer'
+      - name: Logs e limpeza
+        if: always()
+        run: |
+          docker compose logs || true
+          docker compose down --volumes --remove-orphans || true

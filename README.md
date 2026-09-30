@@ -90,10 +90,7 @@ Os arquivos `.dockerignore` excluem `.env`, dependências locais e outros arquiv
 desnecessários. Não são copiadas credenciais locais para as imagens.
 
 O workflow `.github/workflows/docker.yml` constrói as imagens e verifica health
-da API, página inicial, fallback de rotas e 404 de assets. A execução conjunta
-com `docker compose up --build` entra na #32; migrations e seed, na #33.
-
-A execução conjunta dos serviços será configurada na #32; migrations e seed, na #33.
+da API, página inicial, fallback de rotas e 404 de assets.
 
 ### Variáveis de ambiente
 
@@ -118,6 +115,32 @@ Variáveis `VITE_*` são públicas no navegador: nunca coloque senhas nelas.
 Os arquivos `.env` são locais e ignorados pelo Git. Versione apenas os `.env.example`,
 sem credenciais reais. No Docker, a URL do banco deve usar o nome do serviço do banco;
 a URL do frontend deve continuar apontando para um endereço acessível pelo navegador.
+
+### Docker Compose (#32)
+
+Com o Docker Desktop ativo e configurado para containers Linux, execute na raiz:
+
+```bash
+docker compose up --build
+```
+
+O Compose inicia PostgreSQL, API, frontend e Adminer. O backend aguarda o healthcheck
+do banco antes de iniciar. Endereços locais: frontend `http://localhost:8080`, API
+`http://localhost:3000/api/health`, Adminer `http://localhost:8081` e PostgreSQL
+`localhost:5432`. No Adminer, use servidor `db` e as credenciais configuradas abaixo.
+
+Por padrão, o PostgreSQL usa banco `ot_srs`, usuário `ot` e senha `ot`. Para substituir
+esses padrões, defina `POSTGRES_DB`, `POSTGRES_USER` e `POSTGRES_PASSWORD` no ambiente
+ou em um `.env` na raiz. As portas também podem ser alteradas com `POSTGRES_PORT`,
+`BACKEND_PORT`, `FRONTEND_PORT` e `ADMINER_PORT`. `VITE_API_URL` define o endereço da
+API que o navegador usará; se mudar esse endereço, reconstrua o frontend.
+
+Os dados do PostgreSQL ficam no volume persistente `postgres_data`. Para parar os
+serviços, use `docker compose down`. Para apagar também os dados persistidos, use
+`docker compose down -v`.
+
+Migrations e seed serão automatizados pela tarefa #33. Até essa integração, este
+Compose inicia os serviços, mas não prepara tabelas nem insere os dados iniciais.
 
 ## Como contribuir
 
