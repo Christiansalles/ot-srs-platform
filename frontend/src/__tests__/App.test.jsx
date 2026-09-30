@@ -3,11 +3,13 @@ import { describe, expect, it } from 'vitest'
 import App from '../App'
 
 describe('App', () => {
-  it('renderiza a página inicial do OT-SRS', () => {
+  it('renderiza o Dashboard', () => {
     render(<App />)
 
     expect(
-      screen.getByRole('heading', { name: 'OT-SRS' }),
+      screen.getByRole('heading', {
+        name: 'Dashboard',
+      }),
     ).toBeInTheDocument()
 
     expect(

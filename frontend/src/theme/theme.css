@@ -13,8 +13,13 @@
 
   /* Texto e bordas */
   --color-text: #0F172A;
+  --color-text-secondary: #434653;
   --color-text-muted: #64748B;
   --color-border: #E2E8F0;
+
+  /* Estados */
+  --color-success: #0D9488;
+  --color-danger: #DC2626;
 
   /* Paleta de apoio para gráficos */
   --chart-cyan: #5FE6E0;
