@@ -13,6 +13,7 @@
     "node": ">=20"
   },
   "dependencies": {
+    "dotenv": "^18.0.4",
     "express": "^5.2.1"
   },
   "devDependencies": {
