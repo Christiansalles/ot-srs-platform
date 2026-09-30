@@ -19,4 +19,4 @@ COPY --chown=node:node src ./src
 COPY --chown=node:node prisma ./prisma
 USER node
 EXPOSE 3000
-CMD ["node", "src/server.js"]
+CMD ["npm", "start"]
