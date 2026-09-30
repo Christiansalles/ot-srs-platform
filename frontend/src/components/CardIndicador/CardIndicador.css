@@ -1,0 +1,59 @@
+.card-indicador {
+  display: flex;
+  flex-direction: column;
+  min-height: 210px;
+  padding: 1.5rem;
+  background: #FFFFFF;
+  border: 1px solid #EBEBED;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.card-indicador__name {
+  margin: 0;
+  color: #434653;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.card-indicador__value {
+  margin-top: 1.5rem;
+  color: #0B1C30;
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.card-indicador__unit {
+  margin: 0.5rem 0 0;
+  color: #434653;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.card-indicador__variation {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 1.25rem;
+  font-size: 0.78rem;
+}
+
+.card-indicador__variation--positive {
+  color: #0D9488;
+}
+
+.card-indicador__variation--negative {
+  color: #DC2626;
+}
+
+.card-indicador__variation strong {
+  font-weight: 800;
+}
+
+.card-indicador__variation span:last-child {
+  color: #434653;
+}
