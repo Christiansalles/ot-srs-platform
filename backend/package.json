@@ -13,10 +13,12 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "express": "^5.2.1"
   },
   "devDependencies": {
     "jest": "^30.5.2",
+    "prisma": "^6.19.3",
     "supertest": "^7.3.0"
   }
 }
