@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import CardIndicador from '../components/CardIndicador/CardIndicador.jsx'
+import CardIndicador from '../components/CardIndicador/CardIndicador'
 
 describe('CardIndicador', () => {
   it('renderiza os dados do indicador', () => {
@@ -9,6 +9,7 @@ describe('CardIndicador', () => {
         name="Número de leitos"
         value="350"
         unit="leitos"
+        periodo="2025/2"
         variation={12}
       />,
     )
@@ -25,6 +26,10 @@ describe('CardIndicador', () => {
       screen.getByText('leitos'),
     ).toBeInTheDocument()
 
+    expect(
+      screen.getByText('2025/2'),
+    ).toBeInTheDocument()
+
     expect(screen.getByText('12%')).toBeInTheDocument()
 
     expect(
@@ -38,6 +43,7 @@ describe('CardIndicador', () => {
         name="Número de leitos"
         value="350"
         unit="leitos"
+        periodo="2025/2"
         variation={12}
       />,
     )
@@ -51,11 +57,56 @@ describe('CardIndicador', () => {
         name="Número de leitos"
         value="330"
         unit="leitos"
+        periodo="2025/2"
         variation={-5}
       />,
     )
 
     expect(screen.getByText('↓')).toBeInTheDocument()
     expect(screen.getByText('5%')).toBeInTheDocument()
+  })
+
+  it('renderiza o período do indicador', () => {
+    render(
+      <CardIndicador
+        name="Número de leitos"
+        value="350"
+        unit="leitos"
+        periodo="2025/2"
+        variation={12}
+      />,
+    )
+
+    expect(
+      screen.getByText('2025/2'),
+    ).toBeInTheDocument()
+  })
+
+  it('mostra que não existe período anterior quando a variação é null', () => {
+    render(
+      <CardIndicador
+        name="Taxa de ocupação"
+        value="68"
+        unit="%"
+        periodo="2025/2"
+        variation={null}
+      />,
+    )
+
+    expect(
+      screen.getByText('Sem período anterior'),
+    ).toBeInTheDocument()
+
+    expect(
+      screen.queryByText('0%'),
+    ).not.toBeInTheDocument()
+
+    expect(
+      screen.queryByText('↑'),
+    ).not.toBeInTheDocument()
+
+    expect(
+      screen.queryByText('↓'),
+    ).not.toBeInTheDocument()
   })
 })
