@@ -21,8 +21,28 @@ jobs:
           docker run -d --name frontend -p 8080:80 ot-srs-frontend:test
       - name: Validar respostas HTTP
         run: |
-          curl --fail --retry 10 --retry-connrefused --retry-delay 2 http://localhost:3100/api/health | jq -e '.status == "ok"'
-          curl --fail --retry 10 --retry-connrefused --retry-delay 2 http://localhost:8080/ -o /tmp/home.html
+          wait_for_http() {
+            local url="$1"
+            for attempt in {1..30}; do
+              if curl --silent --show-error --fail --max-time 2 "$url" -o /dev/null; then
+                echo "Ready: $url"
+                return 0
+              fi
+              echo "Waiting for $url (attempt $attempt/30)"
+              sleep 1
+            done
+
+            echo "Timed out waiting for $url"
+            docker ps -a
+            docker logs backend || true
+            docker logs frontend || true
+            return 1
+          }
+
+          wait_for_http http://localhost:3100/api/health
+          curl --fail --silent --show-error http://localhost:3100/api/health | jq -e '.status == "ok"'
+          wait_for_http http://localhost:8080/
+          curl --fail --silent --show-error http://localhost:8080/ -o /tmp/home.html
           grep -q 'id="root"' /tmp/home.html
           curl --fail http://localhost:8080/rota-do-frontend -o /tmp/route.html
           cmp /tmp/home.html /tmp/route.html
