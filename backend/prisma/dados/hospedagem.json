@@ -1,0 +1,55 @@
+{
+  "setor": {
+    "nome": "Hospedagem",
+    "descricao": "Indicadores relacionados à hospedagem turística."
+  },
+  "observacao": "dados ilustrativos dos mockups do M3, aguardando dados oficiais da SMCELT",
+  "indicadores": [
+    {
+      "nome": "Número de leitos",
+      "unidade": "leitos",
+      "descricao": "Número de leitos disponíveis nos meios de hospedagem.",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2023,
+            "semestre": 2
+          },
+          "valor": 280,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2024,
+            "semestre": 2
+          },
+          "valor": 312,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 350,
+          "fonte": "Stitch M3 - Image 10.html"
+        }
+      ]
+    },
+    {
+      "nome": "Taxa de ocupação",
+      "unidade": "%",
+      "descricao": "Taxa de ocupação dos meios de hospedagem.",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 68,
+          "fonte": "Stitch M3 - Image 6.html"
+        }
+      ]
+    }
+  ]
+}
