@@ -4,6 +4,9 @@
   "private": true,
   "description": "API de consulta dos indicadores do Observatório do Turismo",
   "main": "src/server.js",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
