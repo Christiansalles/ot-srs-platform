@@ -34,11 +34,6 @@
   }
 }
 
-.dashboard__chart {
-  width: min(100%, 1200px);
-  margin: 1.5rem auto 0;
-}
-
 .dashboard__indicators,
 .dashboard__chart {
   width: min(100%, 1200px);
@@ -48,4 +43,9 @@
 
 .dashboard__chart {
   margin-top: 1.5rem;
+}
+
+.dashboard__state {
+  width: min(100%, 1200px);
+  margin: 0 auto;
 }

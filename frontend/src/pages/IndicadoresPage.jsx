@@ -3,7 +3,7 @@ import { getIndicadores, getSetores } from '../services/api';
 
 export default function IndicadoresPage() {
   const [setores, setSetores] = useState([]);
-  const [setorSelecionado, setSetorSelecionado] = useState(1);
+  const [setorSelecionado, setSetorSelecionado] = useState(null);
   const [indicadores, setIndicadores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -16,6 +16,8 @@ export default function IndicadoresPage() {
       .then((dados) => {
         if (!active) return;
         setSetores(dados);
+        setSetorSelecionado(dados[0]?.id ?? null);
+        if (dados.length === 0) setLoading(false);
       })
       .catch(() => {
         if (active) {
@@ -29,6 +31,7 @@ export default function IndicadoresPage() {
   }, []);
 
   useEffect(() => {
+    if (setorSelecionado === null) return;
     let active = true;
 
     getIndicadores(setorSelecionado)
@@ -76,13 +79,15 @@ export default function IndicadoresPage() {
           <label className="select-control">
             <span>Setor</span>
             <select
-              value={setorSelecionado}
+              value={setorSelecionado ?? ''}
+              disabled={setores.length === 0}
               onChange={(event) => {
                 setLoading(true);
                 setError('');
                 setSetorSelecionado(Number(event.target.value));
               }}
             >
+              {setores.length === 0 && <option value="">Nenhum setor disponível</option>}
               {setores.map((setor) => (
                 <option key={setor.id} value={setor.id}>
                   {setor.nome}
@@ -117,7 +122,7 @@ export default function IndicadoresPage() {
                     <td>{linha.unidade}</td>
                     <td>{linha.ano}</td>
                     <td>{linha.semestre}</td>
-                    <td>{linha.valor}</td>
+                    <td>{linha.valor.toLocaleString('pt-BR')}</td>
                   </tr>
                 ))}
               </tbody>
