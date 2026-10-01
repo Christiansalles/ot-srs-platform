@@ -1,0 +1,76 @@
+.card-indicador {
+  display: flex;
+  flex-direction: column;
+  min-height: 210px;
+  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.card-indicador__header {
+  display: flex;
+  align-items: flex-start;
+}
+
+.card-indicador__name {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.card-indicador__periodo {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.card-indicador__value {
+  margin-top: 1.5rem;
+  color: var(--color-text);
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.card-indicador__unit {
+  margin: 0.5rem 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.card-indicador__variation {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 1.25rem;
+  font-size: 0.78rem;
+}
+
+.card-indicador__variation--positive {
+  color: var(--color-success);
+}
+
+.card-indicador__variation--negative {
+  color: var(--color-danger);
+}
+
+.card-indicador__variation--unavailable {
+  color: var(--color-text-muted);
+}
+
+.card-indicador__variation strong {
+  font-weight: 800;
+}
+
+.card-indicador__variation span:last-child {
+  color: var(--color-text-secondary);
+}

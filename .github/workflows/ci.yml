@@ -39,6 +39,10 @@ jobs:
           cache: npm
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
+      - name: Aplicar migrations e seed
+        run: npm run db:setup
+      - name: Verificar que migrations e seed podem ser repetidos
+        run: npm run db:setup
       - run: npm test
 
   frontend:

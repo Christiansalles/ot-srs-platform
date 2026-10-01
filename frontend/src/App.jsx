@@ -1,122 +1,60 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import './App.css';
+import HomePage from './pages/HomePage';
+import IndicadoresPage from './pages/IndicadoresPage';
+import DashboardPage from './pages/Dashboard/DashboardPage';
+import RelatoriosPage from './pages/RelatoriosPage';
+import cidadeLogo from './assets/logos/santa-rita.svg';
+import observatorioLogo from './assets/logos/observatorio.png';
+import prefeituraLogo from './assets/logos/prefeitura.png';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function AppLayout() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app-shell">
+      <header className="topbar">
+        <div className="brand-block">
+          <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí — Cidade Criativa" />
+          <img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" />
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
+        <nav className="main-nav" aria-label="Navegação principal">
+          <NavLink to="/" end>
+            Home
+          </NavLink>
+          <NavLink to="/indicadores">Indicadores</NavLink>
+          <NavLink to="/dashboard">Dashboard</NavLink>
+          <NavLink to="/relatorios">Relatórios</NavLink>
+        </nav>
+      </header>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <main className="page-shell">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/indicadores" element={<IndicadoresPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/relatorios" element={<RelatoriosPage />} />
+        </Routes>
+      </main>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <footer className="footer-bar">
+        <div className="footer-brand">
+          <div><img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" /><p>Dados abertos para o desenvolvimento turístico do município.</p></div>
+        </div>
+        <div><strong>Realização e apoio</strong><div className="institutional-logos">
+          <img src={prefeituraLogo} alt="Prefeitura Municipal de Santa Rita do Sapucaí" />
+        </div><p>SMCELT · Conselho Municipal de Turismo (COMTUR)</p></div>
+        <div><strong>Contexto regional</strong><p>Circuito Turístico Caminhos da Mantiqueira<br />Minas Gerais · Vale da Eletrônica</p></div>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
+  );
+}
+
+export default App;

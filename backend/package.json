@@ -4,8 +4,12 @@
   "private": true,
   "description": "API de consulta dos indicadores do Observatório do Turismo",
   "main": "src/server.js",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
-    "start": "node src/server.js",
+    "db:setup": "prisma migrate deploy && prisma db seed",
+    "start": "npm run db:setup && node src/server.js",
     "dev": "node --watch src/server.js",
     "test": "jest"
   },
@@ -13,7 +17,11 @@
     "node": ">=20"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "@prisma/client": "^6.19.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "prisma": "^6.19.3"
   },
   "devDependencies": {
     "jest": "^30.5.2",

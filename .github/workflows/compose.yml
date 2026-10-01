@@ -1,0 +1,62 @@
+name: Docker Compose
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Construir e iniciar serviços
+        run: docker compose up --build -d
+      - name: Verificar banco, API, frontend e Adminer
+        run: |
+          docker compose exec -T db pg_isready -U ot -d ot_srs
+
+          wait_for_http() {
+            local url="$1"
+            for attempt in {1..30}; do
+              if curl --silent --show-error --fail --max-time 2 "$url" -o /dev/null; then
+                echo "Ready: $url"
+                return 0
+              fi
+              echo "Waiting for $url (attempt $attempt/30)"
+              sleep 1
+            done
+
+            echo "Timed out waiting for $url"
+            docker compose ps
+            docker compose logs
+            return 1
+          }
+
+          wait_for_http http://localhost:3000/api/health
+          curl --fail --silent --show-error http://localhost:3000/api/health | grep -q '"status":"ok"'
+          wait_for_http http://localhost:8080/
+          curl --fail --silent --show-error http://localhost:8080/ | grep -q 'id="root"'
+          wait_for_http http://localhost:8081/
+          curl --fail --silent --show-error http://localhost:8081/ | grep -qi 'adminer'
+      - name: Verificar integração do front com a API
+        run: |
+          # A API sobe depois de migrate e seed, então a carga já deve estar no banco.
+          curl --fail --silent --show-error http://localhost:3000/api/indicadores/destaques | grep -q '"Número de leitos"'
+          curl --fail --silent --show-error 'http://localhost:3000/api/indicadores?setor=1' | grep -q '"medicoes"'
+
+          # CORS: o navegador abre o front em :8080 e chama a API em :3000.
+          curl --fail --silent --show-error -o /dev/null -D - \
+            -H 'Origin: http://localhost:8080' http://localhost:3000/api/indicadores \
+            | grep -qi '^access-control-allow-origin:'
+
+          # O build do front aponta para a API publicada pelo Compose.
+          script=$(curl --fail --silent --show-error http://localhost:8080/ | grep -o '/assets/[^"]*\.js' | head -n 1)
+          curl --fail --silent --show-error "http://localhost:8080$script" -o "$RUNNER_TEMP/front.js"
+          grep -q 'http://localhost:3000' "$RUNNER_TEMP/front.js"
+      - name: Logs e limpeza
+        if: always()
+        run: |
+          docker compose logs || true
+          docker compose down --volumes --remove-orphans || true
