@@ -109,4 +109,14 @@ describe('CardIndicador', () => {
       screen.queryByText('↓'),
     ).not.toBeInTheDocument()
   })
+
+  it('aceita o período no formato da API', () => {
+    render(
+      <CardIndicador name="Leitos" value={1280} unit="leitos"
+        periodo={{ ano: 2025, semestre: 2 }} variation={12.2} />,
+    )
+    expect(screen.getByText('2025/2')).toBeInTheDocument()
+    expect(screen.getByText('1.280')).toBeInTheDocument()
+    expect(screen.getByText('12,2%')).toBeInTheDocument()
+  })
 })

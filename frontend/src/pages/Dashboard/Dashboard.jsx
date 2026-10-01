@@ -18,9 +18,9 @@ function Dashboard() {
       >
         <CardIndicador
           name="Número de leitos"
-          value="350"
+          value={350}
           unit="leitos"
-          periodo="2025/2"
+          periodo={{ ano: 2025, semestre: 2 }}
           variation={12}
         />
 
