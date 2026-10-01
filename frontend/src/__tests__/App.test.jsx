@@ -19,7 +19,7 @@ describe('App', () => {
     const card = (await screen.findByRole('heading', { name: 'Número de leitos' })).closest('article');
     expect(within(card).getByText('350')).toBeInTheDocument();
     expect(within(card).getByText('2025/2')).toBeInTheDocument();
-    expect(within(card).getByText('12.2%')).toBeInTheDocument();
+    expect(within(card).getByText('12,2%')).toBeInTheDocument();
   });
 
   it('exibe cada medição do mock nas colunas da tabela', async () => {
