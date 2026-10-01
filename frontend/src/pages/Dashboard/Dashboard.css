@@ -1,6 +1,6 @@
 .dashboard {
-  min-height: 100vh;
-  padding: 2rem;
+  width: min(1280px, 100%);
+  margin: 0 auto;
 }
 
 .dashboard__header {
