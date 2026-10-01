@@ -16,6 +16,7 @@ A implementação reutiliza o tema e o CardIndicador do PR #54. A Home adapta as
 - Marca de Santa Rita do Sapucaí: SVG Principal_Completo(PT) cópia.svg, disponibilizado no projeto Stitch (tela 7786936338819278063).
 - Observatório, Prefeitura, SMCELT, COMTUR, Caminhos da Mantiqueira e Minas Gerais: imagens extraídas da página 7 de Proposta_Prefeitura_SRS_Inatel.pdf, fornecido pelo usuário.
 - Os três níveis da proposta são preservados: marca do projeto, realização e apoio, contexto regional.
+- Após a revisão da Karolina, o rodapé usa apenas os logos do Observatório (160 px) e da Prefeitura (95 px). SMCELT, COMTUR e as instituições regionais aparecem em texto, reduzindo o peso visual no celular. As duas marcas do cabeçalho são mantidas.
 
 ## Prints
 

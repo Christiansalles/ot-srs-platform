@@ -30,7 +30,7 @@ describe('App', () => {
     const expected = mockIndicadores.filter((item) => item.setor.id === 1)
       .flatMap((item) => item.medicoes.map((measurement) => [
         item.nome, item.unidade, String(measurement.ano),
-        String(measurement.semestre), String(measurement.valor),
+        String(measurement.semestre), measurement.valor.toLocaleString('pt-BR'),
       ]));
     expect(rows).toHaveLength(expected.length);
     rows.forEach((row, index) => {

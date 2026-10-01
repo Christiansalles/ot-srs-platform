@@ -63,3 +63,10 @@ a:focus-visible, select:focus-visible { outline: 2px solid var(--color-secondary
 @media (max-width: 760px) {
   .observatorio-logo { width: min(230px, 60vw); }
 }
+.footer-bar { gap: 1.5rem; padding: 1.5rem 2rem; }
+.footer-bar .observatorio-logo { width: 160px; }
+.footer-bar .institutional-logos { margin-top: .75rem; }
+.footer-bar .institutional-logos img { width: 95px; height: 32px; }
+@media (max-width: 760px) {
+  .footer-bar { gap: 1.25rem; padding: 1.25rem 1rem; }
+}
