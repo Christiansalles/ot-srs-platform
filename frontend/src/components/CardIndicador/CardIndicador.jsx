@@ -1,5 +1,18 @@
 import './CardIndicador.css'
 
+// Aceita "2025/2" (texto) ou { ano: 2025, semestre: 2 } (formato da API)
+function formatPeriodo(periodo) {
+  if (!periodo) return ''
+  if (typeof periodo === 'string') return periodo
+  return `${periodo.ano}/${periodo.semestre}`
+}
+
+// Aceita número (formata em pt-BR) ou texto já formatado, como "1.240"
+function formatValue(value) {
+  return typeof value === 'number' ? value.toLocaleString('pt-BR') : value
+}
+
+
 function CardIndicador({
   name,
   value,
@@ -19,13 +32,13 @@ function CardIndicador({
           </h2>
 
           <span className="card-indicador__periodo">
-            {periodo}
+            {formatPeriodo(periodo)}
           </span>
         </div>
       </header>
 
       <div className="card-indicador__value">
-        {value}
+        {formatValue(value)}
       </div>
 
       <p className="card-indicador__unit">
@@ -44,7 +57,9 @@ function CardIndicador({
             {isPositive ? '↑' : '↓'}
           </span>
 
-          <strong>{Math.abs(variation)}%</strong>
+          <strong>
+            {Math.abs(variation).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%
+          </strong>
 
           <span>vs. período anterior</span>
         </div>
