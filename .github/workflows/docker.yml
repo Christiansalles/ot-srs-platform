@@ -1,0 +1,72 @@
+name: Docker
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Construir imagens
+        run: |
+          docker build -t ot-srs-backend:test ./backend
+          docker build --build-arg VITE_API_URL=http://localhost:3100 -t ot-srs-frontend:test ./frontend
+      - name: Iniciar containers
+        run: |
+          docker network create ot-srs-test
+          docker run -d --name db --network ot-srs-test \
+            -e POSTGRES_USER=ot -e POSTGRES_PASSWORD=ot -e POSTGRES_DB=ot_srs_test \
+            --health-cmd "pg_isready -U ot -d ot_srs_test" \
+            --health-interval 2s --health-timeout 5s --health-retries 30 postgres:18
+          for attempt in {1..60}; do
+            if [ "$(docker inspect --format='{{.State.Health.Status}}' db)" = "healthy" ]; then
+              break
+            fi
+            if [ "$attempt" = 60 ]; then docker logs db; exit 1; fi
+            sleep 1
+          done
+          docker run -d --name backend --network ot-srs-test \
+            -e PORT=3000 \
+            -e DATABASE_URL=postgresql://ot:ot@db:5432/ot_srs_test \
+            -p 3100:3000 ot-srs-backend:test
+          docker run -d --name frontend -p 8080:80 ot-srs-frontend:test
+      - name: Validar respostas HTTP
+        run: |
+          wait_for_http() {
+            local url="$1"
+            for attempt in {1..30}; do
+              if curl --silent --show-error --fail --max-time 2 "$url" -o /dev/null; then
+                echo "Ready: $url"
+                return 0
+              fi
+              echo "Waiting for $url (attempt $attempt/30)"
+              sleep 1
+            done
+
+            echo "Timed out waiting for $url"
+            docker ps -a
+            docker logs backend || true
+            docker logs frontend || true
+            return 1
+          }
+
+          wait_for_http http://localhost:3100/api/health
+          curl --fail --silent --show-error http://localhost:3100/api/health | jq -e '.status == "ok"'
+          wait_for_http http://localhost:8080/
+          curl --fail --silent --show-error http://localhost:8080/ -o /tmp/home.html
+          grep -q 'id="root"' /tmp/home.html
+          curl --fail http://localhost:8080/rota-do-frontend -o /tmp/route.html
+          cmp /tmp/home.html /tmp/route.html
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/assets/inexistente.js)" = "404"
+      - name: Logs e limpeza
+        if: always()
+        run: |
+          docker logs backend || true
+          docker logs frontend || true
+          docker logs db || true
+          docker rm -f backend frontend db || true
+          docker network rm ot-srs-test || true
