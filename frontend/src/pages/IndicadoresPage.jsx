@@ -7,6 +7,7 @@ export default function IndicadoresPage() {
   const [indicadores, setIndicadores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [setoresError, setSetoresError] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -15,26 +16,20 @@ export default function IndicadoresPage() {
       .then((dados) => {
         if (!active) return;
         setSetores(dados);
-        if (dados.length > 0 && !setorSelecionado) {
-          setSetorSelecionado(dados[0].id);
-        }
       })
       .catch(() => {
         if (active) {
-          setError('Não foi possível carregar os setores.');
+          setSetoresError('Não foi possível carregar os setores.');
         }
       });
 
     return () => {
       active = false;
     };
-  }, [setorSelecionado]);
+  }, []);
 
   useEffect(() => {
     let active = true;
-
-    setLoading(true);
-    setError('');
 
     getIndicadores(setorSelecionado)
       .then((dados) => {
@@ -70,15 +65,23 @@ export default function IndicadoresPage() {
 
   return (
     <div className="page indicadores-page">
+      <header className="page-heading">
+        <p className="eyebrow">Dados abertos · Consulta detalhada</p>
+        <h1>Indicadores turísticos</h1>
+        <p>Consulte as séries de hospedagem e acompanhe sua evolução por período.</p>
+      </header>
       <section className="content-section">
-        <div className="section-header split-header">
-          <h2>Indicadores turísticos</h2>
+        <div className="filter-bar">
 
           <label className="select-control">
             <span>Setor</span>
             <select
               value={setorSelecionado}
-              onChange={(event) => setSetorSelecionado(Number(event.target.value))}
+              onChange={(event) => {
+                setLoading(true);
+                setError('');
+                setSetorSelecionado(Number(event.target.value));
+              }}
             >
               {setores.map((setor) => (
                 <option key={setor.id} value={setor.id}>
@@ -89,10 +92,10 @@ export default function IndicadoresPage() {
           </label>
         </div>
 
-        {loading ? (
+        {setoresError ? <p className="state-message error" role="alert">{setoresError}</p> : loading ? (
           <p className="state-message">Carregando indicadores...</p>
         ) : error ? (
-          <p className="state-message error">{error}</p>
+          <p className="state-message error" role="alert">{error}</p>
         ) : linhas.length === 0 ? (
           <p className="state-message">Sem dados para esse setor.</p>
         ) : (
@@ -100,11 +103,11 @@ export default function IndicadoresPage() {
             <table>
               <thead>
                 <tr>
-                  <th>Indicador</th>
-                  <th>Unidade</th>
-                  <th>Ano</th>
-                  <th>Semestre</th>
-                  <th>Valor</th>
+                  <th scope="col">Indicador</th>
+                  <th scope="col">Unidade</th>
+                  <th scope="col">Ano</th>
+                  <th scope="col">Semestre</th>
+                  <th scope="col">Valor</th>
                 </tr>
               </thead>
               <tbody>
@@ -121,6 +124,7 @@ export default function IndicadoresPage() {
             </table>
           </div>
         )}
+        <p className="data-note">Valores ilustrativos do Milestone III. A unidade e o período acompanham cada medição.</p>
       </section>
     </div>
   );

@@ -1,58 +1,28 @@
-import {
-  mockSetores,
-  mockIndicadores,
-  mockDestaques,
-  mockPeriodos,
-} from '../mocks/dados';
+﻿import { API_URL } from '../config';
+import { mockSetores, mockIndicadores, mockDestaques, mockPeriodos } from '../mocks/dados';
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-
-async function readJson(url) {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Falha ao carregar ${url}`);
-  }
-
+// Mock é uma opção explícita; falhas da API devem chegar às telas.
+async function request(path, mockData) {
+  if (import.meta.env.VITE_USE_MOCK === 'true') return structuredClone(mockData);
+  const response = await fetch(`${API_URL}/api/${path}`);
+  if (!response.ok) throw new Error(`Falha ao consultar ${path} (HTTP ${response.status})`);
   return response.json();
 }
 
-export async function getSetores() {
-  try {
-    return await readJson(`${apiBaseUrl}/setores`);
-  } catch {
-    return mockSetores;
-  }
+export function getSetores() {
+  return request('setores', mockSetores);
 }
 
-export async function getPeriodos() {
-  try {
-    return await readJson(`${apiBaseUrl}/periodos`);
-  } catch {
-    return mockPeriodos;
-  }
+export function getPeriodos() {
+  return request('periodos', mockPeriodos);
 }
 
-export async function getIndicadores(setor) {
-  try {
-    const url = setor
-      ? `${apiBaseUrl}/indicadores?setor=${encodeURIComponent(setor)}`
-      : `${apiBaseUrl}/indicadores`;
-
-    return await readJson(url);
-  } catch {
-    if (!setor) {
-      return mockIndicadores;
-    }
-
-    return mockIndicadores.filter((indicador) => indicador.setor.id === Number(setor));
-  }
+export function getIndicadores(setor) {
+  const query = setor ? `?setor=${encodeURIComponent(setor)}` : '';
+  const data = setor ? mockIndicadores.filter((item) => item.setor.id === Number(setor)) : mockIndicadores;
+  return request(`indicadores${query}`, data);
 }
 
-export async function getDestaques() {
-  try {
-    return await readJson(`${apiBaseUrl}/indicadores/destaques`);
-  } catch {
-    return mockDestaques;
-  }
+export function getDestaques() {
+  return request('indicadores/destaques', mockDestaques);
 }

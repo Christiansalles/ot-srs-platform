@@ -23,7 +23,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #f3f7ff 0%, #f7f5ff 100%);
+  background: var(--color-background, #f8fafc);
 }
 
 img {

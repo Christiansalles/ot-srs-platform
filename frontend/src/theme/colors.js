@@ -16,6 +16,9 @@ export const colors = {
   textMuted: '#64748B',
   border: '#E2E8F0',
 
+  success: '#0D9488',
+  danger: '#DC2626',
+
   chart: {
     cyan: '#5FE6E0',
     violet: '#6C5CE0',

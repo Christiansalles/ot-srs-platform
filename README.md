@@ -35,8 +35,13 @@ Copy-Item backend/.env.example backend/.env
 cd backend
 npm install
 npm test        # roda os testes
-npm run dev     # sobe a API em http://localhost:3000
+npm run dev     # sobe a API em http://localhost:3000, sem preparar o banco
 ```
+
+Para iniciar o backend como em produção, use `npm start`. Esse comando aplica as
+migrations pendentes e executa o seed antes de subir a API. Ele precisa de um
+PostgreSQL acessível pela `DATABASE_URL`. Para preparar o banco manualmente no
+desenvolvimento, execute `npm run db:setup` antes de `npm run dev`.
 
 Teste rápido: abra `http://localhost:3000/api/health`. A resposta deve ser `{"status":"ok"}`.
 
@@ -75,9 +80,10 @@ A API responde em `http://localhost:3000/api/health`; o frontend fica em
 `http://localhost:8080`. Use Ctrl+C em cada terminal para encerrar os containers.
 
 O backend gera o cliente Prisma durante o build, mantém dependências de produção
-na imagem final e executa como usuário `node`. Para consultar dados, forneça
-`DATABASE_URL` para um banco PostgreSQL preparado e acessível ao container,
-usando `--env-file backend/.env` no comando `docker run`. No Docker Desktop,
+na imagem final e executa como usuário `node`. Forneça `DATABASE_URL` para um
+servidor PostgreSQL acessível ao container, usando `--env-file backend/.env` no
+comando `docker run`. Ao iniciar, o backend aplica as migrations e executa o seed.
+No Docker Desktop,
 um banco da máquina hospedeira pode ser acessado por `host.docker.internal`.
 Para mudar a porta interna da API, combine `-e PORT=4000` com `-p 4000:4000`.
 
@@ -90,7 +96,8 @@ Os arquivos `.dockerignore` excluem `.env`, dependências locais e outros arquiv
 desnecessários. Não são copiadas credenciais locais para as imagens.
 
 O workflow `.github/workflows/docker.yml` constrói as imagens e verifica health
-da API, página inicial, fallback de rotas e 404 de assets.
+da API, página inicial, fallback de rotas e 404 de assets. A inicialização
+conjunta dos serviços é feita pelo Docker Compose, documentado acima.
 
 ### Variáveis de ambiente
 
@@ -101,7 +108,8 @@ da API, página inicial, fallback de rotas e 404 de assets.
 | `VITE_API_URL` | `frontend/.env` | Endereço público da API, sem `/api` no final | `http://localhost:3000` |
 
 As credenciais do exemplo são ilustrativas: o banco, usuário e senha precisam existir
-no PostgreSQL. Este arquivo não cria o banco nem executa migrations ou seed.
+no PostgreSQL. `npm start` aplica migrations e seed automaticamente; `npm run dev`
+apenas sobe a API, então requer que o banco já esteja preparado.
 O backend carrega seu `.env` ao iniciar, antes de importar a aplicação. Variáveis já
 definidas no terminal, CI ou Docker têm prioridade sobre esse arquivo.
 
@@ -145,3 +153,9 @@ Compose inicia os serviços, mas não prepara tabelas nem insere os dados inicia
 ## Como contribuir
 
 Leia [docs/fluxo-de-trabalho.md](docs/fluxo-de-trabalho.md) antes de abrir a primeira branch. O contrato da API está em [docs/contrato-api.md](docs/contrato-api.md).
+
+## Dados do frontend
+
+A URL VITE_API_URL contém somente a base (por exemplo, http://localhost:3000); os serviços adicionam /api às rotas. VITE_USE_MOCK=false usa a API e exibe erros de consulta na tela. Para desenvolver ou conferir os dados ilustrativos sem backend, configure VITE_USE_MOCK=true no frontend/.env e reinicie o Vite. O mock não é ativado automaticamente em caso de erro.
+
+As referências visuais e capturas de tela do frontend estão em [docs/pr-48](docs/pr-48/README.md).

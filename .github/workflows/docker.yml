@@ -14,10 +14,25 @@ jobs:
       - name: Construir imagens
         run: |
           docker build -t ot-srs-backend:test ./backend
-          docker build --build-arg VITE_API_URL=http://localhost:3000 -t ot-srs-frontend:test ./frontend
+          docker build --build-arg VITE_API_URL=http://localhost:3100 -t ot-srs-frontend:test ./frontend
       - name: Iniciar containers
         run: |
-          docker run -d --name backend -e PORT=3100 -p 3100:3100 ot-srs-backend:test
+          docker network create ot-srs-test
+          docker run -d --name db --network ot-srs-test \
+            -e POSTGRES_USER=ot -e POSTGRES_PASSWORD=ot -e POSTGRES_DB=ot_srs_test \
+            --health-cmd "pg_isready -U ot -d ot_srs_test" \
+            --health-interval 2s --health-timeout 5s --health-retries 30 postgres:18
+          for attempt in {1..60}; do
+            if [ "$(docker inspect --format='{{.State.Health.Status}}' db)" = "healthy" ]; then
+              break
+            fi
+            if [ "$attempt" = 60 ]; then docker logs db; exit 1; fi
+            sleep 1
+          done
+          docker run -d --name backend --network ot-srs-test \
+            -e PORT=3000 \
+            -e DATABASE_URL=postgresql://ot:ot@db:5432/ot_srs_test \
+            -p 3100:3000 ot-srs-backend:test
           docker run -d --name frontend -p 8080:80 ot-srs-frontend:test
       - name: Validar respostas HTTP
         run: |
@@ -52,4 +67,6 @@ jobs:
         run: |
           docker logs backend || true
           docker logs frontend || true
-          docker rm -f backend frontend || true
+          docker logs db || true
+          docker rm -f backend frontend db || true
+          docker network rm ot-srs-test || true
