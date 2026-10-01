@@ -197,7 +197,9 @@ define a origem permitida pela API; se ficar vazia, a API libera qualquer origem
 Os dados do PostgreSQL ficam no volume persistente `postgres_data`. Para parar os
 serviços, use `docker compose down`. Para apagar também os dados persistidos, use
 `docker compose down -v`. Na inicialização, o backend aplica migrations e executa o
-seed antes de começar a atender requisições.
+seed antes de começar a atender requisições. O workflow
+`.github/workflows/compose.yml` também verifica no CI se o banco, a API, o frontend
+e o Adminer ficam acessíveis.
 
 ## Como contribuir
 
