@@ -88,4 +88,39 @@ describe('GraficoSerieHistorica', () => {
       ),
     ).toBeInTheDocument()
   })
+
+  it('usa ids de gradiente diferentes para cada gráfico da página', () => {
+    const { container } = render(
+      <>
+        <GraficoSerieHistorica medicoes={medicoes} />
+        <GraficoSerieHistorica medicoes={medicoes} />
+      </>,
+    )
+
+    const ids = [...container.querySelectorAll('linearGradient')].map(
+      (gradiente) => gradiente.id,
+    )
+
+    expect(ids).toHaveLength(4)
+    expect(new Set(ids).size).toBe(4)
+  })
+
+  it('mantém a linha visível quando todos os valores são iguais', () => {
+    const { container } = render(
+      <GraficoSerieHistorica
+        medicoes={[
+          { ano: 2024, semestre: 2, valor: 120 },
+          { ano: 2025, semestre: 2, valor: 120 },
+        ]}
+      />,
+    )
+
+    // Com o padrão objectBoundingBox, uma linha reta (altura zero) não é desenhada.
+    const linha = container.querySelector('.recharts-line-curve')
+    const idGradiente = linha.getAttribute('stroke').match(/url\(#(.+)\)/)[1]
+
+    expect(
+      container.querySelector(`[id="${idGradiente}"]`),
+    ).toHaveAttribute('gradientUnits', 'userSpaceOnUse')
+  })
 })

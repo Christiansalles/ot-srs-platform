@@ -23,7 +23,7 @@ function Dashboard() {
   ]
 
   return (
-    <main className="dashboard">
+    <div className="dashboard">
       <header className="dashboard__header">
         <h1>Dashboard</h1>
 
@@ -55,7 +55,7 @@ function Dashboard() {
           medicoes={medicoesLeitos}
         />
       </section>
-    </main>
+    </div>
   )
 }
 
