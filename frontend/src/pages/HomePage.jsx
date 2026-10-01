@@ -65,10 +65,10 @@ export default function HomePage() {
               <CardIndicador
                 key={indicador.id}
                 name={indicador.nome}
-                value={indicador.valor.toLocaleString('pt-BR')}
+                value={indicador.valor}
                 unit={indicador.unidade}
                 variation={indicador.variacao_percentual}
-                periodo={`${indicador.periodo.ano}/${indicador.periodo.semestre}`}
+                periodo={indicador.periodo}
               />
             ))}
           </div>
