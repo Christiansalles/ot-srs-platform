@@ -1,8 +1,8 @@
 import {
   Area,
   CartesianGrid,
+  ComposedChart,
   Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -65,7 +65,7 @@ function GraficoSerieHistorica({
 
       <div className="grafico-serie__chart">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart
+          <ComposedChart
             data={dados}
             margin={{
               top: 20,
@@ -168,11 +168,13 @@ function GraficoSerieHistorica({
               dataKey="valor"
               stroke="none"
               fill="url(#grafico-area)"
+              tooltipType="none"
             />
 
             <Line
               type="monotone"
               dataKey="valor"
+              name="Valor"
               stroke="url(#grafico-linha)"
               strokeWidth={3}
               dot={{
@@ -184,7 +186,7 @@ function GraficoSerieHistorica({
                 r: 7,
               }}
             />
-          </LineChart>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
     </section>
