@@ -1,9 +1,29 @@
 import CardIndicador from '../../components/CardIndicador/CardIndicador'
+import GraficoSerieHistorica from '../../components/GraficoSerieHistorica/GraficoSerieHistorica'
+
 import './Dashboard.css'
 
 function Dashboard() {
+  const medicoesLeitos = [
+    {
+      ano: 2023,
+      semestre: 2,
+      valor: 280,
+    },
+    {
+      ano: 2024,
+      semestre: 2,
+      valor: 312,
+    },
+    {
+      ano: 2025,
+      semestre: 2,
+      valor: 350,
+    },
+  ]
+
   return (
-    <div className="dashboard">
+    <main className="dashboard">
       <header className="dashboard__header">
         <h1>Dashboard</h1>
 
@@ -23,24 +43,19 @@ function Dashboard() {
           periodo={{ ano: 2025, semestre: 2 }}
           variation={12}
         />
+      </section>
 
-        <CardIndicador
-          name="Número de visitantes"
-          value="1.240"
-          unit="visitantes"
-          periodo="2025/2"
-          variation={-5}
-        />
-
-        <CardIndicador
-          name="Taxa de ocupação"
-          value="68"
-          unit="ocupação"
-          periodo="2025/2"
-          variation={null}
+      <section
+        className="dashboard__chart"
+        aria-label="Gráfico de série histórica"
+      >
+        <GraficoSerieHistorica
+          titulo="Evolução do número de leitos"
+          subtitulo="Série histórica anual observada no município"
+          medicoes={medicoesLeitos}
         />
       </section>
-    </div>
+    </main>
   )
 }
 
