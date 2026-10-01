@@ -25,6 +25,7 @@ services:
     restart: unless-stopped
     environment:
       PORT: 3000
+      CORS_ORIGIN: ${CORS_ORIGIN:-}
       DATABASE_URL: postgresql://${POSTGRES_USER:-ot}:${POSTGRES_PASSWORD:-ot}@db:5432/${POSTGRES_DB:-ot_srs}
     ports:
       - "${BACKEND_PORT:-3000}:3000"

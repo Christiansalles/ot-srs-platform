@@ -7,7 +7,8 @@ const errorHandler = require('./middlewares/error-handler');
 
 const app = express();
 
-app.use(cors());
+// Sem CORS_ORIGIN libera qualquer origem; em produção, defina a URL do front.
+app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(express.json());
 
 app.get('/api/health', (req, res) => {
