@@ -8,6 +8,7 @@
     "seed": "node prisma/seed.js"
   },
   "scripts": {
+    "postinstall": "prisma generate",
     "db:setup": "prisma migrate deploy && prisma db seed",
     "start": "npm run db:setup && node src/server.js",
     "dev": "node --watch src/server.js",

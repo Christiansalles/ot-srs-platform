@@ -24,6 +24,15 @@ Para subir o sistema completo, é necessário ter o Docker Desktop ativo e confi
 para containers Linux, com Docker Compose disponível. Node.js 20 ou mais recente é
 necessário apenas para rodar a API, o frontend ou os testes diretamente na máquina.
 
+A versão entregue de cada Milestone fica na branch `main`. A branch padrão do
+repositório é a `develop`, então troque de branch depois de clonar:
+
+```bash
+git clone https://github.com/Christiansalles/ot-srs-platform.git
+cd ot-srs-platform
+git switch main
+```
+
 ### Subir o sistema completo
 
 Na raiz do repositório, execute:
@@ -56,6 +65,15 @@ teste e, se ainda não existir, crie o arquivo local de configuração:
 docker compose up -d --wait db
 if [ ! -f backend/.env ]; then cp backend/.env.example backend/.env; fi
 ```
+
+No PowerShell, troque a segunda linha por
+`if (-not (Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }`.
+
+Se a máquina já tiver um PostgreSQL instalado na porta 5432, os testes conectam nele
+em vez do container e falham com `P1000: Authentication failed`. Nesse caso, suba o
+banco em outra porta com `POSTGRES_PORT=5433 docker compose up -d --wait db` (no
+PowerShell: `$env:POSTGRES_PORT=5433; docker compose up -d --wait db`) e use a mesma
+porta na `DATABASE_URL` do `backend/.env`.
 
 Depois, instale as dependências e prepare o banco antes de rodar os testes:
 
@@ -115,7 +133,7 @@ Copy-Item frontend/.env.example frontend/.env
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm test        # roda os testes
 npm run dev     # sobe o front em http://localhost:5173
 ```
