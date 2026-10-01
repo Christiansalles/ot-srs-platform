@@ -2,7 +2,7 @@ import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
 import IndicadoresPage from './pages/IndicadoresPage';
-import Dashboard from './pages/Dashboard/Dashboard';
+import DashboardPage from './pages/Dashboard/DashboardPage';
 import RelatoriosPage from './pages/RelatoriosPage';
 import cidadeLogo from './assets/logos/santa-rita.svg';
 import observatorioLogo from './assets/logos/observatorio.png';
@@ -31,7 +31,7 @@ function AppLayout() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/indicadores" element={<IndicadoresPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/relatorios" element={<RelatoriosPage />} />
         </Routes>
       </main>

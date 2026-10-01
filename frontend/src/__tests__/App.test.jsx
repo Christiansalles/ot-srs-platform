@@ -62,5 +62,6 @@ describe('App', () => {
     render(<App />);
     fireEvent.click(screen.getByRole('link', { name: /^dashboard$/i }));
     expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Número de leitos' })).toBeInTheDocument();
   });
 });
