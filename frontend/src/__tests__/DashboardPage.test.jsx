@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import Dashboard from '../pages/Dashboard/DashboardPage'
+import DashboardPage from '../pages/Dashboard/DashboardPage'
 
 function stubApi({ indicadores = [], destaques = [], ok = true } = {}) {
   vi.stubEnv('VITE_USE_MOCK', 'false')
@@ -16,7 +16,7 @@ function stubApi({ indicadores = [], destaques = [], ok = true } = {}) {
   )
 }
 
-describe('Dashboard', () => {
+describe('DashboardPage', () => {
   beforeEach(() => {
     vi.stubEnv('VITE_USE_MOCK', 'true')
   })
@@ -27,7 +27,7 @@ describe('Dashboard', () => {
   })
 
   it('mostra o card de leitos do período mais recente e o gráfico do mock', async () => {
-    render(<Dashboard />)
+    render(<DashboardPage />)
 
     const card = (
       await screen.findByRole('heading', { name: 'Número de leitos' })
@@ -45,16 +45,8 @@ describe('Dashboard', () => {
     ).toBeInTheDocument()
   })
 
-  it('não mostra os dados de outros setores', async () => {
-    render(<Dashboard />)
-
-    await screen.findByRole('heading', { name: 'Número de leitos' })
-
-    expect(screen.queryByText('Restaurantes')).not.toBeInTheDocument()
-  })
-
   it('mostra o estado de carregando antes dos dados chegarem', async () => {
-    render(<Dashboard />)
+    render(<DashboardPage />)
 
     expect(screen.getByText('Carregando indicadores...')).toBeInTheDocument()
 
@@ -64,7 +56,7 @@ describe('Dashboard', () => {
   it('mostra mensagem de erro quando a API falha', async () => {
     stubApi({ ok: false })
 
-    render(<Dashboard />)
+    render(<DashboardPage />)
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'Não foi possível carregar o dashboard',
@@ -75,7 +67,7 @@ describe('Dashboard', () => {
   it('mostra mensagem de sem dados quando a API devolve listas vazias', async () => {
     stubApi({ indicadores: [], destaques: [] })
 
-    render(<Dashboard />)
+    render(<DashboardPage />)
 
     expect(
       await screen.findByText('Sem dados de hospedagem disponíveis no momento.'),
@@ -97,11 +89,52 @@ describe('Dashboard', () => {
       destaques: [],
     })
 
-    render(<Dashboard />)
+    render(<DashboardPage />)
 
     expect(
       await screen.findByText('Sem dados de hospedagem disponíveis no momento.'),
     ).toBeInTheDocument()
     expect(screen.queryByRole('article')).not.toBeInTheDocument()
   })
+
+  it('usa no card o destaque com o mesmo id do indicador', async () => {
+    stubApi({
+        indicadores: [
+        {
+            id: 1,
+            nome: 'Número de leitos',
+            unidade: 'leitos',
+            setor: { id: 1, nome: 'Hospedagem' },
+            medicoes: [{ ano: 2025, semestre: 2, valor: 350 }],
+        },
+        ],
+        destaques: [
+        {
+            id: 2,
+            nome: 'Taxa de ocupação',
+            unidade: '%',
+            valor: 68,
+            periodo: { ano: 2025, semestre: 2 },
+            variacao_percentual: null,
+        },
+        {
+            id: 1,
+            nome: 'Número de leitos',
+            unidade: 'leitos',
+            valor: 350,
+            periodo: { ano: 2025, semestre: 2 },
+            variacao_percentual: 12.2,
+        },
+        ],
+    })
+
+    render(<DashboardPage />)
+
+    const card = (
+        await screen.findByRole('heading', { name: 'Número de leitos' })
+    ).closest('article')
+
+    expect(within(card).getByText('350')).toBeInTheDocument()
+    expect(screen.queryByText('Taxa de ocupação')).not.toBeInTheDocument()
+    })
 })

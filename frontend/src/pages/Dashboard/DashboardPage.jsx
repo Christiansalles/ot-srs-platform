@@ -9,7 +9,7 @@ import './DashboardPage.css'
 const SETOR = 'Hospedagem'
 const INDICADOR = 'Número de leitos'
 
-function Dashboard() {
+function DashboardPage() {
   const [estado, setEstado] = useState({ status: 'loading' })
 
   useEffect(() => {
@@ -105,4 +105,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default DashboardPage
