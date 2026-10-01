@@ -105,7 +105,9 @@ conjunta dos serviços é feita pelo Docker Compose, documentado acima.
 | --- | --- | --- | --- |
 | `DATABASE_URL` | `backend/.env` | Conexão PostgreSQL usada pela integração do banco | `postgresql://ot:ot@localhost:5432/ot_srs` |
 | `PORT` | `backend/.env` | Porta HTTP da API; padrão `3000` | `3000` |
+| `CORS_ORIGIN` | `backend/.env` | Origem do front liberada no CORS; vazio libera qualquer origem | `http://localhost:5173` |
 | `VITE_API_URL` | `frontend/.env` | Endereço público da API, sem `/api` no final | `http://localhost:3000` |
+| `VITE_USE_MOCK` | `frontend/.env` | `true` usa os dados de `src/mocks/` em vez da API; padrão `false` | `false` |
 
 As credenciais do exemplo são ilustrativas: o banco, usuário e senha precisam existir
 no PostgreSQL. `npm start` aplica migrations e seed automaticamente; `npm run dev`
@@ -114,7 +116,7 @@ O backend carrega seu `.env` ao iniciar, antes de importar a aplicação. Variá
 definidas no terminal, CI ou Docker têm prioridade sobre esse arquivo.
 
 O Vite carrega o `.env` do frontend automaticamente. O módulo `frontend/src/config.js`
-exporta `API_URL` para as chamadas futuras, por exemplo, `fetch(API_URL + '/api/health')`.
+exporta `API_URL`, que `frontend/src/services/api.js` usa em todas as chamadas à API.
 Sem configuração, a URL é `http://localhost:3000`. Se mudar `PORT`, ajuste também
 `VITE_API_URL`. Reinicie os servidores após alterar os arquivos `.env`; para uma
 versão de produção do frontend, gere um novo build, pois o Vite incorpora a URL no build.
@@ -147,8 +149,9 @@ Os dados do PostgreSQL ficam no volume persistente `postgres_data`. Para parar o
 serviços, use `docker compose down`. Para apagar também os dados persistidos, use
 `docker compose down -v`.
 
-Migrations e seed serão automatizados pela tarefa #33. Até essa integração, este
-Compose inicia os serviços, mas não prepara tabelas nem insere os dados iniciais.
+Ao subir, o backend aplica as migrations e executa o seed, então o front já abre com
+os dados de hospedagem consultados na API. O workflow `.github/workflows/compose.yml`
+confere isso no CI: dados na API, CORS e a URL da API embutida no build do front.
 
 ## Como contribuir
 
@@ -156,6 +159,8 @@ Leia [docs/fluxo-de-trabalho.md](docs/fluxo-de-trabalho.md) antes de abrir a pri
 
 ## Dados do frontend
 
-A URL VITE_API_URL contém somente a base (por exemplo, http://localhost:3000); os serviços adicionam /api às rotas. VITE_USE_MOCK=false usa a API e exibe erros de consulta na tela. Para desenvolver ou conferir os dados ilustrativos sem backend, configure VITE_USE_MOCK=true no frontend/.env e reinicie o Vite. O mock não é ativado automaticamente em caso de erro.
+O front consulta a API real por padrão. A URL `VITE_API_URL` contém somente a base (por exemplo, `http://localhost:3000`); os serviços adicionam `/api` às rotas. Com `VITE_USE_MOCK=false` (padrão), erros de consulta aparecem na tela.
+
+Para desenvolver sem backend, configure `VITE_USE_MOCK=true` no `frontend/.env` e reinicie o Vite. Os mocks de `frontend/src/mocks/dados.js` espelham o que a API devolve com a carga de `backend/prisma/dados/hospedagem.json`, então as telas ficam iguais nos dois modos; se a carga mudar, atualize os mocks junto. O mock não é ativado automaticamente em caso de erro.
 
 As referências visuais e capturas de tela do frontend estão em [docs/pr-48](docs/pr-48/README.md).
