@@ -7,10 +7,6 @@ import RelatoriosPage from './pages/RelatoriosPage';
 import cidadeLogo from './assets/logos/santa-rita.svg';
 import observatorioLogo from './assets/logos/observatorio.png';
 import prefeituraLogo from './assets/logos/prefeitura.png';
-import smceltLogo from './assets/logos/smcelt.png';
-import comturLogo from './assets/logos/comtur.png';
-import mantiqueiraLogo from './assets/logos/mantiqueira.png';
-import minasLogo from './assets/logos/minas.png';
 
 function AppLayout() {
   return (
@@ -42,18 +38,12 @@ function AppLayout() {
 
       <footer className="footer-bar">
         <div className="footer-brand">
-          <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí — Cidade Criativa" />
           <div><img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" /><p>Dados abertos para o desenvolvimento turístico do município.</p></div>
         </div>
         <div><strong>Realização e apoio</strong><div className="institutional-logos">
           <img src={prefeituraLogo} alt="Prefeitura Municipal de Santa Rita do Sapucaí" />
-          <img src={smceltLogo} alt="Secretaria de Cultura, Esporte, Lazer e Turismo — SMCELT" />
-          <img src={comturLogo} alt="Conselho Municipal de Turismo — COMTUR" />
-        </div></div>
-        <div><strong>Contexto regional</strong><div className="institutional-logos">
-          <img src={mantiqueiraLogo} alt="Circuito Turístico Caminhos da Mantiqueira" />
-          <img src={minasLogo} alt="Minas Gerais" />
-        </div></div>
+        </div><p>SMCELT · Conselho Municipal de Turismo (COMTUR)</p></div>
+        <div><strong>Contexto regional</strong><p>Circuito Turístico Caminhos da Mantiqueira<br />Minas Gerais · Vale da Eletrônica</p></div>
       </footer>
     </div>
   );

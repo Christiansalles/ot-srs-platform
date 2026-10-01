@@ -19,7 +19,7 @@ describe('App', () => {
     const card = (await screen.findByRole('heading', { name: 'Número de leitos' })).closest('article');
     expect(within(card).getByText('350')).toBeInTheDocument();
     expect(within(card).getByText('2025/2')).toBeInTheDocument();
-    expect(within(card).getByText(/^12[.,]2%$/)).toBeInTheDocument();
+    expect(within(card).getByText('12,2%')).toBeInTheDocument();
   });
 
   it('exibe cada medição do mock nas colunas da tabela', async () => {
@@ -30,7 +30,7 @@ describe('App', () => {
     const expected = mockIndicadores.filter((item) => item.setor.id === 1)
       .flatMap((item) => item.medicoes.map((measurement) => [
         item.nome, item.unidade, String(measurement.ano),
-        String(measurement.semestre), String(measurement.valor),
+        String(measurement.semestre), measurement.valor.toLocaleString('pt-BR'),
       ]));
     expect(rows).toHaveLength(expected.length);
     rows.forEach((row, index) => {
