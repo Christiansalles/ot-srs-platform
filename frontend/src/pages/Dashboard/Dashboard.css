@@ -33,3 +33,8 @@
     grid-template-columns: 1fr;
   }
 }
+
+.dashboard__chart {
+  width: min(100%, 1200px);
+  margin: 1.5rem auto 0;
+}
