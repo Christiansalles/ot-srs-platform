@@ -3,7 +3,7 @@ import './Dashboard.css'
 
 function Dashboard() {
   return (
-    <main className="dashboard">
+    <div className="dashboard">
       <header className="dashboard__header">
         <h1>Dashboard</h1>
 
@@ -40,7 +40,7 @@ function Dashboard() {
           variation={null}
         />
       </section>
-    </main>
+    </div>
   )
 }
 

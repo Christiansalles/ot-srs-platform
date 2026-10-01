@@ -153,3 +153,9 @@ Compose inicia os serviços, mas não prepara tabelas nem insere os dados inicia
 ## Como contribuir
 
 Leia [docs/fluxo-de-trabalho.md](docs/fluxo-de-trabalho.md) antes de abrir a primeira branch. O contrato da API está em [docs/contrato-api.md](docs/contrato-api.md).
+
+## Dados do frontend
+
+A URL VITE_API_URL contém somente a base (por exemplo, http://localhost:3000); os serviços adicionam /api às rotas. VITE_USE_MOCK=false usa a API e exibe erros de consulta na tela. Para desenvolver ou conferir os dados ilustrativos sem backend, configure VITE_USE_MOCK=true no frontend/.env e reinicie o Vite. O mock não é ativado automaticamente em caso de erro.
+
+As referências visuais e capturas de tela do frontend estão em [docs/pr-48](docs/pr-48/README.md).

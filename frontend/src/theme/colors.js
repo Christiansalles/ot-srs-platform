@@ -19,8 +19,6 @@ export const colors = {
   success: '#0D9488',
   danger: '#DC2626',
 
-  border: '#E2E8F0',
-
   chart: {
     cyan: '#5FE6E0',
     violet: '#6C5CE0',
