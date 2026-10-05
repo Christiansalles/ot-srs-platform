@@ -1,0 +1,75 @@
+{
+  "observacao": "dados ilustrativos dos mockups do M3, aguardando dados oficiais da SMCELT",
+  "indicador": {
+    "nome": "Participação econômica",
+    "unidade": "%",
+    "descricao": "Participação econômica dos setores relacionados ao turismo."
+  },
+  "setores": [
+    {
+      "nome": "Hospedagem",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 28,
+          "fonte": "Stitch M3 - Image 12.html"
+        }
+      ]
+    },
+    {
+      "nome": "Alimentação & Bares",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 24,
+          "fonte": "Stitch M3 - Image 12.html"
+        }
+      ]
+    },
+    {
+      "nome": "Serviços & Eventos",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 20,
+          "fonte": "Stitch M3 - Image 12.html"
+        }
+      ]
+    },
+    {
+      "nome": "Comércio Turístico",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 18,
+          "fonte": "Stitch M3 - Image 12.html"
+        }
+      ]
+    },
+    {
+      "nome": "Outros",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 10,
+          "fonte": "Stitch M3 - Image 12.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "setor": {
+    "nome": "Turismo",
+    "descricao": "Indicadores relacionados ao turismo."
+  },
+  "observacao": "dados ilustrativos dos mockups do M3, aguardando dados oficiais da SMCELT",
+  "indicadores": [
+    {
+      "nome": "Fluxo de visitantes",
+      "unidade": "visitantes",
+      "descricao": "Fluxo de visitantes no setor de turismo.",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2020,
+            "semestre": 2
+          },
+          "valor": 1100,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2021,
+            "semestre": 2
+          },
+          "valor": 1900,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2022,
+            "semestre": 2
+          },
+          "valor": 2450,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2023,
+            "semestre": 2
+          },
+          "valor": 3600,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2024,
+            "semestre": 2
+          },
+          "valor": 4400,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 5200,
+          "fonte": "Stitch M3 - Image 12.html"
+        }
+      ]
+    },
+    {
+      "nome": "Número de empresas",
+      "unidade": "empresas",
+      "descricao": "Número de empresas atuantes no setor de turismo.",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 120,
+          "fonte": "Stitch M3 - Image 6.html"
+        }
+      ]
+    },
+    {
+      "nome": "Empregos no setor",
+      "unidade": "empregos",
+      "descricao": "Número de empregos no setor de turismo.",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 840,
+          "fonte": "Stitch M3 - Image 6.html"
+        }
+      ]
+    },
+    {
+      "nome": "Gasto médio do turista",
+      "unidade": "R$",
+      "descricao": "Gasto médio realizado por turista.",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 350,
+          "fonte": "Stitch M3 - Image 6.html"
+        }
+      ]
+    },
+    {
+      "nome": "Tempo médio de permanência",
+      "unidade": "dias",
+      "descricao": "Tempo médio de permanência dos turistas.",
+      "medicoes": [
+        {
+          "periodo": {
+            "ano": 2025,
+            "semestre": 2
+          },
+          "valor": 2.8,
+          "fonte": "Stitch M3 - Image 6.html"
+        }
+      ]
+    }
+  ]
+}
