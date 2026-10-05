@@ -31,9 +31,25 @@ Base: `http://localhost:3000`. Todas as respostas são JSON.
 [ { "id": 1, "ano": 2025, "semestre": 1 } ]
 ```
 
-### `GET /api/indicadores?setor=1`
+### `GET /api/indicadores?setor=1&ano=2025&semestre=1`
 
-`setor` é opcional. Sem ele, a rota devolve os indicadores de todos os setores.
+Os parâmetros `setor`, `ano` e `semestre` são opcionais.
+
+* `setor`: filtra os indicadores de um setor específico.
+* `ano`: filtra as medições de um ano específico.
+* `semestre`: filtra as medições de um semestre específico (`1` ou `2`).
+
+Sem filtros, a rota mantém o comportamento definido no Milestone IV e devolve os indicadores de todos os setores, com suas medições publicadas.
+
+Os filtros podem ser combinados. Por exemplo:
+
+```text
+GET /api/indicadores?setor=1&ano=2025&semestre=1
+```
+
+Quando `ano` e `semestre` são informados, apenas as medições publicadas daquele período são retornadas.
+
+Se o período for válido, mas não houver dados para os filtros informados, a resposta é `200` com lista vazia `[]`.
 
 ```json
 [
@@ -50,9 +66,27 @@ Base: `http://localhost:3000`. Todas as respostas são JSON.
 ]
 ```
 
-### `GET /api/indicadores/destaques`
+### `GET /api/indicadores/destaques?setor=1&ano=2025&semestre=1`
 
-Um item por indicador, com o valor do período publicado mais recente.
+Os parâmetros `setor`, `ano` e `semestre` são opcionais.
+
+* `setor`: filtra os indicadores de um setor específico.
+* `ano`: seleciona o ano do período do destaque.
+* `semestre`: seleciona o semestre do período do destaque (`1` ou `2`).
+
+Sem filtros, a rota mantém o comportamento definido no Milestone IV: um item por indicador, com o valor do período publicado mais recente.
+
+Quando `ano` e `semestre` são informados, o destaque usa o valor da medição publicada naquele período. Indicadores que não possuem medição publicada no período escolhido ficam de fora da resposta.
+
+A `variacao_percentual` continua sendo calculada em relação à medição publicada anterior do mesmo indicador, mesmo que essa medição esteja fora do período filtrado.
+
+Se o período for válido, mas não houver dados para os filtros informados, a resposta é `200` com lista vazia `[]`.
+
+Exemplo:
+
+```text
+GET /api/indicadores/destaques?setor=1&ano=2025&semestre=1
+```
 
 ```json
 [
@@ -85,7 +119,11 @@ Cada item vira um teste da API (#10).
 
 - [x] **Setor que não existe** (`GET /api/indicadores?setor=999`): `200` com lista vazia `[]`. É um filtro sem resultado, não um erro; o front mostra o estado "sem dados".
 - [x] **`setor` inválido** (`?setor=abc`, `?setor=1.5`, `?setor=-1`): `400` com `{ "erro": "setor deve ser um número inteiro positivo" }`. Ignorar o filtro esconderia bug do front, que veria dados de todos os setores.
+- [ ] **`ano` inválido** (`?ano=25`, `?ano=202`, `?ano=20255`, `?ano=abc`, `?ano=1.5`): `400` com `{ "erro": "..." }`. O ano deve ser um número inteiro com 4 dígitos.
+- [ ] **`semestre` inválido** (`?semestre=0`, `?semestre=3`, `?semestre=abc`): `400` com `{ "erro": "..." }`. O semestre deve ser `1` ou `2`.
+- [ ] **Período válido sem dados** (`?ano=2020&semestre=1`): `200` com lista vazia `[]`. Um período válido sem dados é considerado um filtro sem resultado, não um erro.
 - [x] **Indicador sem nenhuma medição publicada:** fica de fora da lista, tanto em `/api/indicadores` quanto em `/api/indicadores/destaques`. Segue a regra de só mostrar o que está publicado e evita linha vazia na tabela e card sem número.
+- **Distribuição por setor e comparativo anual:** não possuem rotas específicas. O front monta essas informações a partir dos dados retornados por `/api/indicadores`.
 
 ## Erros
 
