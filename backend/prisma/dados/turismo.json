@@ -67,6 +67,22 @@
       "medicoes": [
         {
           "periodo": {
+            "ano": 2023,
+            "semestre": 2
+          },
+          "valor": 92,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2024,
+            "semestre": 2
+          },
+          "valor": 104,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
             "ano": 2025,
             "semestre": 2
           },
@@ -80,6 +96,22 @@
       "unidade": "empregos",
       "descricao": "Número de empregos no setor de turismo.",
       "medicoes": [
+        {
+          "periodo": {
+            "ano": 2023,
+            "semestre": 2
+          },
+          "valor": 680,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
+        {
+          "periodo": {
+            "ano": 2024,
+            "semestre": 2
+          },
+          "valor": 760,
+          "fonte": "Stitch M3 - Image 12.html"
+        },
         {
           "periodo": {
             "ano": 2025,
