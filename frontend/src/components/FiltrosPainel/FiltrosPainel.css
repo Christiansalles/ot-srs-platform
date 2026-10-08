@@ -1,0 +1,7 @@
+.filtros-painel { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; }
+.filtros-painel .select-control { flex: 1 1 180px; min-width: 0; flex-direction: column; align-items: stretch; gap: .5rem; }
+.filtros-painel .select-control select { width: 100%; min-width: 0; }
+.filtros-painel p { flex-basis: 100%; margin: 0; }
+@media (max-width: 760px) {
+  .filtros-painel .select-control { flex-basis: 100%; }
+}
