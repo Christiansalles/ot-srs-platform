@@ -228,3 +228,20 @@ Leia [docs/fluxo-de-trabalho.md](docs/fluxo-de-trabalho.md) antes de abrir a pri
 A URL VITE_API_URL contém somente a base (por exemplo, http://localhost:3000); os serviços adicionam /api às rotas. VITE_USE_MOCK=false usa a API e exibe erros de consulta na tela. Para desenvolver ou conferir os dados ilustrativos sem backend, configure VITE_USE_MOCK=true no frontend/.env e reinicie o Vite. O mock não é ativado automaticamente em caso de erro.
 
 As referências visuais e capturas de tela do frontend estão em [docs/pr-48](docs/pr-48/README.md).
+
+### Filtros dos serviços (#109)
+
+`getIndicadores({ setor, ano, semestre })` e `getDestaques({ setor, ano, semestre })`
+aceitam filtros opcionais. Apenas os valores preenchidos entram na URL; chamadas
+sem argumentos continuam funcionando. Exemplo: `getIndicadores({ setor: 1, ano: 2024 })`.
+
+No modo mock, os dados incluem 6 setores, 12 indicadores e 23 medições, com o
+histórico de empresas e empregos registrado no PR #117. Os IDs são locais ao mock.
+O filtro de ano inclui os dois semestres disponíveis; o destaque usa o mais recente
+do ano e calcula a variação contra a medição anterior, mesmo fora do filtro.
+Semestre exige ano, e filtros válidos sem dados retornam uma lista vazia.
+Os valores são ilustrativos e aguardam os dados oficiais da SMCELT.
+
+Para conferir, execute `npm test`, `npm run lint` e `npm run build` em `frontend/`.
+A integração com a API real depende das rotas com filtros (#73) e da carga dos
+demais setores (#85); o histórico adicional do mock acompanha o PR #117.
