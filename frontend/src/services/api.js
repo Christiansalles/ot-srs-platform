@@ -2,11 +2,13 @@
 import { mockSetores, mockIndicadores, mockPeriodos, montarDestaques } from '../mocks/dados';
 
 // Mock é uma opção explícita; falhas da API devem chegar às telas.
-async function request(path, mockData) {
+async function request(path, mockData, filtros = {}) {
+  const params = montarQuery(filtros);
   if (import.meta.env.VITE_USE_MOCK === 'true') {
-    return structuredClone(typeof mockData === 'function' ? mockData() : mockData);
+    return structuredClone(typeof mockData === 'function' ? mockData(params) : mockData);
   }
-  const response = await fetch(`${API_URL}/api/${path}`);
+  const query = params.size ? `?${params}` : '';
+  const response = await fetch(`${API_URL}/api/${path}${query}`);
   if (!response.ok) throw new Error(`Falha ao consultar ${path} (HTTP ${response.status})`);
   return response.json();
 }
@@ -25,11 +27,10 @@ function montarQuery(filtros) {
     const valor = filtros[campo];
     if (valor !== undefined && valor !== null && valor !== '') params.set(campo, valor);
   }
-  return params.size ? `?${params}` : '';
+  return params;
 }
 
-function filtrarMock(filtros) {
-  const params = new URLSearchParams(montarQuery(filtros));
+function filtrarMock(params) {
   if (params.has('setor') && !/^[1-9]\d*$/.test(params.get('setor'))) {
     throw new Error('setor deve ser um número inteiro positivo');
   }
@@ -53,9 +54,9 @@ function filtrarMock(filtros) {
 }
 
 export function getIndicadores(filtros = {}) {
-  return request(`indicadores${montarQuery(filtros)}`, () => filtrarMock(filtros));
+  return request('indicadores', filtrarMock, filtros);
 }
 
 export function getDestaques(filtros = {}) {
-  return request(`indicadores/destaques${montarQuery(filtros)}`, () => montarDestaques(filtrarMock(filtros)));
+  return request('indicadores/destaques', (params) => montarDestaques(filtrarMock(params)), filtros);
 }

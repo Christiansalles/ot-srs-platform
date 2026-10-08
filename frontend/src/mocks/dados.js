@@ -21,15 +21,22 @@ export const mockPeriodos = [
 
 export const mockIndicadores = [
   {
-    id: 5,
-    nome: 'Empregos no setor',
-    unidade: 'empregos',
-    setor: { id: 2, nome: 'Turismo' },
+    id: 1,
+    nome: 'Número de leitos',
+    unidade: 'leitos',
+    setor: { id: 1, nome: 'Hospedagem' },
     medicoes: [
-      { ano: 2023, semestre: 2, valor: 680 },
-      { ano: 2024, semestre: 2, valor: 760 },
-      { ano: 2025, semestre: 2, valor: 840 },
+      { ano: 2023, semestre: 2, valor: 280 },
+      { ano: 2024, semestre: 2, valor: 312 },
+      { ano: 2025, semestre: 2, valor: 350 },
     ],
+  },
+  {
+    id: 2,
+    nome: 'Taxa de ocupação',
+    unidade: '%',
+    setor: { id: 1, nome: 'Hospedagem' },
+    medicoes: [{ ano: 2025, semestre: 2, valor: 68 }],
   },
   {
     id: 3,
@@ -46,15 +53,6 @@ export const mockIndicadores = [
     ],
   },
   {
-    id: 6,
-    nome: 'Gasto médio do turista',
-    unidade: 'R$',
-    setor: { id: 2, nome: 'Turismo' },
-    medicoes: [
-      { ano: 2025, semestre: 2, valor: 350 },
-    ],
-  },
-  {
     id: 4,
     nome: 'Número de empresas',
     unidade: 'empresas',
@@ -66,80 +64,44 @@ export const mockIndicadores = [
     ],
   },
   {
-    id: 1,
-    nome: 'Número de leitos',
-    unidade: 'leitos',
-    setor: { id: 1, nome: 'Hospedagem' },
+    id: 5,
+    nome: 'Empregos no setor',
+    unidade: 'empregos',
+    setor: { id: 2, nome: 'Turismo' },
     medicoes: [
-      { ano: 2023, semestre: 2, valor: 280 },
-      { ano: 2024, semestre: 2, valor: 312 },
-      { ano: 2025, semestre: 2, valor: 350 },
+      { ano: 2023, semestre: 2, valor: 680 },
+      { ano: 2024, semestre: 2, valor: 760 },
+      { ano: 2025, semestre: 2, valor: 840 },
     ],
   },
   {
-    id: 8,
-    nome: 'Participação econômica',
-    unidade: '%',
-    setor: { id: 1, nome: 'Hospedagem' },
-    medicoes: [
-      { ano: 2025, semestre: 2, valor: 28 },
-    ],
-  },
-  {
-    id: 9,
-    nome: 'Participação econômica',
-    unidade: '%',
-    setor: { id: 3, nome: 'Alimentação & Bares' },
-    medicoes: [
-      { ano: 2025, semestre: 2, valor: 24 },
-    ],
-  },
-  {
-    id: 10,
-    nome: 'Participação econômica',
-    unidade: '%',
-    setor: { id: 4, nome: 'Serviços & Eventos' },
-    medicoes: [
-      { ano: 2025, semestre: 2, valor: 20 },
-    ],
-  },
-  {
-    id: 11,
-    nome: 'Participação econômica',
-    unidade: '%',
-    setor: { id: 5, nome: 'Comércio Turístico' },
-    medicoes: [
-      { ano: 2025, semestre: 2, valor: 18 },
-    ],
-  },
-  {
-    id: 12,
-    nome: 'Participação econômica',
-    unidade: '%',
-    setor: { id: 6, nome: 'Outros' },
-    medicoes: [
-      { ano: 2025, semestre: 2, valor: 10 },
-    ],
-  },
-  {
-    id: 2,
-    nome: 'Taxa de ocupação',
-    unidade: '%',
-    setor: { id: 1, nome: 'Hospedagem' },
-    medicoes: [
-      { ano: 2025, semestre: 2, valor: 68 },
-    ],
+    id: 6,
+    nome: 'Gasto médio do turista',
+    unidade: 'R$',
+    setor: { id: 2, nome: 'Turismo' },
+    medicoes: [{ ano: 2025, semestre: 2, valor: 350 }],
   },
   {
     id: 7,
     nome: 'Tempo médio de permanência',
     unidade: 'dias',
     setor: { id: 2, nome: 'Turismo' },
-    medicoes: [
-      { ano: 2025, semestre: 2, valor: 2.8 },
-    ],
+    medicoes: [{ ano: 2025, semestre: 2, valor: 2.8 }],
   },
-];
+  ...[
+    { id: 8, setorId: 1, valor: 28 },
+    { id: 9, setorId: 3, valor: 24 },
+    { id: 10, setorId: 4, valor: 20 },
+    { id: 11, setorId: 5, valor: 18 },
+    { id: 12, setorId: 6, valor: 10 },
+  ].map(({ id, setorId, valor }) => ({
+    id,
+    nome: 'Participação econômica',
+    unidade: '%',
+    setor: mockSetores.find((setor) => setor.id === setorId),
+    medicoes: [{ ano: 2025, semestre: 2, valor }],
+  })),
+].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
 // A medição anterior vem da série completa, mesmo quando está fora do filtro.
 export function montarDestaques(indicadores) {
