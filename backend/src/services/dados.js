@@ -23,17 +23,62 @@ async function buscarPeriodos() {
 
 // setorId é opcional; sem ele, traz os indicadores de todos os setores.
 // Só medições publicadas vêm do banco.
-async function buscarIndicadores({ setorId } = {}) {
+async function buscarIndicadores({ setorId, ano, semestre } = {}) {
+  const periodoWhere = ano === undefined
+    ? undefined
+    : semestre === undefined
+      ? { ano }
+      : { ano, semestre };
   const indicadores = await prisma.indicador.findMany({
-    where: setorId === undefined ? {} : { id_setor: setorId },
+    where: {
+      ...(setorId === undefined ? {} : { id_setor: setorId }),
+      ...(ano === undefined ? {} : {
+        medicoes: {
+          some: {
+            status: STATUS_PUBLICADO,
+            periodo: { is: periodoWhere },
+          },
+        },
+      }),
+    },
     include: {
       setor: true,
       medicoes: {
-        where: { status: STATUS_PUBLICADO },
+        where: {
+          status: STATUS_PUBLICADO,
+          ...(periodoWhere ? { periodo: { is: periodoWhere } } : {}),
+        },
         include: { periodo: true },
       },
     },
   });
+
+  // Destaques precisam da medição publicada imediatamente anterior ao período
+  // escolhido. Buscamos candidatos anteriores no banco e selecionamos a mais
+  // recente por indicador; a lista pública continua usando apenas `medicoes`.
+  let anteriores = [];
+  if (ano !== undefined && indicadores.length > 0) {
+    const ids = indicadores.map((indicador) => indicador.id_indicador);
+    anteriores = await prisma.medicao.findMany({
+      where: {
+        id_indicador: { in: ids },
+        status: STATUS_PUBLICADO,
+        periodo: {
+          is: { OR: semestre === undefined
+            ? [{ ano: { lte: ano } }]
+            : [{ ano: { lt: ano } }, { ano, semestre: { lt: semestre } }] },
+        },
+      },
+      include: { periodo: true },
+    });
+  }
+
+  const anterioresPorIndicador = new Map();
+  for (const medicao of anteriores) {
+    const grupo = anterioresPorIndicador.get(medicao.id_indicador) || [];
+    grupo.push(medicao);
+    anterioresPorIndicador.set(medicao.id_indicador, grupo);
+  }
 
   return indicadores.map((indicador) => ({
     id: indicador.id_indicador,
@@ -41,6 +86,12 @@ async function buscarIndicadores({ setorId } = {}) {
     unidade: indicador.unidade,
     setor: { id: indicador.setor.id_setor, nome: indicador.setor.nome },
     medicoes: indicador.medicoes.map((medicao) => ({
+      ano: medicao.periodo.ano,
+      semestre: medicao.periodo.semestre,
+      valor: medicao.valor,
+      status: medicao.status,
+    })),
+    medicoesCandidatasAnteriores: (anterioresPorIndicador.get(indicador.id_indicador) || []).map((medicao) => ({
       ano: medicao.periodo.ano,
       semestre: medicao.periodo.semestre,
       valor: medicao.valor,

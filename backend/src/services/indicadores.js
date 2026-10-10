@@ -36,6 +36,9 @@ function formatarIndicadores(indicadores) {
       nome: indicador.nome,
       unidade: indicador.unidade,
       setor: { id: indicador.setor.id, nome: indicador.setor.nome },
+      medicoesCandidatasAnteriores: (indicador.medicoesCandidatasAnteriores || [])
+        .filter((medicao) => medicao.status === STATUS_PUBLICADO)
+        .map((medicao) => ({ ano: medicao.ano, semestre: medicao.semestre, valor: Number(medicao.valor) })),
       medicoes: indicador.medicoes
         .filter((medicao) => medicao.status === STATUS_PUBLICADO)
         .map((medicao) => ({
@@ -55,7 +58,10 @@ function formatarIndicadores(indicadores) {
 function montarDestaques(indicadores) {
   return indicadores.map((indicador) => {
     const atual = indicador.medicoes[indicador.medicoes.length - 1];
-    const anterior = indicador.medicoes[indicador.medicoes.length - 2];
+    const anterior = indicador.medicoesCandidatasAnteriores
+      ?.filter((medicao) => compararPorPeriodo(medicao, atual) < 0)
+      .sort(compararPorPeriodo)
+      .at(-1) || indicador.medicoes[indicador.medicoes.length - 2];
 
     return {
       id: indicador.id,
