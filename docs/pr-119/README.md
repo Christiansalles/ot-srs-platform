@@ -21,3 +21,7 @@ Celular, 390 × 844 (`/dashboard?ano=2025`): os filtros empilham e a página nã
 Testes de `FiltrosPainel.test.jsx` e o lint:
 
 ![Testes](testes.png)
+
+Comparação com a barra de filtros dos mockups do Stitch (a mesma da Figura 6 do relatório do M3), todos a 1280 px:
+
+![Comparação com o Stitch](comparacao-stitch.png)
