@@ -1,6 +1,3 @@
-// Teste de integração: precisa de um Postgres com as migrações aplicadas
-// (no CI, o job backend roda `prisma migrate deploy` antes dos testes).
-
 const prisma = require('../src/db');
 const dados = require('../src/services/dados');
 
@@ -106,6 +103,19 @@ describe('services/dados', () => {
     const ids = indicadores.map((i) => i.id);
 
     expect(ids).toEqual(expect.arrayContaining([leitos.id_indicador, restaurantes.id_indicador]));
+  });
+
+  it('filtra as medições no banco pelo ano e semestre, mantendo a medição publicada anterior', async () => {
+    const indicadores = await dados.buscarIndicadores({ setorId: hospedagem.id_setor, ano: ANO_TESTE, semestre: 2 });
+
+    expect(indicadores).toEqual([]); // o único registro do semestre está em rascunho
+  });
+
+  it('retorna somente medições publicadas do ano consultado', async () => {
+    const indicadores = await dados.buscarIndicadores({ setorId: hospedagem.id_setor, ano: ANO_TESTE });
+
+    expect(indicadores[0].medicoes).toHaveLength(1);
+    expect(indicadores[0].medicoes[0]).toMatchObject({ ano: ANO_TESTE, semestre: 1, status: 'publicado' });
   });
 
   it('setor que não existe devolve lista vazia', async () => {

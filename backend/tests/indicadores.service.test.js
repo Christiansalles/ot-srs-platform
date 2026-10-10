@@ -45,4 +45,20 @@ describe('montarDestaques', () => {
     expect(ocupacao.valor).toBe(68);
     expect(ocupacao.variacao_percentual).toBeNull();
   });
+
+  it('usa a medição anterior ao destaque mesmo quando ela veio fora do período selecionado', () => {
+    const filtrados = formatarIndicadores([{
+      ...fixtures.indicadores.find((i) => i.id === 1),
+      medicoes: [
+        { ano: 2025, semestre: 1, valor: '320', status: 'publicado' },
+        { ano: 2025, semestre: 2, valor: '350', status: 'publicado' },
+      ],
+      medicoesCandidatasAnteriores: [
+        { ano: 2024, semestre: 2, valor: '312', status: 'publicado' },
+        { ano: 2025, semestre: 1, valor: '320', status: 'publicado' },
+      ],
+    }]);
+
+    expect(montarDestaques(filtrados)[0].variacao_percentual).toBe(9.4);
+  });
 });
