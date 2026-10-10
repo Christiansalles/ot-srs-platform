@@ -236,3 +236,13 @@ roteador com `<FiltrosPainel />`. Carrega anos e setores pelos serviços existen
 e mantém `ano`, `semestre` e `setor` na URL. Semestre só fica disponível com um ano
 selecionado; "Limpar filtros" preserva os demais parâmetros. A integração nas
 páginas será feita nas #97 e #111. Testes: `cd frontend` e `npm test`.
+
+Após carregar as opções, o painel remove filtros inválidos da URL sem adicionar
+uma entrada ao histórico. Os anos aparecem em ordem decrescente, com o mais
+recente marcado como "(Atual)". Para ler os filtros nas páginas, importe
+`lerFiltros` de `frontend/src/components/FiltrosPainel/filtros.js` e passe um
+`URLSearchParams`: retorna `{ setor, ano, semestre }` como valores textuais, usando
+`''` para filtros ausentes ou com formato inválido e para semestre sem ano válido.
+O segundo argumento opcional, `{ anos, setores }`, também verifica se o ano e o
+setor existem nas opções carregadas. Nas integrações, use essas opções para
+manter a leitura dos filtros consistente com o painel.
