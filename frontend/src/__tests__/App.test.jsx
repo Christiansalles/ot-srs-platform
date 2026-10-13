@@ -1,4 +1,4 @@
-﻿import { fireEvent, render, screen, within } from '@testing-library/react';
+﻿import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { vi } from 'vitest';
 import App from '../App';
 import { mockIndicadores } from '../mocks/dados';
@@ -25,7 +25,10 @@ describe('App', () => {
   it('exibe cada medição do mock nas colunas da tabela', async () => {
     render(<App />);
     fireEvent.click(screen.getByRole('link', { name: /^indicadores$/i }));
-    const table = await screen.findByRole('table');
+    await screen.findByRole('table');
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } });
+    await waitFor(() => expect(screen.getByRole('cell', { name: 'Taxa de ocupação' })).toBeInTheDocument());
+    const table = screen.getByRole('table');
     const rows = within(table).getAllByRole('row').slice(1);
     const expected = mockIndicadores.filter((item) => item.setor.id === 1)
       .flatMap((item) => item.medicoes.map((measurement) => [

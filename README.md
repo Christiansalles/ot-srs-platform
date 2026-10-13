@@ -229,6 +229,15 @@ A URL VITE_API_URL contém somente a base (por exemplo, http://localhost:3000); 
 
 As referências visuais e capturas de tela do frontend estão em [docs/pr-48](docs/pr-48/README.md).
 
+### Filtros dos serviços (#109)
+
+Os serviços aceitam filtros opcionais: `getIndicadores({ setor, ano, semestre })` e
+`getDestaques({ setor, ano, semestre })`. Apenas valores preenchidos entram na URL.
+O mock segue o [contrato da API](docs/contrato-api.md), com 6 setores, 12 indicadores
+e 23 medições, incluindo o histórico do PR #117; seus IDs são locais.
+A integração real depende de #73 e #85. Para conferir, execute `npm test`,
+`npm run lint` e `npm run build` em `frontend/`.
+
 ### Componente de filtros (#110)
 
 `frontend/src/components/FiltrosPainel/FiltrosPainel.jsx` pode ser usado dentro do
