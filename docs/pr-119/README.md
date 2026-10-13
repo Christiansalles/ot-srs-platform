@@ -6,7 +6,7 @@ Sem filtro (`/dashboard`): Semestre fica desabilitado até escolher um ano.
 
 ![Sem filtro](sem-filtro.png)
 
-Só pelo teclado: Período com `End` (2025), `Tab`, Semestre com `End` (2º semestre), `Tab`, Setor com a seta para baixo (Hospedagem). A URL ficou `/dashboard?ano=2025&semestre=2&setor=1`.
+Só pelo teclado: Período com `End` (2023, porque agora os anos vêm em ordem decrescente), `Tab`, Semestre com `End` (2º semestre), `Tab`, Setor com a seta para baixo (Hospedagem). A URL ficou `/dashboard?ano=2023&semestre=2&setor=1`.
 
 ![Teclado](teclado.png)
 
@@ -22,6 +22,6 @@ Testes de `FiltrosPainel.test.jsx` e o lint:
 
 ![Testes](testes.png)
 
-Comparação com a barra de filtros dos mockups do Stitch (a mesma da Figura 6 do relatório do M3), todos a 1280 px:
+Comparação com a barra de filtros dos mockups do Stitch (a mesma da Figura 6 do relatório do M3), todos a 1280 px, já com a correção do estilo:
 
 ![Comparação com o Stitch](comparacao-stitch.png)
