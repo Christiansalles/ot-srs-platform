@@ -34,7 +34,7 @@ export default function IndicadoresPage() {
     if (setorSelecionado === null) return;
     let active = true;
 
-    getIndicadores(setorSelecionado)
+    getIndicadores({ setor: setorSelecionado })
       .then((dados) => {
         if (!active) return;
         setIndicadores(dados);

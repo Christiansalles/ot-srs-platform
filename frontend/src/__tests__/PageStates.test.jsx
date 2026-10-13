@@ -39,7 +39,7 @@ describe('consulta de indicadores', () => {
     await act(async () => pending.resolve(sectors));
     expect(await screen.findByRole('table')).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toHaveValue('7');
-    expect(getIndicadores).toHaveBeenCalledWith(7);
+    expect(getIndicadores).toHaveBeenCalledWith({ setor: 7 });
     expect(screen.getByRole('cell', { name: '1.280,5' })).toBeInTheDocument();
   });
 
@@ -75,7 +75,7 @@ describe('consulta de indicadores', () => {
     render(<IndicadoresPage />);
     await screen.findByRole('table');
     fireEvent.change(screen.getByRole('combobox'), { target: { value: '9' } });
-    expect(getIndicadores).toHaveBeenLastCalledWith(9);
+    expect(getIndicadores).toHaveBeenLastCalledWith({ setor: 9 });
     expect(screen.getByText('Carregando indicadores...')).toBeInTheDocument();
     await act(async () => pending.resolve([{
       id: 2, nome: 'Restaurantes', unidade: 'estabelecimentos',
