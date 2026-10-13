@@ -4,50 +4,46 @@ const fs = require('fs');
 const path = require('path');
 
 const prisma = new PrismaClient();
-
-const dadosPath = path.join(__dirname, 'dados', 'hospedagem.json');
-const dados = JSON.parse(fs.readFileSync(dadosPath, 'utf8'));
+const dadosPath = path.join(__dirname, 'dados');
 
 function gerarSenhaHash() {
   const senha = crypto.randomBytes(32).toString('hex');
   const salt = crypto.randomBytes(16).toString('hex');
-
   const hash = crypto.scryptSync(senha, salt, 64).toString('hex');
 
   return `${salt}:${hash}`;
 }
 
-async function main() {
-  const usuario = await prisma.usuario.upsert({
-    where: {
-      email: 'carga-inicial@observatorio.local',
-    },
-    update: {
-      nome: 'Carga inicial',
-      ativo: false,
-    },
-    create: {
-      nome: 'Carga inicial',
-      email: 'carga-inicial@observatorio.local',
-      senha_hash: gerarSenhaHash(),
-      ativo: false,
-    },
-  });
+function setoresDoArquivo(dados, arquivo) {
+  if (dados.setor) {
+    return [{ setor: dados.setor, indicadores: dados.indicadores }];
+  }
 
+  if (Array.isArray(dados.setores)) {
+    return dados.setores.map((setor) => ({
+      setor,
+      indicadores: setor.indicadores || (dados.indicador
+        ? [{ ...dados.indicador, medicoes: setor.medicoes }]
+        : undefined),
+    }));
+  }
+
+  throw new Error(
+    `Formato inválido em ${arquivo}: esperado "setor" ou "setores" com seus indicadores.`
+  );
+}
+
+async function carregarSetor(setorDados, usuario) {
   const setor = await prisma.setor.upsert({
-    where: {
-      nome: dados.setor.nome,
-    },
-    update: {
-      descricao: dados.setor.descricao,
-    },
+    where: { nome: setorDados.setor.nome },
+    update: { descricao: setorDados.setor.descricao },
     create: {
-      nome: dados.setor.nome,
-      descricao: dados.setor.descricao,
+      nome: setorDados.setor.nome,
+      descricao: setorDados.setor.descricao,
     },
   });
 
-  for (const indicadorDados of dados.indicadores) {
+  for (const indicadorDados of setorDados.indicadores) {
     const indicadorExistente = await prisma.indicador.findFirst({
       where: {
         id_setor: setor.id_setor,
@@ -57,9 +53,7 @@ async function main() {
 
     const indicador = indicadorExistente
       ? await prisma.indicador.update({
-          where: {
-            id_indicador: indicadorExistente.id_indicador,
-          },
+          where: { id_indicador: indicadorExistente.id_indicador },
           data: {
             descricao: indicadorDados.descricao,
             unidade: indicadorDados.unidade,
@@ -111,14 +105,43 @@ async function main() {
       });
     }
   }
+}
 
-  console.log('Seed da hospedagem executado com sucesso.');
+async function main() {
+  const usuario = await prisma.usuario.upsert({
+    where: { email: 'carga-inicial@observatorio.local' },
+    update: {
+      nome: 'Carga inicial',
+      ativo: false,
+    },
+    create: {
+      nome: 'Carga inicial',
+      email: 'carga-inicial@observatorio.local',
+      senha_hash: gerarSenhaHash(),
+      ativo: false,
+    },
+  });
+
+  const arquivos = fs
+    .readdirSync(dadosPath)
+    .filter((arquivo) => path.extname(arquivo).toLowerCase() === '.json')
+    .sort();
+
+  for (const arquivo of arquivos) {
+    const caminho = path.join(dadosPath, arquivo);
+    const dados = JSON.parse(fs.readFileSync(caminho, 'utf8'));
+
+    for (const setorDados of setoresDoArquivo(dados, arquivo)) {
+      await carregarSetor(setorDados, usuario);
+      console.log(`Carga do setor ${setorDados.setor.nome} executada com sucesso.`);
+    }
+  }
 }
 
 main()
   .catch((erro) => {
     console.error('Erro ao executar o seed:', erro);
-    process.exit(1);
+    process.exitCode = 1;
   })
   .finally(async () => {
     await prisma.$disconnect();
