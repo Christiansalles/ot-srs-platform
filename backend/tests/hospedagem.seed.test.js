@@ -4,7 +4,6 @@ const prisma = require('../src/db');
 
 const backendDir = path.resolve(__dirname, '..');
 const seedPath = path.join(backendDir, 'prisma', 'seed.js');
-const nomesIndicadoresSeed = ['Número de leitos', 'Taxa de ocupação'];
 
 describe('Seed da carga de hospedagem', () => {
   let setor;
@@ -28,7 +27,6 @@ describe('Seed da carga de hospedagem', () => {
           setor: {
             nome: 'Hospedagem',
           },
-          nome: { in: nomesIndicadoresSeed },
         },
         include: {
           medicoes: {
@@ -41,7 +39,6 @@ describe('Seed da carga de hospedagem', () => {
       prisma.medicao.findMany({
         where: {
           indicador: {
-            nome: { in: nomesIndicadoresSeed },
             setor: {
               nome: 'Hospedagem',
             },
@@ -103,7 +100,6 @@ describe('Seed da carga de hospedagem', () => {
     const quantidade = await prisma.medicao.count({
       where: {
         indicador: {
-          nome: { in: nomesIndicadoresSeed },
           setor: {
             nome: 'Hospedagem',
           },

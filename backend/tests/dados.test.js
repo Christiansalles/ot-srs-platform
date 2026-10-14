@@ -1,3 +1,4 @@
+// Teste de integração: precisa de um Postgres com o schema aplicado.
 const prisma = require('../src/db');
 const dados = require('../src/services/dados');
 
@@ -105,7 +106,7 @@ describe('services/dados', () => {
     expect(ids).toEqual(expect.arrayContaining([leitos.id_indicador, restaurantes.id_indicador]));
   });
 
-  it('filtra as medições no banco pelo ano e semestre, mantendo a medição publicada anterior', async () => {
+  it('período só com rascunho devolve lista vazia', async () => {
     const indicadores = await dados.buscarIndicadores({ setorId: hospedagem.id_setor, ano: ANO_TESTE, semestre: 2 });
 
     expect(indicadores).toEqual([]); // o único registro do semestre está em rascunho
