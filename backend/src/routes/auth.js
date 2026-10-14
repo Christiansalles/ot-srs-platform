@@ -1,10 +1,9 @@
 const { Router } = require('express');
 const {
-  autenticar,
-  buscarUsuarioAutenticado,
+  validarCredenciais,
   ERRO_CREDENCIAIS,
-  ERRO_TOKEN,
 } = require('../services/auth');
+const autenticar = require('../middlewares/autenticar');
 
 const router = Router();
 
@@ -15,7 +14,7 @@ router.post('/login', async (req, res) => {
     return res.status(400).json({ erro: 'E-mail e senha são obrigatórios' });
   }
 
-  const resultado = await autenticar(email.trim().toLowerCase(), senha);
+  const resultado = await validarCredenciais(email.trim().toLowerCase(), senha);
   if (!resultado) {
     return res.status(401).json({ erro: ERRO_CREDENCIAIS });
   }
@@ -23,19 +22,6 @@ router.post('/login', async (req, res) => {
   return res.status(200).json(resultado);
 });
 
-router.get('/me', async (req, res) => {
-  const autorizacao = req.get('Authorization') || '';
-  const correspondencia = autorizacao.match(/^Bearer\s+(\S+)$/i);
-  if (!correspondencia) {
-    return res.status(401).json({ erro: ERRO_TOKEN });
-  }
-
-  const usuario = await buscarUsuarioAutenticado(correspondencia[1]);
-  if (!usuario) {
-    return res.status(401).json({ erro: ERRO_TOKEN });
-  }
-
-  return res.status(200).json({ usuario });
-});
+router.get('/me', autenticar, (req, res) => res.status(200).json(req.usuario));
 
 module.exports = router;

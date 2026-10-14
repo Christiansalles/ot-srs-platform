@@ -1,11 +1,10 @@
 const crypto = require('node:crypto');
-const { promisify } = require('node:util');
+const jwt = require('jsonwebtoken');
 const prisma = require('../db');
 
-const scrypt = promisify(crypto.scrypt);
 const ERRO_CREDENCIAIS = 'E-mail ou senha inválidos';
 const ERRO_TOKEN = 'Token inválido ou expirado';
-const DURACAO_TOKEN_SEGUNDOS = 60 * 60;
+const DURACAO_TOKEN = '8h';
 
 async function verificarSenha(senha, senhaHash) {
   if (typeof senhaHash !== 'string') return false;
@@ -18,76 +17,47 @@ async function verificarSenha(senha, senhaHash) {
   if (!/^[a-f\d]+$/i.test(salt) || !/^[a-f\d]+$/i.test(hashArmazenado)) return false;
 
   const hashEsperado = Buffer.from(hashArmazenado, 'hex');
-  const hashCalculado = await scrypt(senha, salt, hashEsperado.length);
+  const hashCalculado = await new Promise((resolve, reject) => {
+    crypto.scrypt(senha, salt, hashEsperado.length, (erro, resultado) => {
+      if (erro) reject(erro);
+      else resolve(resultado);
+    });
+  });
+
   return hashCalculado.length === hashEsperado.length
     && crypto.timingSafeEqual(hashCalculado, hashEsperado);
 }
 
-function criarToken(usuario, agora = Math.floor(Date.now() / 1000)) {
-  const segredo = process.env.AUTH_TOKEN_SECRET;
+function criarToken(usuario) {
+  const segredo = process.env.JWT_SECRET;
   if (!segredo) {
-    throw new Error('AUTH_TOKEN_SECRET não está configurada');
+    throw new Error('JWT_SECRET não está configurada');
   }
 
-  const codificar = (valor) => Buffer.from(JSON.stringify(valor)).toString('base64url');
-  const cabecalho = codificar({ alg: 'HS256', typ: 'JWT' });
-  const payload = codificar({
-    sub: String(usuario.id_usuario),
-    email: usuario.email,
-    iat: agora,
-    exp: agora + DURACAO_TOKEN_SEGUNDOS,
-  });
-  const conteudo = `${cabecalho}.${payload}`;
-  const assinatura = crypto.createHmac('sha256', segredo).update(conteudo).digest('base64url');
-  return `${conteudo}.${assinatura}`;
+  return jwt.sign(
+    { email: usuario.email },
+    segredo,
+    { algorithm: 'HS256', subject: String(usuario.id_usuario), expiresIn: DURACAO_TOKEN },
+  );
 }
 
-function lerToken(token, agora = Math.floor(Date.now() / 1000)) {
-  const segredo = process.env.AUTH_TOKEN_SECRET;
+function lerToken(token) {
+  const segredo = process.env.JWT_SECRET;
   if (!segredo || typeof token !== 'string') return null;
 
-  const partes = token.split('.');
-  if (partes.length !== 3) return null;
-
-  const [cabecalho, payload, assinatura] = partes;
-  let dadosCabecalho;
-  let dadosToken;
   try {
-    dadosCabecalho = JSON.parse(Buffer.from(cabecalho, 'base64url').toString('utf8'));
-    dadosToken = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    const dadosToken = jwt.verify(token, segredo, { algorithms: ['HS256'] });
+    if (typeof dadosToken.sub !== 'string' || !/^\d+$/.test(dadosToken.sub)
+        || !Number.isSafeInteger(Number(dadosToken.sub))) {
+      return null;
+    }
+    return { id_usuario: Number(dadosToken.sub) };
   } catch {
     return null;
   }
-
-  if (!dadosCabecalho || typeof dadosCabecalho !== 'object'
-      || !dadosToken || typeof dadosToken !== 'object'
-      || dadosCabecalho.alg !== 'HS256' || dadosCabecalho.typ !== 'JWT') {
-    return null;
-  }
-
-  const conteudo = `${cabecalho}.${payload}`;
-  const assinaturaEsperada = crypto.createHmac('sha256', segredo).update(conteudo).digest();
-  let assinaturaRecebida;
-  try {
-    assinaturaRecebida = Buffer.from(assinatura, 'base64url');
-  } catch {
-    return null;
-  }
-  if (assinaturaRecebida.length !== assinaturaEsperada.length
-      || !crypto.timingSafeEqual(assinaturaRecebida, assinaturaEsperada)) {
-    return null;
-  }
-
-  if (typeof dadosToken.sub !== 'string' || !/^\d+$/.test(dadosToken.sub)
-      || !Number.isSafeInteger(Number(dadosToken.sub))
-      || !Number.isFinite(dadosToken.exp) || dadosToken.exp <= agora) {
-    return null;
-  }
-
-  return { id_usuario: Number(dadosToken.sub) };
 }
 
-async function autenticar(email, senha) {
+async function validarCredenciais(email, senha) {
   const usuario = await prisma.usuario.findUnique({ where: { email } });
   if (!usuario || !usuario.ativo) return null;
 
@@ -97,7 +67,7 @@ async function autenticar(email, senha) {
   return {
     token: criarToken(usuario),
     usuario: {
-      id_usuario: usuario.id_usuario,
+      id: usuario.id_usuario,
       nome: usuario.nome,
       email: usuario.email,
     },
@@ -114,14 +84,14 @@ async function buscarUsuarioAutenticado(token) {
   if (!usuario || !usuario.ativo) return null;
 
   return {
-    id_usuario: usuario.id_usuario,
+    id: usuario.id_usuario,
     nome: usuario.nome,
     email: usuario.email,
   };
 }
 
 module.exports = {
-  autenticar,
+  validarCredenciais,
   buscarUsuarioAutenticado,
   criarToken,
   ERRO_CREDENCIAIS,

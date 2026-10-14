@@ -57,7 +57,7 @@ No Adminer, informe `db` como servidor, `ot` como usuário, `ot` como senha e
 `docker compose down` em outro terminal na raiz do projeto.
 
 O Compose usa um segredo local ilustrativo para assinar tokens de autenticação.
-Em qualquer ambiente compartilhado ou de produção, defina `AUTH_TOKEN_SECRET`
+Em qualquer ambiente compartilhado ou de produção, defina `JWT_SECRET`
 com um valor aleatório e privado antes de iniciar os serviços.
 
 ### Rodar os testes
