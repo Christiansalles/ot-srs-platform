@@ -10,8 +10,12 @@ beforeEach(() => {
   jest.clearAllMocks();
   dados.buscarSetores.mockResolvedValue(fixtures.setores);
   dados.buscarPeriodos.mockResolvedValue(fixtures.periodos);
-  dados.buscarIndicadores.mockImplementation(async ({ setorId } = {}) =>
-    fixtures.indicadores.filter((i) => setorId === undefined || i.setor.id === setorId),
+  dados.buscarIndicadores.mockImplementation(async ({ setorId, ano, semestre } = {}) =>
+    fixtures.indicadores
+      .filter((i) => setorId === undefined || i.setor.id === setorId)
+      .map((i) => ({ ...i, medicoes: i.medicoes.filter((m) =>
+        (ano === undefined || m.ano === ano) && (semestre === undefined || m.semestre === semestre)) }))
+      .filter((i) => i.medicoes.length > 0),
   );
 });
 
@@ -46,7 +50,7 @@ describe('GET /api/indicadores', () => {
     const res = await request(app).get('/api/indicadores?setor=1');
 
     expect(res.status).toBe(200);
-    expect(dados.buscarIndicadores).toHaveBeenCalledWith({ setorId: 1 });
+    expect(dados.buscarIndicadores).toHaveBeenCalledWith({ setorId: 1, ano: undefined, semestre: undefined });
     expect(res.body).toEqual([
       {
         id: 1,
@@ -73,7 +77,7 @@ describe('GET /api/indicadores', () => {
     const res = await request(app).get('/api/indicadores');
 
     expect(res.status).toBe(200);
-    expect(dados.buscarIndicadores).toHaveBeenCalledWith({ setorId: undefined });
+    expect(dados.buscarIndicadores).toHaveBeenCalledWith({ setorId: undefined, ano: undefined, semestre: undefined });
     expect(res.body.map((i) => i.nome)).toEqual([
       'Número de leitos',
       'Restaurantes',
@@ -113,6 +117,32 @@ describe('GET /api/indicadores', () => {
     const res = await request(app).get('/api/indicadores?setor=1&setor=2');
 
     expect(res.status).toBe(400);
+  });
+
+  it('filtra no serviço pelo ano e semestre informados', async () => {
+    const res = await request(app).get('/api/indicadores?setor=1&ano=2025&semestre=2');
+
+    expect(res.status).toBe(200);
+    expect(dados.buscarIndicadores).toHaveBeenCalledWith({ setorId: 1, ano: 2025, semestre: 2 });
+    expect(res.body.every((i) => i.medicoes.every((m) => m.ano === 2025 && m.semestre === 2))).toBe(true);
+  });
+
+  it.each(['25', '202', '20255', 'abc', '1.5'])('ano inválido (%p) devolve 400', async (ano) => {
+    const res = await request(app).get(`/api/indicadores?ano=${ano}`);
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ erro: 'ano deve ser um número inteiro de 4 dígitos' });
+  });
+
+  it.each(['0', '3', 'abc'])('semestre inválido (%p) devolve 400', async (semestre) => {
+    const res = await request(app).get(`/api/indicadores?ano=2025&semestre=${semestre}`);
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ erro: 'semestre deve ser 1 ou 2' });
+  });
+
+  it('semestre sem ano devolve 400', async () => {
+    const res = await request(app).get('/api/indicadores?semestre=2');
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ erro: 'semestre exige ano' });
   });
 });
 
