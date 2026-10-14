@@ -45,11 +45,11 @@ describe('GET /api/indicadores/destaques contra a carga', () => {
       periodo: { ano: 2025, semestre: 2 },
       variacao_percentual: 18.2,
     });
-    // Empresas só tem 2025/2 na carga: sem anterior, a variação é null.
+    // 120 em 2025/2 contra 104 em 2024/2.
     expect(destaque(res.body, ids.empresas)).toMatchObject({
       valor: 120,
       periodo: { ano: 2025, semestre: 2 },
-      variacao_percentual: null,
+      variacao_percentual: 15.4,
     });
   });
 
@@ -57,7 +57,7 @@ describe('GET /api/indicadores/destaques contra a carga', () => {
     const res = await request(app).get('/api/indicadores/destaques?ano=2024');
 
     expect(res.status).toBe(200);
-    // 312 contra 280 e 4.400 contra 3.600, as duas de 2023/2.
+    // 312 contra 280, 4.400 contra 3.600 e 104 contra 92, todas de 2023/2.
     expect(destaque(res.body, ids.leitos)).toMatchObject({
       valor: 312,
       periodo: { ano: 2024, semestre: 2 },
@@ -68,8 +68,12 @@ describe('GET /api/indicadores/destaques contra a carga', () => {
       periodo: { ano: 2024, semestre: 2 },
       variacao_percentual: 22.2,
     });
-    // Sem medição em 2024, ficam de fora.
-    expect(destaque(res.body, ids.empresas)).toBeUndefined();
+    expect(destaque(res.body, ids.empresas)).toMatchObject({
+      valor: 104,
+      periodo: { ano: 2024, semestre: 2 },
+      variacao_percentual: 13.0,
+    });
+    // Sem medição em 2024, fica de fora.
     expect(destaque(res.body, ids.ocupacao)).toBeUndefined();
   });
 });
