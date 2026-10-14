@@ -47,7 +47,11 @@ describe('POST /api/auth/login', () => {
       nome: 'Maria Clara',
       email: 'maria@example.com',
     });
-    expect(res.body.token.split('.')).toHaveLength(3);
+    expect(Object.keys(res.body).sort()).toEqual(['token', 'usuario']);
+    const [, payloadToken] = res.body.token.split('.');
+    const claims = JSON.parse(Buffer.from(payloadToken, 'base64url').toString('utf8'));
+    expect(claims).not.toHaveProperty('perfil');
+    expect(claims).not.toHaveProperty('role');
     expect(JSON.stringify(res.body)).not.toContain('senha_hash');
     expect(prisma.usuario.findUnique).toHaveBeenCalledWith({
       where: { email: 'maria@example.com' },
