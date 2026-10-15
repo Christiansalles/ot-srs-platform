@@ -137,6 +137,9 @@ function GraficoComparativoAnual({ dados = [] }) {
               <XAxis
                 dataKey="nome"
                 tickFormatter={nomeAbreviado}
+                // Sem isso o Recharts esconde rótulos quando acha que não
+                // cabem, e no celular um par de barras fica sem nome.
+                interval={0}
                 axisLine={false}
                 tickLine={false}
                 tick={{
@@ -147,6 +150,7 @@ function GraficoComparativoAnual({ dados = [] }) {
               />
 
               <YAxis
+                width={40}
                 axisLine={false}
                 tickLine={false}
                 tick={{

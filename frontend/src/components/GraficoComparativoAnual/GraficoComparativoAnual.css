@@ -85,6 +85,11 @@
   .grafico-comparativo__chart {
     height: 250px;
   }
+
+  /* Os quatro rótulos do eixo X precisam caber lado a lado. */
+  .grafico-comparativo .recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value {
+    font-size: 10px;
+  }
 }
 
 .grafico-comparativo__tooltip {
