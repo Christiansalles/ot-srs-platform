@@ -3,9 +3,16 @@ import { useEffect, useState } from 'react'
 import CardIndicador from '../../components/CardIndicador/CardIndicador'
 import GraficoSerieHistorica from '../../components/GraficoSerieHistorica/GraficoSerieHistorica'
 import { getDestaques, getIndicadores } from '../../services/api'
-
+import GraficoDistribuicaoSetor from '../../components/GraficoDistribuicaoSetor/GraficoDistribuicaoSetor'
+import {
+  montarDistribuicao,
+  periodoMaisRecente,
+} from '../../utils/montarDistribuicao'
 import { montarCards } from './montarCards'
 import './DashboardPage.css'
+
+const NOTA_DISTRIBUICAO =
+  'Metodologia: Mapeamento contínuo SMCELT & COMTUR Santa Rita do Sapucaí'
 
 function DashboardPage() {
   const [estado, setEstado] = useState({ status: 'loading' })
@@ -27,7 +34,13 @@ function DashboardPage() {
         // O gráfico mostra a série do primeiro card.
         const serie = indicadores.find((item) => item.id === cards[0].id)
 
-        setEstado({ status: 'ready', cards, serie })
+        setEstado({
+          status: 'ready',
+          cards,
+          serie,
+          distribuicao: montarDistribuicao(indicadores),
+          ano: periodoMaisRecente(indicadores)?.ano,
+        })
       })
       .catch(() => {
         if (active) setEstado({ status: 'error' })
@@ -38,7 +51,7 @@ function DashboardPage() {
     }
   }, [])
 
-  const { status, cards, serie } = estado
+  const { status, cards, serie, distribuicao, ano } = estado
 
   return (
     <div className="dashboard">
@@ -100,6 +113,15 @@ function DashboardPage() {
                 />
               </section>
             )}
+
+            <div className="dashboard__graficos">
+              <GraficoDistribuicaoSetor
+                dados={distribuicao}
+                ano={ano}
+                nota={NOTA_DISTRIBUICAO}
+              />
+            </div>
+            
           </>
         )}
       </div>
