@@ -4,11 +4,19 @@ import CardIndicador from '../../components/CardIndicador/CardIndicador'
 import GraficoSerieHistorica from '../../components/GraficoSerieHistorica/GraficoSerieHistorica'
 import { getDestaques, getIndicadores } from '../../services/api'
 import GraficoDistribuicaoSetor from '../../components/GraficoDistribuicaoSetor/GraficoDistribuicaoSetor'
+import GraficoComparativoAnual from '../../components/GraficoComparativoAnual/GraficoComparativoAnual'
+
 import {
   montarDistribuicao,
   periodoMaisRecente,
 } from '../../utils/montarDistribuicao'
-import { montarCards } from './montarCards'
+
+import {
+  montarComparativoAnual,
+} from '../../utils/montarComparativoAnual'
+
+import { montarCards } from '../../utils/montarCards'
+
 import './DashboardPage.css'
 
 const NOTA_DISTRIBUICAO =
@@ -40,6 +48,7 @@ function DashboardPage() {
           serie,
           distribuicao: montarDistribuicao(indicadores),
           ano: periodoMaisRecente(indicadores)?.ano,
+          comparativoAnual: montarComparativoAnual(indicadores),
         })
       })
       .catch(() => {
@@ -51,7 +60,7 @@ function DashboardPage() {
     }
   }, [])
 
-  const { status, cards, serie, distribuicao, ano } = estado
+  const { status, cards, serie, distribuicao, ano, comparativoAnual } = estado
 
   return (
     <div className="dashboard">
@@ -119,6 +128,9 @@ function DashboardPage() {
                 dados={distribuicao}
                 ano={ano}
                 nota={NOTA_DISTRIBUICAO}
+              />
+              <GraficoComparativoAnual
+                dados={comparativoAnual}
               />
             </div>
             
