@@ -168,4 +168,43 @@ describe('DashboardPage', () => {
     ).toBeInTheDocument()
     expect(screen.queryByRole('article')).not.toBeInTheDocument()
   })
+
+  it('mostra a rosca de distribuição por setor com o ano e os setores do mock', async () => {
+    render(<DashboardPage />)
+
+    const rosca = await screen.findByRole('region', {
+      name: 'Distribuição por setor',
+    })
+
+    expect(
+      within(rosca).getByRole('heading', { name: 'Distribuição por setor (2025)' }),
+    ).toBeInTheDocument()
+    expect(within(rosca).getAllByRole('listitem')).toHaveLength(5)
+    expect(within(rosca).getByText('Hospedagem')).toBeInTheDocument()
+    expect(within(rosca).getByText('28%')).toBeInTheDocument()
+    expect(
+      within(rosca).getByText(/Metodologia: Mapeamento contínuo SMCELT/),
+    ).toBeInTheDocument()
+  })
+
+  it('mostra a mensagem de sem dados na rosca quando não há participação econômica', async () => {
+    stubApi({
+      destaques: [destaque(1, 'Número de leitos')],
+      indicadores: [indicador(1, 'Número de leitos')],
+    })
+
+    render(<DashboardPage />)
+
+    const rosca = await screen.findByRole('region', {
+      name: 'Distribuição por setor',
+    })
+
+    expect(
+      within(rosca).getByText(
+        'Não há dados disponíveis para exibir a distribuição por setor.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getAllByRole('article')).toHaveLength(1)
+  })
+
 })

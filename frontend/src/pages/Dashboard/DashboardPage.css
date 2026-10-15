@@ -43,3 +43,17 @@
   width: min(100%, 1200px);
   margin: 0 auto;
 }
+
+.dashboard__graficos {
+  width: min(100%, 1200px);
+  margin: 1.5rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .dashboard__graficos {
+    grid-template-columns: 1fr;
+  }
+}
