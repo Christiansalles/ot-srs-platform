@@ -2,6 +2,7 @@ const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const prisma = require('../src/db');
+const dados = require('../src/services/dados');
 const { formatarIndicadores, montarDestaques } = require('../src/services/indicadores');
 
 const backendDir = path.resolve(__dirname, '..');
@@ -125,22 +126,10 @@ describe('Seed de todos os setores', () => {
     });
     expect(participacoes.reduce((total, medicao) => total + Number(medicao.valor), 0)).toBe(100);
 
-    const empresas = await prisma.indicador.findFirst({
-      where: { setor: { nome: 'Turismo' }, nome: 'Número de empresas' },
-      include: { setor: true, medicoes: { include: { periodo: true } } },
-    });
-    const destaque = montarDestaques(formatarIndicadores([{
-      id: empresas.id_indicador,
-      nome: empresas.nome,
-      unidade: empresas.unidade,
-      setor: { id: empresas.setor.id_setor, nome: empresas.setor.nome },
-      medicoes: empresas.medicoes.map((medicao) => ({
-        status: medicao.status,
-        ano: medicao.periodo.ano,
-        semestre: medicao.periodo.semestre,
-        valor: medicao.valor,
-      })),
-    }]))[0];
+    const turismo = (await dados.buscarSetores()).find(({ nome }) => nome === 'Turismo');
+    const indicadores = await dados.buscarIndicadores({ setorId: turismo.id });
+    const destaque = montarDestaques(formatarIndicadores(indicadores))
+      .find(({ nome }) => nome === 'Número de empresas');
     expect(destaque.variacao_percentual).toBe(15.4);
   });
 
