@@ -1,4 +1,3 @@
-
 const ORDEM_DO_MOCKUP = [
   'Número de leitos',
   'Fluxo de visitantes',

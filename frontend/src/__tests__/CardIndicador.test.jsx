@@ -119,4 +119,25 @@ describe('CardIndicador', () => {
     expect(screen.getByText('1.280')).toBeInTheDocument()
     expect(screen.getByText('12,2%')).toBeInTheDocument()
   })
+
+    it.each([
+    [420, 'R$', 'R$ 420'],
+    [55, '%', '55%'],
+  ])('mostra %s com a unidade %s junto do valor', (value, unit, esperado) => {
+    render(
+      <CardIndicador name="Indicador" value={value} unit={unit} periodo="2025/2" variation={null} />,
+    )
+
+    expect(screen.getByText(esperado)).toBeInTheDocument()
+    expect(screen.queryByText(unit)).not.toBeInTheDocument()
+  })
+
+  it('mostra a unidade em palavra ao lado do valor', () => {
+    render(
+      <CardIndicador name="Tempo médio" value={1.5} unit="dias" periodo="2025/2" variation={null} />,
+    )
+
+    expect(screen.getByText('dias')).toBeInTheDocument()
+    expect(screen.getByRole('article')).toHaveTextContent('1,5 dias')
+  })
 })
