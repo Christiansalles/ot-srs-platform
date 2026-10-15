@@ -104,10 +104,10 @@ describe('DashboardPage', () => {
 
     // "Número de leitos" é o primeiro card pela ordem do mockup.
     expect(
-      await screen.findByText('Evolução: Número de leitos'),
+      await screen.findByText('Evolução do número de leitos'),
     ).toBeInTheDocument()
     expect(
-      screen.queryByText('Evolução: Taxa de ocupação'),
+      screen.queryByText('Evolução do número de visitantes'),
     ).not.toBeInTheDocument()
   })
 
@@ -118,8 +118,16 @@ describe('DashboardPage', () => {
 
     expect(await screen.findAllByRole('article')).toHaveLength(1)
     expect(
-      screen.queryByRole('region', { name: 'Série histórica do indicador' }),
-    ).not.toBeInTheDocument()
+      screen.getByRole('region', {
+        name: 'Série histórica do indicador',
+      }),
+    ).toBeInTheDocument()
+
+    expect(
+      screen.getByText(
+        'Não há dados disponíveis para exibir a série histórica.',
+      ),
+    ).toBeInTheDocument()
   })
 
   it('não cria card a partir de um indicador que não tem destaque', async () => {

@@ -1,43 +1,143 @@
 import { render, screen } from '@testing-library/react'
-import { cloneElement } from 'react'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import GraficoSerieHistorica from '../components/GraficoSerieHistorica/GraficoSerieHistorica'
+import { TooltipSerieHistorica } from '../components/GraficoSerieHistorica/GraficoSerieHistorica'
 
-// O tooltip real só abre com o mouse sobre o gráfico, o que o ambiente de
-// testes não simula. Aqui o Tooltip é trocado por um que mostra o que o
-// formatter recebido devolve para o valor 350.
-vi.mock('recharts', async (importOriginal) => {
-  const original = await importOriginal()
+describe('TooltipSerieHistorica', () => {
+  it('não renderiza quando o tooltip não está ativo', () => {
+    const { container } = render(
+      <TooltipSerieHistorica
+        active={false}
+        payload={[]}
+      />,
+    )
 
-  return {
-    ...original,
-    ResponsiveContainer: ({ children }) =>
-      cloneElement(children, { width: 800, height: 280 }),
-    Tooltip: ({ formatter }) => <output>{formatter(350, 'Valor')}</output>,
-  }
-})
+    expect(container).toBeEmptyDOMElement()
+  })
 
-const medicoes = [
-  { ano: 2024, semestre: 2, valor: 312 },
-  { ano: 2025, semestre: 2, valor: 350 },
-]
+  it('não renderiza quando não existem dados', () => {
+    const { container } = render(
+      <TooltipSerieHistorica
+        active
+        payload={[]}
+      />,
+    )
 
-describe('GraficoSerieHistorica: tooltip', () => {
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('mostra o período da medição', () => {
+    render(
+      <TooltipSerieHistorica
+        active
+        payload={[
+          {
+            payload: {
+              periodo: '2025/2',
+              valor: 350,
+              unidade: 'leitos',
+            },
+          },
+        ]}
+      />,
+    )
+
+    expect(
+      screen.getByText('2025/2'),
+    ).toBeInTheDocument()
+  })
+
+  it('mostra o valor formatado com a unidade', () => {
+    render(
+      <TooltipSerieHistorica
+        active
+        payload={[
+          {
+            payload: {
+              periodo: '2025/2',
+              valor: 350,
+              unidade: 'leitos',
+            },
+          },
+        ]}
+      />,
+    )
+
+    expect(
+      screen.getByText('350 leitos'),
+    ).toBeInTheDocument()
+  })
+
   it.each([
     ['R$', 'R$ 350'],
     ['%', '350%'],
     ['leitos', '350 leitos'],
-  ])('formata o valor com a unidade %s', (unidade, esperado) => {
-    render(<GraficoSerieHistorica medicoes={medicoes} unidade={unidade} />)
+  ])(
+    'formata o valor corretamente para a unidade %s',
+    (unidade, esperado) => {
+      render(
+        <TooltipSerieHistorica
+          active
+          payload={[
+            {
+              payload: {
+                periodo: '2025/2',
+                valor: 350,
+                unidade,
+              },
+            },
+          ]}
+        />,
+      )
 
-    expect(screen.getByRole('status')).toHaveTextContent(esperado)
+      expect(
+        screen.getByText(esperado),
+      ).toBeInTheDocument()
+    },
+  )
+
+  it('mostra somente o valor quando não há unidade', () => {
+    render(
+      <TooltipSerieHistorica
+        active
+        payload={[
+          {
+            payload: {
+              periodo: '2025/2',
+              valor: 350,
+            },
+          },
+        ]}
+      />,
+    )
+
+    expect(
+      screen.getByText('350'),
+    ).toBeInTheDocument()
+
+    expect(
+      screen.queryByText(/R\$/),
+    ).not.toBeInTheDocument()
   })
 
-  it('mostra só o valor quando não há unidade', () => {
-    render(<GraficoSerieHistorica medicoes={medicoes} />)
+  it('mostra o rótulo Valor', () => {
+    render(
+      <TooltipSerieHistorica
+        active
+        payload={[
+          {
+            payload: {
+              periodo: '2025/2',
+              valor: 350,
+              unidade: 'leitos',
+            },
+          },
+        ]}
+      />,
+    )
 
-    expect(screen.getByRole('status')).toHaveTextContent('350')
-    expect(screen.getByRole('status')).not.toHaveTextContent('R$')
+    expect(
+      screen.getByText('Valor'),
+    ).toBeInTheDocument()
   })
 })

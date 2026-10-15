@@ -39,13 +39,10 @@ function DashboardPage() {
           return
         }
 
-        // O gráfico mostra a série do primeiro card.
-        const serie = indicadores.find((item) => item.id === cards[0].id)
-
         setEstado({
           status: 'ready',
           cards,
-          serie,
+          indicadores,
           distribuicao: montarDistribuicao(indicadores),
           ano: periodoMaisRecente(indicadores)?.ano,
           comparativoAnual: montarComparativoAnual(indicadores),
@@ -60,7 +57,7 @@ function DashboardPage() {
     }
   }, [])
 
-  const { status, cards, serie, distribuicao, ano, comparativoAnual } = estado
+  const { status, cards, indicadores, distribuicao, ano, comparativoAnual } = estado
 
   return (
     <div className="dashboard">
@@ -109,20 +106,17 @@ function DashboardPage() {
               ))}
             </section>
 
-            {serie && (
+            {indicadores && (
               <section
                 className="dashboard__chart"
                 aria-label="Gráfico de série histórica"
               >
                 <GraficoSerieHistorica
-                  titulo={`Evolução: ${serie.nome}`}
+                  indicadores={indicadores}
                   subtitulo="Série histórica observada no município"
-                  unidade={serie.unidade}
-                  medicoes={serie.medicoes}
                 />
               </section>
             )}
-
             <div className="dashboard__graficos">
               <GraficoDistribuicaoSetor
                 dados={distribuicao}
