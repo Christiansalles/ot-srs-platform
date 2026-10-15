@@ -24,11 +24,11 @@
   width: min(100%, 1200px);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1.5rem;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 640px) {
   .dashboard__indicators {
     grid-template-columns: 1fr;
   }

@@ -4,10 +4,8 @@ import CardIndicador from '../../components/CardIndicador/CardIndicador'
 import GraficoSerieHistorica from '../../components/GraficoSerieHistorica/GraficoSerieHistorica'
 import { getDestaques, getIndicadores } from '../../services/api'
 
+import { montarCards } from './montarCards'
 import './DashboardPage.css'
-
-const SETOR = 'Hospedagem'
-const INDICADOR = 'Número de leitos'
 
 function DashboardPage() {
   const [estado, setEstado] = useState({ status: 'loading' })
@@ -15,23 +13,21 @@ function DashboardPage() {
   useEffect(() => {
     let active = true
 
-    Promise.all([getIndicadores(), getDestaques()])
-      .then(([indicadores, destaques]) => {
+    Promise.all([getDestaques(), getIndicadores()])
+      .then(([destaques, indicadores]) => {
         if (!active) return
 
-        const indicador = indicadores.find(
-          (item) => item.nome === INDICADOR && item.setor.nome === SETOR,
-        )
-        const destaque = indicador
-          ? destaques.find((item) => item.id === indicador.id)
-          : undefined
+        const cards = montarCards(destaques)
 
-        if (!indicador || !destaque || indicador.medicoes.length === 0) {
+        if (cards.length === 0) {
           setEstado({ status: 'empty' })
           return
         }
 
-        setEstado({ status: 'ready', indicador, destaque })
+        // O gráfico mostra a série do primeiro card.
+        const serie = indicadores.find((item) => item.id === cards[0].id)
+
+        setEstado({ status: 'ready', cards, serie })
       })
       .catch(() => {
         if (active) setEstado({ status: 'error' })
@@ -42,7 +38,7 @@ function DashboardPage() {
     }
   }, [])
 
-  const { status, indicador, destaque } = estado
+  const { status, cards, serie } = estado
 
   return (
     <div className="dashboard">
@@ -69,7 +65,7 @@ function DashboardPage() {
 
         {status === 'empty' && (
           <p className="state-message dashboard__state">
-            Sem dados de hospedagem disponíveis no momento.
+            Sem indicadores disponíveis no momento.
           </p>
         )}
 
@@ -79,25 +75,30 @@ function DashboardPage() {
               className="dashboard__indicators"
               aria-label="Indicadores turísticos"
             >
-              <CardIndicador
-                name={destaque.nome}
-                value={destaque.valor}
-                unit={destaque.unidade}
-                periodo={destaque.periodo}
-                variation={destaque.variacao_percentual}
-              />
+              {cards.map((destaque) => (
+                <CardIndicador
+                  key={destaque.id}
+                  name={destaque.nome}
+                  value={destaque.valor}
+                  unit={destaque.unidade}
+                  periodo={destaque.periodo}
+                  variation={destaque.variacao_percentual}
+                />
+              ))}
             </section>
 
-            <section
-              className="dashboard__chart"
-              aria-label="Gráfico de série histórica"
-            >
-              <GraficoSerieHistorica
-                titulo={`Evolução do ${indicador.nome.toLowerCase()}`}
-                subtitulo="Série histórica observada no município"
-                medicoes={indicador.medicoes}
-              />
-            </section>
+            {serie && (
+              <section
+                className="dashboard__chart"
+                aria-label="Gráfico de série histórica"
+              >
+                <GraficoSerieHistorica
+                  titulo={`Evolução: ${serie.nome}`}
+                  subtitulo="Série histórica observada no município"
+                  medicoes={serie.medicoes}
+                />
+              </section>
+            )}
           </>
         )}
       </div>
