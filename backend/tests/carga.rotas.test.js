@@ -2,9 +2,9 @@
 // sem mock. Precisa de um Postgres com `npm run db:setup` já executado
 // (no CI, o job backend roda antes dos testes).
 //
-// Outros testes criam indicadores com o mesmo nome em 2098 e 2099 enquanto
-// este roda, por isso os destaques são localizados pelo id do indicador da
-// carga, e não pelo nome.
+// Os ids mudam de um banco para outro, e o dados.test.js cria um "Número de
+// leitos" em outro setor enquanto este roda. Por isso cada destaque é
+// localizado pelo id do indicador da carga, buscado por setor + nome.
 
 const request = require('supertest');
 const prisma = require('../src/db');
