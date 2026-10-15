@@ -95,6 +95,7 @@ function DashboardPage() {
                 <GraficoSerieHistorica
                   titulo={`Evolução: ${serie.nome}`}
                   subtitulo="Série histórica observada no município"
+                  unidade={serie.unidade}
                   medicoes={serie.medicoes}
                 />
               </section>
