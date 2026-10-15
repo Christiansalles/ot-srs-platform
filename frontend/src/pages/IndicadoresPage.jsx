@@ -1,55 +1,34 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getIndicadores, getSetores } from '../services/api';
+import { useSearchParams } from 'react-router-dom';
+import FiltrosPainel from '../components/FiltrosPainel/FiltrosPainel';
+import { lerFiltros } from '../components/FiltrosPainel/filtros';
+import { getIndicadores } from '../services/api';
 
 export default function IndicadoresPage() {
-  const [setores, setSetores] = useState([]);
-  const [setorSelecionado, setSetorSelecionado] = useState(null);
-  const [indicadores, setIndicadores] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [setoresError, setSetoresError] = useState('');
+  const [params] = useSearchParams();
+  const { setor, ano, semestre } = lerFiltros(params);
+  const consulta = `${setor}/${ano}/${semestre}`;
+  const [resultado, setResultado] = useState({ consulta: null, indicadores: [], erro: '' });
+  const carregando = resultado.consulta !== consulta;
+  const { indicadores, erro } = resultado;
 
   useEffect(() => {
-    let active = true;
+    let ativo = true;
 
-    getSetores()
+    getIndicadores({ setor, ano, semestre })
       .then((dados) => {
-        if (!active) return;
-        setSetores(dados);
-        setSetorSelecionado(dados[0]?.id ?? null);
-        if (dados.length === 0) setLoading(false);
+        if (!ativo) return;
+        setResultado({ consulta, indicadores: dados, erro: '' });
       })
       .catch(() => {
-        if (active) {
-          setSetoresError('Não foi possível carregar os setores.');
-        }
+        if (!ativo) return;
+        setResultado({ consulta, indicadores: [], erro: 'Não foi possível consultar os indicadores.' });
       });
 
     return () => {
-      active = false;
+      ativo = false;
     };
-  }, []);
-
-  useEffect(() => {
-    if (setorSelecionado === null) return;
-    let active = true;
-
-    getIndicadores({ setor: setorSelecionado })
-      .then((dados) => {
-        if (!active) return;
-        setIndicadores(dados);
-        setLoading(false);
-      })
-      .catch(() => {
-        if (!active) return;
-        setError('Não foi possível consultar os indicadores do setor selecionado.');
-        setLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [setorSelecionado]);
+  }, [setor, ano, semestre, consulta]);
 
   const linhas = useMemo(
     () =>
@@ -57,6 +36,7 @@ export default function IndicadoresPage() {
         indicador.medicoes.map((medicao) => ({
           id: `${indicador.id}-${medicao.ano}-${medicao.semestre}`,
           nome: indicador.nome,
+          setor: indicador.setor.nome,
           unidade: indicador.unidade,
           ano: medicao.ano,
           semestre: medicao.semestre,
@@ -71,44 +51,24 @@ export default function IndicadoresPage() {
       <header className="page-heading">
         <p className="eyebrow">Dados abertos · Consulta detalhada</p>
         <h1>Indicadores turísticos</h1>
-        <p>Consulte as séries de hospedagem e acompanhe sua evolução por período.</p>
+        <p>Consulte e filtre os indicadores do turismo em Santa Rita do Sapucaí.</p>
       </header>
       <section className="content-section">
-        <div className="filter-bar">
+        <FiltrosPainel />
 
-          <label className="select-control">
-            <span>Setor</span>
-            <select
-              value={setorSelecionado ?? ''}
-              disabled={setores.length === 0}
-              onChange={(event) => {
-                setLoading(true);
-                setError('');
-                setSetorSelecionado(Number(event.target.value));
-              }}
-            >
-              {setores.length === 0 && <option value="">Nenhum setor disponível</option>}
-              {setores.map((setor) => (
-                <option key={setor.id} value={setor.id}>
-                  {setor.nome}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        {setoresError ? <p className="state-message error" role="alert">{setoresError}</p> : loading ? (
-          <p className="state-message">Carregando indicadores...</p>
-        ) : error ? (
-          <p className="state-message error" role="alert">{error}</p>
+        {carregando ? (
+          <p className="state-message" role="status">Carregando indicadores...</p>
+        ) : erro ? (
+          <p className="state-message error" role="alert">{erro}</p>
         ) : linhas.length === 0 ? (
-          <p className="state-message">Sem dados para esse setor.</p>
+          <p className="state-message" role="status">Sem dados para os filtros selecionados. Use "Limpar filtros" para consultar todos os indicadores.</p>
         ) : (
           <div className="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th scope="col">Indicador</th>
+                  <th scope="col">Setor</th>
                   <th scope="col">Unidade</th>
                   <th scope="col">Ano</th>
                   <th scope="col">Semestre</th>
@@ -119,6 +79,7 @@ export default function IndicadoresPage() {
                 {linhas.map((linha) => (
                   <tr key={linha.id}>
                     <td>{linha.nome}</td>
+                    <td>{linha.setor}</td>
                     <td>{linha.unidade}</td>
                     <td>{linha.ano}</td>
                     <td>{linha.semestre}</td>
