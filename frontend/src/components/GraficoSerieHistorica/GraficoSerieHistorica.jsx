@@ -11,9 +11,11 @@ import {
 import { useId } from 'react'
 
 import './GraficoSerieHistorica.css'
+import { formatarValor } from '../../utils/formatarValor'
 
 function GraficoSerieHistorica({
   medicoes = [],
+  unidade,
   titulo = 'Evolução do indicador',
   subtitulo = 'Série histórica observada no município',
 }) {
@@ -139,6 +141,7 @@ function GraficoSerieHistorica({
               />
 
               <Tooltip
+                formatter={(valor) => formatarValor(valor, unidade)}
                 contentStyle={{
                   border: '1px solid var(--color-border)',
                   borderRadius: '10px',
