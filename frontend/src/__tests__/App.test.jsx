@@ -32,13 +32,14 @@ describe('App', () => {
     render(<App />);
     fireEvent.click(screen.getByRole('link', { name: /^indicadores$/i }));
     await screen.findByRole('table');
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } });
+    await screen.findByRole('option', { name: 'Hospedagem' });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Setor' }), { target: { value: '1' } });
     await waitFor(() => expect(screen.getByRole('cell', { name: 'Taxa de ocupação' })).toBeInTheDocument());
     const table = screen.getByRole('table');
     const rows = within(table).getAllByRole('row').slice(1);
     const expected = mockIndicadores.filter((item) => item.setor.id === 1)
       .flatMap((item) => item.medicoes.map((measurement) => [
-        item.nome, item.unidade, String(measurement.ano),
+        item.nome, item.setor.nome, item.unidade, String(measurement.ano),
         String(measurement.semestre), measurement.valor.toLocaleString('pt-BR'),
       ]));
     expect(rows).toHaveLength(expected.length);
@@ -58,9 +59,11 @@ describe('App', () => {
   it('mostra erro na consulta de indicadores', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'false');
     vi.stubGlobal('fetch', vi.fn().mockImplementation((url) =>
-      url.endsWith('/setores')
-        ? Promise.resolve({ ok: true, json: async () => [{ id: 1, nome: 'Hospedagem' }] })
-        : Promise.resolve({ ok: false, status: 503 })));
+      Promise.resolve(url.endsWith('/setores')
+        ? { ok: true, json: async () => [{ id: 1, nome: 'Hospedagem' }] }
+        : url.endsWith('/periodos')
+          ? { ok: true, json: async () => [] }
+          : { ok: false, status: 503 })));
     window.history.replaceState({}, '', '/indicadores');
     render(<App />);
     expect(await screen.findByRole('alert')).toHaveTextContent('Não foi possível consultar os indicadores');

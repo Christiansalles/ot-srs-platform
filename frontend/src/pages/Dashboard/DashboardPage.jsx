@@ -4,11 +4,19 @@ import CardIndicador from '../../components/CardIndicador/CardIndicador'
 import GraficoSerieHistorica from '../../components/GraficoSerieHistorica/GraficoSerieHistorica'
 import { getDestaques, getIndicadores } from '../../services/api'
 import GraficoDistribuicaoSetor from '../../components/GraficoDistribuicaoSetor/GraficoDistribuicaoSetor'
+import GraficoComparativoAnual from '../../components/GraficoComparativoAnual/GraficoComparativoAnual'
+
 import {
   montarDistribuicao,
   periodoMaisRecente,
 } from '../../utils/montarDistribuicao'
-import { montarCards } from './montarCards'
+
+import {
+  montarComparativoAnual,
+} from '../../utils/montarComparativoAnual'
+
+import { montarCards } from '../../utils/montarCards'
+
 import './DashboardPage.css'
 
 const NOTA_DISTRIBUICAO =
@@ -31,15 +39,13 @@ function DashboardPage() {
           return
         }
 
-        // O gráfico mostra a série do primeiro card.
-        const serie = indicadores.find((item) => item.id === cards[0].id)
-
         setEstado({
           status: 'ready',
           cards,
-          serie,
+          indicadores,
           distribuicao: montarDistribuicao(indicadores),
           ano: periodoMaisRecente(indicadores)?.ano,
+          comparativoAnual: montarComparativoAnual(indicadores),
         })
       })
       .catch(() => {
@@ -51,7 +57,7 @@ function DashboardPage() {
     }
   }, [])
 
-  const { status, cards, serie, distribuicao, ano } = estado
+  const { status, cards, indicadores, distribuicao, ano, comparativoAnual } = estado
 
   return (
     <div className="dashboard">
@@ -100,25 +106,25 @@ function DashboardPage() {
               ))}
             </section>
 
-            {serie && (
+            {indicadores && (
               <section
                 className="dashboard__chart"
                 aria-label="Gráfico de série histórica"
               >
                 <GraficoSerieHistorica
-                  titulo={`Evolução: ${serie.nome}`}
+                  indicadores={indicadores}
                   subtitulo="Série histórica observada no município"
-                  unidade={serie.unidade}
-                  medicoes={serie.medicoes}
                 />
               </section>
             )}
-
             <div className="dashboard__graficos">
               <GraficoDistribuicaoSetor
                 dados={distribuicao}
                 ano={ano}
                 nota={NOTA_DISTRIBUICAO}
+              />
+              <GraficoComparativoAnual
+                dados={comparativoAnual}
               />
             </div>
             

@@ -2,17 +2,10 @@ const { PrismaClient } = require('@prisma/client');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const { gerarHash } = require('../src/services/senha');
 
 const prisma = new PrismaClient();
 const dadosPath = path.join(__dirname, 'dados');
-
-function gerarSenhaHash() {
-  const senha = crypto.randomBytes(32).toString('hex');
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(senha, salt, 64).toString('hex');
-
-  return `${salt}:${hash}`;
-}
 
 function setoresDoArquivo(dados, arquivo) {
   if (dados.setor) {
@@ -117,7 +110,7 @@ async function main() {
     create: {
       nome: 'Carga inicial',
       email: 'carga-inicial@observatorio.local',
-      senha_hash: gerarSenhaHash(),
+      senha_hash: await gerarHash(crypto.randomBytes(32).toString('hex')),
       ativo: false,
     },
   });
