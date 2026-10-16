@@ -40,6 +40,44 @@ export function getToken() {
   return window.sessionStorage.getItem(TOKEN_KEY);
 }
 
+export async function getUsuarioAutenticado() {
+  const token = getToken();
+  if (!token) throw new Error('Sessão não encontrada.');
+
+  let response;
+  try {
+    response = await fetch(`${API_URL}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch {
+    throw new Error('Não foi possível verificar a sessão. Tente novamente.');
+  }
+
+  if (response.status === 401) {
+    logout();
+    window.dispatchEvent(new Event(AUTH_UNAUTHORIZED_EVENT));
+    throw new Error('Sessão inválida ou expirada.');
+  }
+
+  if (!response.ok) {
+    throw new Error('Não foi possível verificar a sessão. Tente novamente.');
+  }
+
+  let usuario;
+  try {
+    usuario = await response.json();
+  } catch {
+    throw new Error('A API retornou uma resposta de sessão inválida.');
+  }
+
+  if (!usuario?.id || !usuario?.nome || !usuario?.email) {
+    throw new Error('A API retornou uma resposta de sessão inválida.');
+  }
+
+  window.sessionStorage.setItem(USER_KEY, JSON.stringify(usuario));
+  return usuario;
+}
+
 export function getUsuarioLogado() {
   if (!getToken()) return null;
 

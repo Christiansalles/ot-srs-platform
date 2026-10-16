@@ -22,7 +22,7 @@ function AdminPage() {
           </div>
           <button className="ot-button-secondary" onClick={handleLogout} type="button">Sair</button>
         </div>
-        <p className="state-message">Você entrou no painel administrativo do Observatório do Turismo.</p>
+        <p className="state-message">O painel de gestão dos indicadores chega no Milestone 6.</p>
       </section>
     </main>
   );
