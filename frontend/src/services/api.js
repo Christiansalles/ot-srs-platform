@@ -1,6 +1,6 @@
 ﻿import { API_URL } from '../config';
 import { mockSetores, mockIndicadores, mockPeriodos, montarDestaques } from '../mocks/dados';
-import { getToken } from './auth';
+import { AUTH_UNAUTHORIZED_EVENT, getToken, logout } from './auth';
 
 // Mock é uma opção explícita; falhas da API devem chegar às telas.
 async function request(path, mockData, filtros = {}) {
@@ -13,6 +13,10 @@ async function request(path, mockData, filtros = {}) {
   const response = await fetch(`${API_URL}/api/${path}${query}`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
+  if (response.status === 401) {
+    logout();
+    window.dispatchEvent(new Event(AUTH_UNAUTHORIZED_EVENT));
+  }
   if (!response.ok) throw new Error(`Falha ao consultar ${path} (HTTP ${response.status})`);
   return response.json();
 }

@@ -6,6 +6,7 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import RelatoriosPage from './pages/RelatoriosPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
+import RotaProtegida from './components/RotaProtegida';
 import cidadeLogo from './assets/logos/santa-rita.svg';
 import observatorioLogo from './assets/logos/observatorio.png';
 import prefeituraLogo from './assets/logos/prefeitura.png';
@@ -58,7 +59,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/admin/login" element={<AdminLoginPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route element={<RotaProtegida />}>
+          <Route path="/admin" element={<AdminPage />} />
+        </Route>
         <Route element={<AppLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/indicadores" element={<IndicadoresPage />} />
