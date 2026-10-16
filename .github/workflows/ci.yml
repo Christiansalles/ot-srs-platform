@@ -31,6 +31,10 @@ jobs:
           --health-retries 10
     env:
       DATABASE_URL: postgresql://ot:ot@localhost:5432/ot_srs_test
+      # Valores fictícios exclusivos para testes no CI.
+      ADMIN_EMAIL: admin-ci@observatorio.local
+      ADMIN_SENHA: senha-ci-ficticia-nao-usar-em-producao
+      JWT_SECRET: jwt-secret-ci-ficticio-nao-usar-em-producao
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
