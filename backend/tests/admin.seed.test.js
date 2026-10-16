@@ -19,9 +19,10 @@ function executarSeed() {
 }
 
 describe('Admin criado pelo seed', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     process.env.ADMIN_EMAIL = emailAdminTeste;
     process.env.ADMIN_SENHA = senhaAdminTeste;
+    await prisma.usuario.deleteMany({ where: { email: emailAdminNormalizado } });
     executarSeed();
   });
 
