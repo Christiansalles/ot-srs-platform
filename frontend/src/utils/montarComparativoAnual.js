@@ -27,10 +27,15 @@ function ultimosDoisAnos(medicoes) {
   }
 }
 
-function medicaoDoAno(medicoes, ano) {
-  return ordenarPorAno(medicoes)
+function medicaoDoAno(medicoes, ano, semestre) {
+  const doAno = ordenarPorAno(medicoes)
     .filter((item) => item.ano === ano)
-    .at(-1)
+
+  if (semestre) {
+    return doAno.find((item) => item.semestre === Number(semestre))
+  }
+
+  return doAno.at(-1)
 }
 
 function indiceComparativo(valorAnterior, valorAtual) {
@@ -39,25 +44,40 @@ function indiceComparativo(valorAnterior, valorAtual) {
   return (valorAtual / valorAnterior) * 100
 }
 
-export function montarComparativoAnual(indicadores) {
+export function montarComparativoAnual(
+  indicadores,
+  { ano, semestre } = {},
+) {
   const selecionados = indicadores.filter((indicador) =>
     INDICADORES_COMPARATIVO.includes(indicador.nome),
   )
 
   const comparativos = selecionados
     .map((indicador) => {
-      const anos = ultimosDoisAnos(indicador.medicoes)
+      let anos
+
+      if (ano) {
+        const anoAtual = Number(ano)
+        anos = {
+          anterior: anoAtual - 1,
+          atual: anoAtual,
+        }
+      } else {
+        anos = ultimosDoisAnos(indicador.medicoes)
+      }
 
       if (!anos) return null
 
       const anterior = medicaoDoAno(
         indicador.medicoes,
         anos.anterior,
+        semestre,
       )
 
       const atual = medicaoDoAno(
         indicador.medicoes,
         anos.atual,
+        semestre,
       )
 
       if (!anterior || !atual) return null

@@ -191,4 +191,99 @@ describe('montarComparativoAnual', () => {
   it('devolve lista vazia quando não recebe indicadores', () => {
     expect(montarComparativoAnual([])).toEqual([])
   })
+
+  it('compara o ano informado com o ano anterior usando o semestre informado', () => {
+    const dados = montarComparativoAnual(
+      [
+        indicador(INDICADORES.LEITOS, [
+          { ano: 2024, semestre: 2, valor: 312 },
+          { ano: 2025, semestre: 2, valor: 350 },
+        ]),
+      ],
+      {
+        ano: 2025,
+        semestre: 2,
+      },
+    )
+
+    expect(dados[0]).toEqual(
+      expect.objectContaining({
+        nome: INDICADORES.LEITOS,
+        anoAnterior: 2024,
+        anoAtual: 2025,
+        valorAnterior: 312,
+        valorAtual: 350,
+        anterior: 100,
+        atual: expect.closeTo(112.18, 2),
+      }),
+    )
+  })
+
+  it('usa o último semestre disponível quando o ano é informado sem semestre', () => {
+    const dados = montarComparativoAnual(
+      [
+        indicador(INDICADORES.LEITOS, [
+          { ano: 2024, semestre: 1, valor: 300 },
+          { ano: 2024, semestre: 2, valor: 312 },
+          { ano: 2025, semestre: 1, valor: 340 },
+          { ano: 2025, semestre: 2, valor: 350 },
+        ]),
+      ],
+      {
+        ano: 2025,
+      },
+    )
+
+    expect(dados[0]).toEqual(
+      expect.objectContaining({
+        anoAnterior: 2024,
+        anoAtual: 2025,
+        valorAnterior: 312,
+        valorAtual: 350,
+      }),
+    )
+  })
+
+  it('compara o mesmo semestre dos dois anos quando o semestre é informado', () => {
+    const dados = montarComparativoAnual(
+      [
+        indicador(INDICADORES.LEITOS, [
+          { ano: 2024, semestre: 1, valor: 300 },
+          { ano: 2024, semestre: 2, valor: 312 },
+          { ano: 2025, semestre: 1, valor: 340 },
+          { ano: 2025, semestre: 2, valor: 350 },
+        ]),
+      ],
+      {
+        ano: 2025,
+        semestre: 1,
+      },
+    )
+
+    expect(dados[0]).toEqual(
+      expect.objectContaining({
+        anoAnterior: 2024,
+        anoAtual: 2025,
+        valorAnterior: 300,
+        valorAtual: 340,
+      }),
+    )
+  })
+
+  it('ignora o indicador quando não existe o semestre correspondente no ano anterior', () => {
+    const dados = montarComparativoAnual(
+      [
+        indicador(INDICADORES.LEITOS, [
+          { ano: 2024, semestre: 1, valor: 300 },
+          { ano: 2025, semestre: 2, valor: 350 },
+        ]),
+      ],
+      {
+        ano: 2025,
+        semestre: 2,
+      },
+    )
+
+    expect(dados).toEqual([])
+  })
 })

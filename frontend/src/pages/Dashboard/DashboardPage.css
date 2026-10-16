@@ -57,3 +57,10 @@
     grid-template-columns: 1fr;
   }
 }
+
+.dashboard__filtros {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
