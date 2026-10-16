@@ -1,3 +1,5 @@
+import { separarValor } from '../../utils/formatarValor'
+
 import './CardIndicador.css'
 
 // Aceita "2025/2" (texto) ou { ano: 2025, semestre: 2 } (formato da API)
@@ -6,12 +8,6 @@ function formatPeriodo(periodo) {
   if (typeof periodo === 'string') return periodo
   return `${periodo.ano}/${periodo.semestre}`
 }
-
-// Aceita número (formata em pt-BR) ou texto já formatado, como "1.240"
-function formatValue(value) {
-  return typeof value === 'number' ? value.toLocaleString('pt-BR') : value
-}
-
 
 function CardIndicador({
   name,
@@ -22,6 +18,7 @@ function CardIndicador({
 }) {
   const hasVariation = variation !== null && variation !== undefined
   const isPositive = hasVariation && variation >= 0
+  const { principal, rotulo } = separarValor(value, unit)
 
   return (
     <article className="card-indicador">
@@ -38,12 +35,15 @@ function CardIndicador({
       </header>
 
       <div className="card-indicador__value">
-        {formatValue(value)}
-      </div>
+        {principal}
 
-      <p className="card-indicador__unit">
-        {unit}
-      </p>
+        {rotulo && (
+          <>
+            {' '}
+            <span className="card-indicador__unit">{rotulo}</span>
+          </>
+        )}
+      </div>
 
       {hasVariation ? (
         <div

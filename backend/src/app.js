@@ -3,6 +3,7 @@ const cors = require('cors');
 const setoresRouter = require('./routes/setores');
 const periodosRouter = require('./routes/periodos');
 const indicadoresRouter = require('./routes/indicadores');
+const authRouter = require('./routes/auth');
 const errorHandler = require('./middlewares/error-handler');
 
 const app = express();
@@ -18,6 +19,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/setores', setoresRouter);
 app.use('/api/periodos', periodosRouter);
 app.use('/api/indicadores', indicadoresRouter);
+app.use('/api/auth', authRouter);
 
 // Deve vir depois das rotas para que rotas inválidas recebam JSON 404.
 app.use((req, res) => {

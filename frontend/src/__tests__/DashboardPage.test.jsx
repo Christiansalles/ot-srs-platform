@@ -16,6 +16,29 @@ function stubApi({ indicadores = [], destaques = [], ok = true } = {}) {
   )
 }
 
+function destaque(id, nome, valor = 10) {
+  return {
+    id,
+    nome,
+    unidade: 'un',
+    valor,
+    periodo: { ano: 2025, semestre: 2 },
+    variacao_percentual: null,
+  }
+}
+
+function indicador(id, nome) {
+  return {
+    id,
+    nome,
+    unidade: 'un',
+    setor: { id: 1, nome: 'Hospedagem' },
+    medicoes: [{ ano: 2025, semestre: 2, valor: 10 }],
+  }
+}
+
+// As regras de filtro e de ordem têm testes próprios em montarCards.test.js.
+// Aqui ficam só a ligação da página com a API, com o card e com o gráfico.
 describe('DashboardPage', () => {
   beforeEach(() => {
     vi.stubEnv('VITE_USE_MOCK', 'true')
@@ -26,7 +49,36 @@ describe('DashboardPage', () => {
     vi.unstubAllGlobals()
   })
 
-  it('mostra o card de leitos do período mais recente e o gráfico do mock', async () => {
+  it('mostra um card para cada destaque que vira card, na ordem de montarCards', async () => {
+    stubApi({
+      destaques: [
+        destaque(4, 'Empregos no setor'),
+        destaque(7, 'Taxa de ocupação'),
+        destaque(1, 'Número de leitos'),
+        destaque(8, 'Participação econômica'),
+        destaque(3, 'Fluxo de visitantes'),
+        destaque(5, 'Número de empresas'),
+      ],
+    })
+
+    render(<DashboardPage />)
+
+    await screen.findAllByRole('article')
+
+    const nomes = screen
+      .getAllByRole('article')
+      .map((card) => within(card).getByRole('heading').textContent)
+
+    expect(nomes).toEqual([
+      'Número de leitos',
+      'Fluxo de visitantes',
+      'Número de empresas',
+      'Empregos no setor',
+      'Taxa de ocupação',
+    ])
+  })
+
+  it('passa os dados do destaque para o card', async () => {
     render(<DashboardPage />)
 
     const card = (
@@ -36,13 +88,63 @@ describe('DashboardPage', () => {
     expect(within(card).getByText('350')).toBeInTheDocument()
     expect(within(card).getByText('leitos')).toBeInTheDocument()
     expect(within(card).getByText('2025/2')).toBeInTheDocument()
+    expect(within(card).getByText('12,2%')).toBeInTheDocument()
+  })
+
+  it('usa no gráfico a série do indicador com o mesmo id do primeiro card', async () => {
+    stubApi({
+      destaques: [destaque(2, 'Taxa de ocupação'), destaque(1, 'Número de leitos')],
+      indicadores: [
+        indicador(2, 'Taxa de ocupação'),
+        indicador(1, 'Número de leitos'),
+      ],
+    })
+
+    render(<DashboardPage />)
+
+    // "Número de leitos" é o primeiro card pela ordem do mockup.
+    expect(
+      await screen.findByText('Evolução do número de leitos'),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByText('Evolução do número de visitantes'),
+    ).not.toBeInTheDocument()
+  })
+
+  it('mostra os cards mesmo sem a série do primeiro card', async () => {
+    stubApi({ destaques: [destaque(1, 'Número de leitos')], indicadores: [] })
+
+    render(<DashboardPage />)
+
+    expect(await screen.findAllByRole('article')).toHaveLength(1)
+    expect(
+      screen.getByRole('region', {
+        name: 'Série histórica do indicador',
+      }),
+    ).toBeInTheDocument()
 
     expect(
-      screen.getByRole('region', { name: 'Série histórica do indicador' }),
+      screen.getByText(
+        'Não há dados disponíveis para exibir a série histórica.',
+      ),
     ).toBeInTheDocument()
+  })
+
+  it('não cria card a partir de um indicador que não tem destaque', async () => {
+    stubApi({
+      indicadores: [indicador(1, 'Número de leitos')],
+      destaques: [],
+    })
+
+    render(<DashboardPage />)
+
     expect(
-      screen.getByText('Evolução do número de leitos'),
+      await screen.findByText('Sem indicadores disponíveis no momento.'),
     ).toBeInTheDocument()
+    expect(screen.queryByRole('article')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('region', { name: 'Série histórica do indicador' }),
+    ).not.toBeInTheDocument()
   })
 
   it('mostra o estado de carregando antes dos dados chegarem', async () => {
@@ -50,7 +152,7 @@ describe('DashboardPage', () => {
 
     expect(screen.getByText('Carregando indicadores...')).toBeInTheDocument()
 
-    await screen.findByRole('heading', { name: 'Número de leitos' })
+    await screen.findAllByRole('article')
   })
 
   it('mostra mensagem de erro quando a API falha', async () => {
@@ -70,71 +172,67 @@ describe('DashboardPage', () => {
     render(<DashboardPage />)
 
     expect(
-      await screen.findByText('Sem dados de hospedagem disponíveis no momento.'),
+      await screen.findByText('Sem indicadores disponíveis no momento.'),
     ).toBeInTheDocument()
     expect(screen.queryByRole('article')).not.toBeInTheDocument()
   })
 
-  it('não mostra um card quando o indicador não tem destaque correspondente', async () => {
-    stubApi({
-      indicadores: [
-        {
-          id: 1,
-          nome: 'Número de leitos',
-          unidade: 'leitos',
-          setor: { id: 1, nome: 'Hospedagem' },
-          medicoes: [{ ano: 2025, semestre: 2, valor: 350 }],
-        },
-      ],
-      destaques: [],
-    })
-
+  it('mostra a rosca de distribuição por setor com o ano e os setores do mock', async () => {
     render(<DashboardPage />)
+
+    const rosca = await screen.findByRole('region', {
+      name: 'Distribuição por setor',
+    })
 
     expect(
-      await screen.findByText('Sem dados de hospedagem disponíveis no momento.'),
+      within(rosca).getByRole('heading', { name: 'Distribuição por setor (2025)' }),
     ).toBeInTheDocument()
-    expect(screen.queryByRole('article')).not.toBeInTheDocument()
+    expect(within(rosca).getAllByRole('listitem')).toHaveLength(5)
+    expect(within(rosca).getByText('Hospedagem')).toBeInTheDocument()
+    expect(within(rosca).getByText('28%')).toBeInTheDocument()
+    expect(
+      within(rosca).getByText(/Metodologia: Mapeamento contínuo SMCELT/),
+    ).toBeInTheDocument()
   })
 
-  it('usa no card o destaque com o mesmo id do indicador', async () => {
+  it('mostra a mensagem de sem dados na rosca quando não há participação econômica', async () => {
     stubApi({
-        indicadores: [
-        {
-            id: 1,
-            nome: 'Número de leitos',
-            unidade: 'leitos',
-            setor: { id: 1, nome: 'Hospedagem' },
-            medicoes: [{ ano: 2025, semestre: 2, valor: 350 }],
-        },
-        ],
-        destaques: [
-        {
-            id: 2,
-            nome: 'Taxa de ocupação',
-            unidade: '%',
-            valor: 68,
-            periodo: { ano: 2025, semestre: 2 },
-            variacao_percentual: null,
-        },
-        {
-            id: 1,
-            nome: 'Número de leitos',
-            unidade: 'leitos',
-            valor: 350,
-            periodo: { ano: 2025, semestre: 2 },
-            variacao_percentual: 12.2,
-        },
-        ],
+      destaques: [destaque(1, 'Número de leitos')],
+      indicadores: [indicador(1, 'Número de leitos')],
     })
 
     render(<DashboardPage />)
 
-    const card = (
-        await screen.findByRole('heading', { name: 'Número de leitos' })
-    ).closest('article')
-
-    expect(within(card).getByText('350')).toBeInTheDocument()
-    expect(screen.queryByText('Taxa de ocupação')).not.toBeInTheDocument()
+    const rosca = await screen.findByRole('region', {
+      name: 'Distribuição por setor',
     })
+
+    expect(
+      within(rosca).getByText(
+        'Não há dados disponíveis para exibir a distribuição por setor.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getAllByRole('article')).toHaveLength(1)
+  })
+
+  it('mostra o gráfico comparativo anual', async () => {
+    render(<DashboardPage />)
+
+    const comparativo = await screen.findByRole('region', {
+      name: 'Comparativo anual',
+    })
+
+    expect(comparativo).toBeInTheDocument()
+
+    expect(
+      within(comparativo).getByRole('heading', {
+        name: 'Comparativo anual',
+      }),
+    ).toBeInTheDocument()
+
+    expect(
+      within(comparativo).getByText('Variação das 4 dimensões-chave'),
+    ).toBeInTheDocument()
+  })
+
 })

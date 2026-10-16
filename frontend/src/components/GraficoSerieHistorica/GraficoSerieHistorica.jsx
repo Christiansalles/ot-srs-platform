@@ -1,3 +1,4 @@
+import { useId, useMemo, useState } from 'react'
 import {
   Area,
   CartesianGrid,
@@ -8,12 +9,64 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { useId } from 'react'
+
+import { INDICADORES, ORDEM_DASHBOARD } from '../../config/indicadores'
+import { formatarValor } from '../../utils/formatarValor'
 
 import './GraficoSerieHistorica.css'
 
+function nomeAbreviado(nome) {
+  const nomes = {
+    [INDICADORES.LEITOS]: 'Leitos',
+    [INDICADORES.VISITANTES]: 'Visitantes',
+    [INDICADORES.EMPRESAS]: 'Empresas',
+    [INDICADORES.EMPREGOS]: 'Empregos',
+  }
+
+  return nomes[nome] ?? nome
+}
+
+function tituloDoIndicador(nome) {
+  const titulos = {
+    [INDICADORES.LEITOS]: 'Evolução do número de leitos',
+    [INDICADORES.VISITANTES]: 'Evolução do número de visitantes',
+    [INDICADORES.EMPRESAS]: 'Evolução do número de empresas',
+    [INDICADORES.EMPREGOS]: 'Evolução dos empregos no setor',
+  }
+
+  return titulos[nome] ?? `Evolução: ${nome}`
+}
+
+export function TooltipSerieHistorica({ active, payload }) {
+  if (!active || !payload?.length) return null
+
+  const ponto = payload[0].payload
+
+  return (
+    <div className="grafico-serie__tooltip">
+      <p className="grafico-serie__tooltip-titulo">
+        {ponto.periodo}
+      </p>
+
+      <div className="grafico-serie__tooltip-item">
+        <span className="grafico-serie__tooltip-indicador" />
+
+        <div>
+          <span className="grafico-serie__tooltip-label">
+            Valor
+          </span>
+
+          <span className="grafico-serie__tooltip-valor">
+            {formatarValor(ponto.valor, ponto.unidade)}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function GraficoSerieHistorica({
-  medicoes = [],
+  indicadores = [],
   titulo = 'Evolução do indicador',
   subtitulo = 'Série histórica observada no município',
 }) {
@@ -21,10 +74,50 @@ function GraficoSerieHistorica({
   const idLinha = `${idBase}linha`
   const idArea = `${idBase}area`
 
-  const dados = medicoes.map((medicao) => ({
-    periodo: `${medicao.ano}/${medicao.semestre}`,
-    valor: medicao.valor,
-  }))
+  const [indicadorSelecionado, setIndicadorSelecionado] = useState(
+    INDICADORES.VISITANTES,
+  )
+
+  const indicadoresComHistorico = useMemo(
+    () =>
+      ORDEM_DASHBOARD
+        .map((nome) =>
+          indicadores.find(
+            (indicador) => indicador.nome === nome,
+          ),
+        )
+        .filter(
+          (indicador) =>
+            indicador?.medicoes?.length > 0,
+        ),
+    [indicadores],
+  )
+
+  const nomeSelecionado = indicadoresComHistorico.some(
+    (indicador) => indicador.nome === indicadorSelecionado,
+  )
+    ? indicadorSelecionado
+    : indicadoresComHistorico[0]?.nome
+
+  const serieSelecionada = indicadoresComHistorico.find(
+    (indicador) => indicador.nome === nomeSelecionado,
+  )
+
+  const unidadeSelecionada = serieSelecionada?.unidade
+
+  const dados = useMemo(
+    () =>
+      (serieSelecionada?.medicoes ?? []).map((medicao) => ({
+        periodo: `${medicao.ano}/${medicao.semestre}`,
+        valor: medicao.valor,
+        unidade: unidadeSelecionada,
+      })),
+    [serieSelecionada, unidadeSelecionada],
+  )
+
+  const tituloGrafico = serieSelecionada
+    ? tituloDoIndicador(serieSelecionada.nome)
+    : titulo
 
   return (
     <section
@@ -34,13 +127,34 @@ function GraficoSerieHistorica({
       <header className="grafico-serie__header">
         <div>
           <h2 className="grafico-serie__title">
-            {titulo}
+            {tituloGrafico}
           </h2>
 
           <p className="grafico-serie__subtitle">
             {subtitulo}
           </p>
         </div>
+
+        {indicadoresComHistorico.length > 0 && (
+          <label className="grafico-serie__seletor">
+            <select
+              aria-label="Indicador da série histórica"
+              value={nomeSelecionado}
+              onChange={(event) =>
+                setIndicadorSelecionado(event.target.value)
+              }
+            >
+              {indicadoresComHistorico.map((indicador) => (
+                <option
+                  key={indicador.nome}
+                  value={indicador.nome}
+                >
+                  {nomeAbreviado(indicador.nome)}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
       </header>
 
       {dados.length === 0 ? (
@@ -62,8 +176,7 @@ function GraficoSerieHistorica({
               <defs>
                 <linearGradient
                   id={idLinha}
-                  // Medido no SVG inteiro: com o padrão (objectBoundingBox), a linha
-                  // some quando todos os valores são iguais, porque a altura dela é zero.
+                  // Evita que a linha desapareça quando todos os valores são iguais.
                   gradientUnits="userSpaceOnUse"
                   x1="0%"
                   y1="0"
@@ -139,15 +252,10 @@ function GraficoSerieHistorica({
               />
 
               <Tooltip
-                contentStyle={{
-                  border: '1px solid var(--color-border)',
-                  borderRadius: '10px',
-                  boxShadow:
-                    '0 4px 16px rgba(15, 23, 42, 0.08)',
-                }}
-                labelStyle={{
-                  color: 'var(--color-text)',
-                  fontWeight: 700,
+                content={<TooltipSerieHistorica />}
+                cursor={{
+                  stroke: 'var(--color-border)',
+                  strokeDasharray: '4 4',
                 }}
               />
 
