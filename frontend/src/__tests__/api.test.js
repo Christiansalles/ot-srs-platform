@@ -72,7 +72,7 @@ describe('serviços da API', () => {
     const indicadores = await getIndicadores();
     expect(indicadores).toHaveLength(12);
     expect(indicadores.flatMap((item) => item.medicoes)).toHaveLength(23);
-    const destaques = await getDestaques({ setor: 2, ano: 2025 });
+    const destaques = await getDestaques({ setor: 6, ano: 2025 });
     expect(destaques.find((item) => item.nome === 'Número de empresas')).toMatchObject({ valor: 120, variacao_percentual: 15.4 });
     expect(destaques.find((item) => item.nome === 'Empregos no setor')).toMatchObject({ valor: 840, variacao_percentual: 10.5 });
     expect(destaques.find((item) => item.nome === 'Fluxo de visitantes')).toMatchObject({ valor: 5200, variacao_percentual: 18.2 });

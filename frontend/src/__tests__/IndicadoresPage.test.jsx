@@ -24,13 +24,13 @@ beforeEach(() => vi.stubEnv('VITE_USE_MOCK', 'true'));
 afterEach(() => vi.unstubAllEnvs());
 
 it('abre um link por setor com a tabela filtrada e mantém o filtro ao reabrir', async () => {
-  const esperadas = mockIndicadores.filter((item) => item.setor.id === 2)
+  const esperadas = mockIndicadores.filter((item) => item.setor.id === 6)
     .reduce((total, item) => total + item.medicoes.length, 0);
   for (let tentativa = 0; tentativa < 2; tentativa++) {
-    const tela = abrir('?setor=2');
+    const tela = abrir('?setor=6');
     const tabela = await screen.findByRole('table');
     await screen.findByRole('option', { name: 'Turismo' });
-    expect(screen.getByRole('combobox', { name: 'Setor' })).toHaveValue('2');
+    expect(screen.getByRole('combobox', { name: 'Setor' })).toHaveValue('6');
     const linhas = within(tabela).getAllByRole('row').slice(1);
     expect(linhas).toHaveLength(esperadas);
     for (const linha of linhas) expect(within(linha).getByRole('cell', { name: 'Turismo' })).toBeInTheDocument();
@@ -39,7 +39,7 @@ it('abre um link por setor com a tabela filtrada e mantém o filtro ao reabrir',
 });
 
 it('combina ano, semestre e setor e limpa para voltar à lista completa', async () => {
-  abrir('?setor=2&ano=2024&semestre=2&pagina=3');
+  abrir('?setor=6&ano=2024&semestre=2&pagina=3');
   const tabela = await screen.findByRole('table');
   const linhas = within(tabela).getAllByRole('row').slice(1);
   expect(linhas).toHaveLength(3);
@@ -75,7 +75,7 @@ it.each(['?semestre=2', '?ano=abc&setor=999', '?ano=2019&semestre=2'])('corrige 
 });
 
 it('recarrega a tabela ao escolher o período e ao voltar e avançar no histórico', async () => {
-  abrir('?setor=2');
+  abrir('?setor=6');
   await screen.findByRole('option', { name: '2024' });
   fireEvent.change(screen.getByRole('combobox', { name: 'Período' }), { target: { value: '2024' } });
   await waitFor(() => expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(4));
