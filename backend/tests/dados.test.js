@@ -119,6 +119,35 @@ describe('services/dados', () => {
     expect(indicadores[0].medicoes[0]).toMatchObject({ ano: ANO_TESTE, semestre: 1, status: 'publicado' });
   });
 
+  it('filtra por ano e semestre sem incluir medições de outros períodos', async () => {
+    const indicadores = await dados.buscarIndicadores({ ano: ANO_TESTE, semestre: 1 });
+
+    expect(indicadores.map((indicador) => indicador.id)).toEqual(expect.arrayContaining([
+      leitos.id_indicador,
+      restaurantes.id_indicador,
+    ]));
+    expect(indicadores.every((indicador) => indicador.medicoes.every((medicao) => (
+      medicao.ano === ANO_TESTE && medicao.semestre === 1 && medicao.status === 'publicado'
+    )))).toBe(true);
+  });
+
+  it('combina setor e período na consulta', async () => {
+    const indicadores = await dados.buscarIndicadores({
+      setorId: hospedagem.id_setor,
+      ano: ANO_TESTE,
+      semestre: 1,
+    });
+
+    expect(indicadores).toHaveLength(1);
+    expect(indicadores[0].id).toBe(leitos.id_indicador);
+    expect(indicadores[0].medicoes).toHaveLength(1);
+    expect(indicadores[0].medicoes[0]).toMatchObject({ ano: ANO_TESTE, semestre: 1, status: 'publicado' });
+  });
+
+  it('período sem medições publicadas devolve lista vazia', async () => {
+    expect(await dados.buscarIndicadores({ ano: 2097, semestre: 1 })).toEqual([]);
+  });
+
   it('setor que não existe devolve lista vazia', async () => {
     expect(await dados.buscarIndicadores({ setorId: 999999 })).toEqual([]);
   });
