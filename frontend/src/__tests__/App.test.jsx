@@ -1,4 +1,4 @@
-﻿import { fireEvent, render, screen, within } from '@testing-library/react';
+﻿import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { vi } from 'vitest';
 import App from '../App';
 import { mockIndicadores } from '../mocks/dados';
@@ -13,6 +13,27 @@ describe('App', () => {
     vi.unstubAllGlobals();
   });
 
+  it.each(['/', '/indicadores', '/dashboard', '/relatorios'])('oferece acesso administrativo no cabeçalho de %s', async (caminho) => {
+    window.history.replaceState({}, '', caminho);
+    render(<App />);
+    const acesso = screen.getByRole('link', { name: 'Acesso Administrativo' });
+    expect(acesso).toHaveAttribute('href', '/admin/login');
+    expect(acesso.closest('header')).toHaveClass('topbar');
+    // Aguarda as consultas das páginas antes de encerrar o teste.
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it('abre a tela de login pelo acesso administrativo do cabeçalho', async () => {
+    window.sessionStorage.clear();
+    render(<App />);
+    fireEvent.click(screen.getByRole('link', { name: 'Acesso Administrativo' }));
+    expect(await screen.findByRole('heading', { name: 'Acesso Administrativo' })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/admin/login');
+    expect(screen.getByLabelText('E-mail')).toBeInTheDocument();
+    expect(screen.getByLabelText('Senha')).toHaveAttribute('type', 'password');
+    expect(screen.getByRole('button', { name: 'Entrar' })).toBeInTheDocument();
+  });
+
   it('renderiza os destaques com o card compartilhado', async () => {
     render(<App />);
     expect(await screen.findByRole('heading', { name: /indicadores do turismo/i })).toBeInTheDocument();
@@ -20,16 +41,26 @@ describe('App', () => {
     expect(within(card).getByText('350')).toBeInTheDocument();
     expect(within(card).getByText('2025/2')).toBeInTheDocument();
     expect(within(card).getByText('12,2%')).toBeInTheDocument();
+    const destaques = screen.getAllByRole('article');
+    expect(destaques).toHaveLength(4);
+    expect(destaques.map((item) => within(item).getByRole('heading').textContent)).toEqual([
+      'Número de leitos', 'Fluxo de visitantes', 'Número de empresas', 'Empregos no setor',
+    ]);
+    expect(screen.queryByRole('heading', { name: 'Participação econômica' })).not.toBeInTheDocument();
   });
 
   it('exibe cada medição do mock nas colunas da tabela', async () => {
     render(<App />);
     fireEvent.click(screen.getByRole('link', { name: /^indicadores$/i }));
-    const table = await screen.findByRole('table');
+    await screen.findByRole('table');
+    await screen.findByRole('option', { name: 'Hospedagem' });
+    fireEvent.change(screen.getByRole('combobox', { name: 'Setor' }), { target: { value: '1' } });
+    await waitFor(() => expect(screen.getByRole('cell', { name: 'Taxa de ocupação' })).toBeInTheDocument());
+    const table = screen.getByRole('table');
     const rows = within(table).getAllByRole('row').slice(1);
     const expected = mockIndicadores.filter((item) => item.setor.id === 1)
       .flatMap((item) => item.medicoes.map((measurement) => [
-        item.nome, item.unidade, String(measurement.ano),
+        item.nome, item.setor.nome, item.unidade, String(measurement.ano),
         String(measurement.semestre), measurement.valor.toLocaleString('pt-BR'),
       ]));
     expect(rows).toHaveLength(expected.length);
@@ -49,9 +80,11 @@ describe('App', () => {
   it('mostra erro na consulta de indicadores', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'false');
     vi.stubGlobal('fetch', vi.fn().mockImplementation((url) =>
-      url.endsWith('/setores')
-        ? Promise.resolve({ ok: true, json: async () => [{ id: 1, nome: 'Hospedagem' }] })
-        : Promise.resolve({ ok: false, status: 503 })));
+      Promise.resolve(url.endsWith('/setores')
+        ? { ok: true, json: async () => [{ id: 1, nome: 'Hospedagem' }] }
+        : url.endsWith('/periodos')
+          ? { ok: true, json: async () => [] }
+          : { ok: false, status: 503 })));
     window.history.replaceState({}, '', '/indicadores');
     render(<App />);
     expect(await screen.findByRole('alert')).toHaveTextContent('Não foi possível consultar os indicadores');

@@ -56,10 +56,10 @@ describe('Seed da carga de hospedagem', () => {
     await prisma.$disconnect();
   });
 
-  test('cria exatamente 4 medições de hospedagem', () => {
+  test('cria os indicadores e medições da hospedagem e da participação econômica', () => {
     expect(setor).not.toBeNull();
-    expect(indicadores).toHaveLength(2);
-    expect(medicoes).toHaveLength(4);
+    expect(indicadores).toHaveLength(3);
+    expect(medicoes).toHaveLength(5);
   });
 
   test('cria 3 medições de leitos e 1 de taxa de ocupação', () => {
@@ -91,7 +91,7 @@ describe('Seed da carga de hospedagem', () => {
     expect(medicoes.every((medicao) => medicao.status === 'publicado')).toBe(true);
   });
 
-  test('executar o seed novamente mantém exatamente 4 medições', async () => {
+  test('executar o seed novamente mantém exatamente 5 medições', async () => {
     execFileSync(process.execPath, [seedPath], {
       cwd: backendDir,
       stdio: 'inherit',
@@ -107,7 +107,7 @@ describe('Seed da carga de hospedagem', () => {
       },
     });
 
-    expect(quantidade).toBe(4);
+    expect(quantidade).toBe(5);
   });
 
   test('não permite inserir a mesma medição duas vezes', async () => {

@@ -1,5 +1,7 @@
 ﻿.app-shell { min-height: 100vh; display: flex; flex-direction: column; }
-.topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 1rem max(2rem, calc((100vw - 1280px) / 2)); background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.topbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding: 1rem max(2rem, calc((100vw - 1280px) / 2)); background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.topbar-admin-link { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; font-size: .875rem; text-decoration: none; white-space: nowrap; }
+.topbar-admin-link svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
 .brand-block, .footer-brand { display: flex; align-items: center; gap: 1rem; }
 .brand-logo { width: 76px; height: 76px; object-fit: contain; flex-shrink: 0; }
 .brand-block strong, .brand-block small { display: block; }

@@ -1,37 +1,139 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import CardIndicador from '../../components/CardIndicador/CardIndicador'
+import FiltrosPainel from '../../components/FiltrosPainel/FiltrosPainel'
 import GraficoSerieHistorica from '../../components/GraficoSerieHistorica/GraficoSerieHistorica'
 import { getDestaques, getIndicadores } from '../../services/api'
+import GraficoDistribuicaoSetor from '../../components/GraficoDistribuicaoSetor/GraficoDistribuicaoSetor'
+import GraficoComparativoAnual from '../../components/GraficoComparativoAnual/GraficoComparativoAnual'
+
+import {
+  lerFiltros,
+} from '../../components/FiltrosPainel/filtros'
+
+import {
+  montarDistribuicao,
+  periodoMaisRecente,
+} from '../../utils/montarDistribuicao'
+
+import {
+  montarComparativoAnual,
+} from '../../utils/montarComparativoAnual'
+
+import { montarCards } from '../../utils/montarCards'
 
 import './DashboardPage.css'
 
-const SETOR = 'Hospedagem'
-const INDICADOR = 'Número de leitos'
+const NOTA_DISTRIBUICAO =
+  'Metodologia: Mapeamento contínuo SMCELT & COMTUR Santa Rita do Sapucaí'
+
+function combinarIndicadores(indicadores) {
+  const agrupados = new Map()
+
+  indicadores.forEach((indicador) => {
+    const chave = indicador.id
+
+    if (!agrupados.has(chave)) {
+      agrupados.set(chave, {
+        ...indicador,
+        medicoes: [...indicador.medicoes],
+      })
+      return
+    }
+
+    const existente = agrupados.get(chave)
+
+    existente.medicoes.push(...indicador.medicoes)
+  })
+
+  return [...agrupados.values()]
+}
+
+async function buscarIndicadoresComparativo({
+  setor,
+  ano,
+  semestre,
+}) {
+  if (!ano) {
+    return getIndicadores({
+      setor,
+      semestre,
+    })
+  }
+
+  const anoAtual = Number(ano)
+
+  const [indicadoresAnterior, indicadoresAtual] =
+    await Promise.all([
+      getIndicadores({
+        setor,
+        ano: String(anoAtual - 1),
+        semestre,
+      }),
+      getIndicadores({
+        setor,
+        ano,
+        semestre,
+      }),
+    ])
+
+  return combinarIndicadores([
+    ...indicadoresAnterior,
+    ...indicadoresAtual,
+  ])
+}
 
 function DashboardPage() {
   const [estado, setEstado] = useState({ status: 'loading' })
+  const [params] = useSearchParams()
+  const {
+    setor: setorFiltro,
+    ano: anoFiltro,
+    semestre: semestreFiltro,
+  } = lerFiltros(params)
 
   useEffect(() => {
     let active = true
 
-    Promise.all([getIndicadores(), getDestaques()])
-      .then(([indicadores, destaques]) => {
+    Promise.all([
+      getDestaques({
+        setor: setorFiltro,
+        ano: anoFiltro,
+        semestre: semestreFiltro,
+      }),
+      getIndicadores({
+        setor: setorFiltro,
+        ano: anoFiltro,
+        semestre: semestreFiltro,
+      }),
+      buscarIndicadoresComparativo({
+        setor: setorFiltro,
+        ano: anoFiltro,
+        semestre: semestreFiltro,
+      }),
+    ])
+      .then(([destaques, indicadores, indicadoresComparativo]) => {
         if (!active) return
 
-        const indicador = indicadores.find(
-          (item) => item.nome === INDICADOR && item.setor.nome === SETOR,
-        )
-        const destaque = indicador
-          ? destaques.find((item) => item.id === indicador.id)
-          : undefined
+        const cards = montarCards(destaques)
 
-        if (!indicador || !destaque || indicador.medicoes.length === 0) {
+        if (cards.length === 0) {
           setEstado({ status: 'empty' })
           return
         }
 
-        setEstado({ status: 'ready', indicador, destaque })
+        setEstado({
+          status: 'ready',
+          cards,
+          indicadores,
+          distribuicao: montarDistribuicao(indicadores),
+          ano: periodoMaisRecente(indicadores)?.ano,
+          comparativoAnual: montarComparativoAnual(indicadoresComparativo, {
+            ano: anoFiltro,
+            semestre: semestreFiltro,
+          }),
+        })
       })
       .catch(() => {
         if (active) setEstado({ status: 'error' })
@@ -40,9 +142,9 @@ function DashboardPage() {
     return () => {
       active = false
     }
-  }, [])
+  }, [setorFiltro, anoFiltro, semestreFiltro])
 
-  const { status, indicador, destaque } = estado
+  const { status, cards, indicadores, distribuicao, ano, comparativoAnual } = estado
 
   return (
     <div className="dashboard">
@@ -53,6 +155,10 @@ function DashboardPage() {
           Observatório do Turismo de Santa Rita do Sapucaí
         </p>
       </header>
+
+      <div className="dashboard__filtros">
+        <FiltrosPainel />
+      </div>
 
       <div aria-live="polite">
         {status === 'loading' && (
@@ -69,7 +175,7 @@ function DashboardPage() {
 
         {status === 'empty' && (
           <p className="state-message dashboard__state">
-            Sem dados de hospedagem disponíveis no momento.
+            Sem indicadores disponíveis no momento.
           </p>
         )}
 
@@ -79,25 +185,40 @@ function DashboardPage() {
               className="dashboard__indicators"
               aria-label="Indicadores turísticos"
             >
-              <CardIndicador
-                name={destaque.nome}
-                value={destaque.valor}
-                unit={destaque.unidade}
-                periodo={destaque.periodo}
-                variation={destaque.variacao_percentual}
-              />
+              {cards.map((destaque) => (
+                <CardIndicador
+                  key={destaque.id}
+                  name={destaque.nome}
+                  value={destaque.valor}
+                  unit={destaque.unidade}
+                  periodo={destaque.periodo}
+                  variation={destaque.variacao_percentual}
+                />
+              ))}
             </section>
 
-            <section
-              className="dashboard__chart"
-              aria-label="Gráfico de série histórica"
-            >
-              <GraficoSerieHistorica
-                titulo={`Evolução do ${indicador.nome.toLowerCase()}`}
-                subtitulo="Série histórica observada no município"
-                medicoes={indicador.medicoes}
+            {indicadores && (
+              <section
+                className="dashboard__chart"
+                aria-label="Gráfico de série histórica"
+              >
+                <GraficoSerieHistorica
+                  indicadores={indicadores}
+                  subtitulo="Série histórica observada no município"
+                />
+              </section>
+            )}
+            <div className="dashboard__graficos">
+              <GraficoDistribuicaoSetor
+                dados={distribuicao}
+                ano={ano}
+                nota={NOTA_DISTRIBUICAO}
               />
-            </section>
+              <GraficoComparativoAnual
+                dados={comparativoAnual}
+              />
+            </div>
+            
           </>
         )}
       </div>

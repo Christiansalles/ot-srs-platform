@@ -1,0 +1,155 @@
+.grafico-distribuicao {
+  container-type: inline-size;
+  width: 100%;
+  padding: 1.25rem 1.5rem 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.grafico-distribuicao__header {
+  margin-bottom: 1rem;
+}
+
+.grafico-distribuicao__title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.grafico-distribuicao__subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.grafico-distribuicao__conteudo {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.grafico-distribuicao__rosca {
+  position: relative;
+  flex: 0 0 200px;
+  width: 200px;
+  height: 200px;
+}
+
+.grafico-distribuicao__centro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.grafico-distribuicao__centro strong {
+  color: var(--color-text);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.grafico-distribuicao__centro span {
+  color: var(--color-text-muted);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.grafico-distribuicao__legenda {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grafico-distribuicao__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  font-size: 0.85rem;
+}
+
+.grafico-distribuicao__cor {
+  flex: 0 0 auto;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+}
+
+.grafico-distribuicao__nome {
+  flex: 1;
+  min-width: 0;
+  color: var(--color-text-secondary);
+}
+
+/* Coluna fixa à direita: os percentuais ficam alinhados e nunca encostam no nome. */
+.grafico-distribuicao__valor {
+  flex: 0 0 auto;
+  min-width: 2.75rem;
+  color: var(--color-text);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.grafico-distribuicao__nota {
+  margin: 1.25rem 0 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-surface-muted);
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.grafico-distribuicao__empty {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Card estreito com rosca e legenda lado a lado (dois gráficos por linha em
+   telas médias): rosca menor para a legenda caber sem quebrar os nomes. */
+@media (min-width: 641px) {
+  @container (max-width: 520px) {
+    .grafico-distribuicao__conteudo {
+      gap: 1.25rem;
+    }
+
+    .grafico-distribuicao__rosca {
+      flex-basis: 150px;
+      width: 150px;
+      height: 150px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .grafico-distribuicao {
+    padding: 1rem;
+  }
+
+  .grafico-distribuicao__conteudo {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .grafico-distribuicao__legenda {
+    width: 100%;
+  }
+}

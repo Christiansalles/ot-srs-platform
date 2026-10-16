@@ -1,9 +1,12 @@
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, NavLink, Outlet, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
 import IndicadoresPage from './pages/IndicadoresPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import RelatoriosPage from './pages/RelatoriosPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminPage from './pages/AdminPage';
+import RotaProtegida from './components/RotaProtegida';
 import cidadeLogo from './assets/logos/santa-rita.svg';
 import observatorioLogo from './assets/logos/observatorio.png';
 import prefeituraLogo from './assets/logos/prefeitura.png';
@@ -25,15 +28,17 @@ function AppLayout() {
           <NavLink to="/dashboard">Dashboard</NavLink>
           <NavLink to="/relatorios">Relatórios</NavLink>
         </nav>
+        <Link className="ot-button-primary topbar-admin-link" to="/admin/login">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="5" y="10" width="14" height="11" rx="2" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+          Acesso Administrativo
+        </Link>
       </header>
 
       <main className="page-shell">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/indicadores" element={<IndicadoresPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/relatorios" element={<RelatoriosPage />} />
-        </Routes>
+        <Outlet />
       </main>
 
       <footer className="footer-bar">
@@ -52,7 +57,18 @@ function AppLayout() {
 function App() {
   return (
     <BrowserRouter>
-      <AppLayout />
+      <Routes>
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route element={<RotaProtegida />}>
+          <Route path="/admin" element={<AdminPage />} />
+        </Route>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/indicadores" element={<IndicadoresPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/relatorios" element={<RelatoriosPage />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }
