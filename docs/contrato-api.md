@@ -159,9 +159,65 @@ Cada item vira um teste da API (#10).
 
 - [x] **Indicador sem nenhuma medição publicada:** fica de fora da lista, tanto em `/api/indicadores` quanto em `/api/indicadores/destaques`. Segue a regra de só mostrar o que está publicado e evita linha vazia na tabela e card sem número.
 
+## Autenticação
+
+### `POST /api/auth/login`
+
+Autentica um usuário ativo. O e-mail é removido de espaços nas extremidades e convertido para minúsculas antes da consulta.
+
+Requisição:
+
+```json
+{ "email": "admin@observatorio.local", "senha": "sua-senha" }
+```
+
+Em caso de sucesso, responde `200` com o token e os dados públicos do usuário:
+
+```json
+{
+  "token": "<jwt>",
+  "usuario": {
+    "id": 1,
+    "nome": "Administrador",
+    "email": "admin@observatorio.local"
+  }
+}
+```
+
+O token é assinado com HS256 e expira em 8 horas. No M5, ele não contém perfil ou papel de acesso. `senha_hash` nunca é enviado ao cliente.
+
+Erros:
+
+- `400` quando e-mail ou senha estiverem ausentes, vazios ou não forem texto: `{ "erro": "E-mail e senha são obrigatórios" }`.
+- `400` quando o corpo não for JSON válido: `{ "erro": "JSON inválido" }`.
+- `401` para e-mail inexistente, senha incorreta ou usuário inativo: `{ "erro": "E-mail ou senha inválidos" }`.
+- `500` se ocorrer uma falha interna, incluindo `JWT_SECRET` não configurada: `{ "erro": "Erro interno do servidor" }`.
+
+### `GET /api/auth/me`
+
+Retorna os dados públicos do usuário associado ao token. Envie o token no cabeçalho `Authorization` como `Bearer <jwt>`.
+
+Em caso de sucesso, responde `200` diretamente com o objeto do usuário:
+
+```json
+{
+  "id": 1,
+  "nome": "Administrador",
+  "email": "admin@observatorio.local"
+}
+```
+
+Responde `401` se o token estiver ausente, inválido ou expirado, ou se o usuário associado estiver inativo:
+
+```json
+{ "erro": "Token inválido ou expirado" }
+```
+
+`senha_hash` não aparece na resposta.
+
 ## Erros
 
-Formato combinado com a base do Express:
+As respostas de erro da API usam o formato JSON combinado com a base do Express:
 
 ```json
 { "erro": "mensagem legível" }
