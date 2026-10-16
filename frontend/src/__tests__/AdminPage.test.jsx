@@ -3,9 +3,10 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AdminLoginPage from '../pages/AdminLoginPage';
 import AdminPage from '../pages/AdminPage';
-import { getUsuarioLogado, logout } from '../services/auth';
+import { getToken, getUsuarioLogado, logout } from '../services/auth';
 
 vi.mock('../services/auth', () => ({
+  getToken: vi.fn(),
   getUsuarioLogado: vi.fn(),
   login: vi.fn(),
   logout: vi.fn(),
@@ -25,6 +26,7 @@ function renderAdmin() {
 describe('rota administrativa', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    getToken.mockReturnValue(null);
   });
 
   it('redireciona para o login quando não há usuário autenticado', () => {

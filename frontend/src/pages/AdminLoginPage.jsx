@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../services/auth';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { getToken, login } from '../services/auth';
 import './AdminLoginPage.css';
 
 function AdminLoginPage() {
@@ -25,6 +25,8 @@ function AdminLoginPage() {
       setCarregando(false);
     }
   }
+
+  if (getToken()) return <Navigate to="/admin" replace />;
 
   return (
     <main className="admin-login-page">

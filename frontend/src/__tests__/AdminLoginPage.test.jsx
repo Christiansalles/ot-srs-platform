@@ -2,9 +2,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AdminLoginPage from '../pages/AdminLoginPage';
-import { login } from '../services/auth';
+import { getToken, login } from '../services/auth';
 
-vi.mock('../services/auth', () => ({ login: vi.fn() }));
+vi.mock('../services/auth', () => ({ getToken: vi.fn(), login: vi.fn() }));
 
 function renderLogin() {
   return render(
@@ -20,6 +20,16 @@ function renderLogin() {
 describe('tela de login administrativa', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    getToken.mockReturnValue(null);
+  });
+
+  it('redireciona para /admin quando já existe uma sessão', () => {
+    getToken.mockReturnValue('token-existente');
+
+    renderLogin();
+
+    expect(screen.getByRole('heading', { name: 'Painel administrativo' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Acesso Administrativo' })).not.toBeInTheDocument();
   });
 
   it('mostra e esconde a senha e não oferece recuperação de senha', () => {
