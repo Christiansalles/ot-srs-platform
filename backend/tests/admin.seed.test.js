@@ -5,8 +5,6 @@ const { conferirSenha, gerarHash } = require('../src/services/senha');
 
 const backendDir = path.resolve(__dirname, '..');
 const seedPath = path.join(backendDir, 'prisma', 'seed.js');
-const emailOriginal = process.env.ADMIN_EMAIL;
-const senhaOriginal = process.env.ADMIN_SENHA;
 const emailAdminTeste = `Admin-Teste-${Date.now()}@observatorio.local`;
 const emailAdminNormalizado = emailAdminTeste.trim().toLowerCase();
 const senhaAdminTeste = 'senha-admin-teste-ficticia';
@@ -15,13 +13,16 @@ function executarSeed() {
   execFileSync(process.execPath, [seedPath], {
     cwd: backendDir,
     stdio: 'inherit',
+    env: {
+      ...process.env,
+      ADMIN_EMAIL: emailAdminTeste,
+      ADMIN_SENHA: senhaAdminTeste,
+    },
   });
 }
 
 describe('Admin criado pelo seed', () => {
   beforeAll(async () => {
-    process.env.ADMIN_EMAIL = emailAdminTeste;
-    process.env.ADMIN_SENHA = senhaAdminTeste;
     await prisma.usuario.deleteMany({ where: { email: emailAdminNormalizado } });
     executarSeed();
   });
@@ -29,11 +30,6 @@ describe('Admin criado pelo seed', () => {
   afterAll(async () => {
     await prisma.usuario.deleteMany({ where: { email: emailAdminNormalizado } });
     await prisma.$disconnect();
-
-    if (emailOriginal === undefined) delete process.env.ADMIN_EMAIL;
-    else process.env.ADMIN_EMAIL = emailOriginal;
-    if (senhaOriginal === undefined) delete process.env.ADMIN_SENHA;
-    else process.env.ADMIN_SENHA = senhaOriginal;
   });
 
   it('cria o admin ativo usando e-mail normalizado e hash compatível', async () => {
@@ -49,6 +45,8 @@ describe('Admin criado pelo seed', () => {
 
   it('atualiza o admin com as credenciais do ambiente ao executar o seed novamente', async () => {
     const admin = await prisma.usuario.findUnique({ where: { email: emailAdminNormalizado } });
+    if (!admin) throw new Error('O seed não criou o administrador de teste.');
+
     await prisma.usuario.update({
       where: { id_usuario: admin.id_usuario },
       data: {
