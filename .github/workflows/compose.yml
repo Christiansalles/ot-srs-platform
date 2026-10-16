@@ -55,6 +55,51 @@ jobs:
           script=$(curl --fail --silent --show-error http://localhost:8080/ | grep -o '/assets/[^"]*\.js' | head -n 1)
           curl --fail --silent --show-error "http://localhost:8080$script" -o "$RUNNER_TEMP/front.js"
           grep -q 'http://localhost:3000' "$RUNNER_TEMP/front.js"
+      - name: Verificar filtros e login contra a API real
+        run: |
+          api=http://localhost:3000/api
+
+          # Filtros do E8: destaque do período escolhido, variação contra a medição anterior.
+          curl --fail --silent --show-error "$api/indicadores/destaques?ano=2024" \
+            | grep -q '"nome":"Número de leitos","unidade":"leitos","valor":312,"periodo":{"ano":2024,"semestre":2},"variacao_percentual":11.4}'
+          curl --fail --silent --show-error "$api/indicadores?setor=1&ano=2024&semestre=2" | grep -q '"valor":312'
+          test "$(curl --silent --show-error "$api/indicadores?ano=2019")" = '[]'
+          for consulta in 'ano=abc' 'semestre=3&ano=2024' 'semestre=2' 'setor=abc'; do
+            test "$(curl --silent -o /dev/null -w '%{http_code}' "$api/indicadores?$consulta")" = 400
+          done
+
+          # Depois do login o front envia Authorization em toda chamada: o preflight precisa liberar.
+          curl --fail --silent --show-error -o /dev/null -D - -X OPTIONS \
+            -H 'Origin: http://localhost:8080' -H 'Access-Control-Request-Method: GET' \
+            -H 'Access-Control-Request-Headers: authorization' "$api/indicadores" \
+            | grep -qi '^access-control-allow-headers:.*authorization'
+
+          # Login de ponta a ponta com o administrador de desenvolvimento criado pelo seed.
+          email=$(docker compose exec -T backend printenv ADMIN_EMAIL)
+          senha=$(docker compose exec -T backend printenv ADMIN_SENHA)
+          test "$(curl --silent -o /dev/null -w '%{http_code}' -H 'Content-Type: application/json' \
+            -d "{\"email\":\"$email\",\"senha\":\"senha-errada\"}" "$api/auth/login")" = 401
+          token=$(curl --fail --silent --show-error -H 'Content-Type: application/json' \
+            -d "{\"email\":\"$email\",\"senha\":\"$senha\"}" "$api/auth/login" \
+            | node -e 'process.stdout.write(JSON.parse(require("fs").readFileSync(0, "utf8")).token)')
+          curl --fail --silent --show-error -H "Authorization: Bearer $token" "$api/auth/me" | grep -q "\"email\":\"$email\""
+          test "$(curl --silent -o /dev/null -w '%{http_code}' -H 'Authorization: Bearer invalido' "$api/auth/me")" = 401
+      - name: Comparar o mock do front com a API real
+        working-directory: frontend
+        run: |
+          # Com VITE_USE_MOCK=true o front precisa ver exatamente o que a API devolve.
+          node --input-type=module -e '
+            import { mockSetores, mockPeriodos, mockIndicadores, mockDestaques } from "./src/mocks/dados.js";
+            const api = (rota) => fetch(`http://localhost:3000/api/${rota}`).then((resposta) => resposta.json());
+            const pares = { setores: mockSetores, periodos: mockPeriodos, indicadores: mockIndicadores, "indicadores/destaques": mockDestaques };
+            let divergiu = false;
+            for (const [rota, mock] of Object.entries(pares)) {
+              const igual = JSON.stringify(await api(rota)) === JSON.stringify(mock);
+              console.log(`${igual ? "igual" : "DIVERGE"}: /api/${rota}`);
+              divergiu ||= !igual;
+            }
+            process.exitCode = divergiu ? 1 : 0;
+          '
       - name: Logs e limpeza
         if: always()
         run: |
