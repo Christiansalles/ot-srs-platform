@@ -11,9 +11,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
+      # -h localhost testa pela rede. Sem ele, o servidor temporário que o
+      # Postgres usa na primeira inicialização (só socket local) já conta como
+      # pronto, e o backend sobe antes de a porta 5432 aceitar conexão.
       test:
         - CMD-SHELL
-        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+        - pg_isready -h localhost -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
       interval: 5s
       timeout: 5s
       retries: 10
