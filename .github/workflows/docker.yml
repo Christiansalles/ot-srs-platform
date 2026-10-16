@@ -32,6 +32,9 @@ jobs:
           docker run -d --name backend --network ot-srs-test \
             -e PORT=3000 \
             -e DATABASE_URL=postgresql://ot:ot@db:5432/ot_srs_test \
+            -e ADMIN_EMAIL=admin-ci@observatorio.local \
+            -e ADMIN_SENHA=senha-ci-ficticia-nao-usar-em-producao \
+            -e JWT_SECRET=jwt-secret-ci-ficticio-nao-usar-em-producao \
             -p 3100:3000 ot-srs-backend:test
           docker run -d --name frontend -p 8080:80 ot-srs-frontend:test
       - name: Validar respostas HTTP

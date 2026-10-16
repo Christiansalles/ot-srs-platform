@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { gerarHash } = require('../src/services/senha');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env'), quiet: true });
 
 const prisma = new PrismaClient();
 const dadosPath = path.join(__dirname, 'dados');
@@ -101,6 +102,31 @@ async function carregarSetor(setorDados, usuario) {
 }
 
 async function main() {
+  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const adminSenha = process.env.ADMIN_SENHA;
+  if (!adminEmail || !adminSenha?.trim()) {
+    throw new Error('ADMIN_EMAIL e ADMIN_SENHA precisam estar configuradas para executar o seed.');
+  }
+  if (adminEmail === 'carga-inicial@observatorio.local') {
+    throw new Error('ADMIN_EMAIL não pode usar o e-mail reservado para Carga inicial.');
+  }
+
+  const adminSenhaHash = await gerarHash(adminSenha);
+  await prisma.usuario.upsert({
+    where: { email: adminEmail },
+    update: {
+      nome: 'Administrador',
+      senha_hash: adminSenhaHash,
+      ativo: true,
+    },
+    create: {
+      nome: 'Administrador',
+      email: adminEmail,
+      senha_hash: adminSenhaHash,
+      ativo: true,
+    },
+  });
+
   const usuario = await prisma.usuario.upsert({
     where: { email: 'carga-inicial@observatorio.local' },
     update: {
