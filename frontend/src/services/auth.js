@@ -2,6 +2,7 @@ import { API_URL } from '../config';
 
 const TOKEN_KEY = 'ot-srs-token';
 const USER_KEY = 'ot-srs-user';
+export const AUTH_UNAUTHORIZED_EVENT = 'ot-srs:unauthorized';
 
 export async function login(email, senha) {
   let response;
