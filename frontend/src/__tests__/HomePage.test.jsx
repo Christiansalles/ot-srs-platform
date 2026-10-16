@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 import HomePage from '../pages/HomePage';
 import { getDestaques } from '../services/api';
-import { montarCards } from '../pages/Dashboard/montarCards';
+import { montarCards } from '../utils/montarCards';
 
 vi.mock('../services/api', () => ({ getDestaques: vi.fn() }));
 
