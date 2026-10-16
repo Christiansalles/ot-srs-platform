@@ -13,6 +13,27 @@ describe('App', () => {
     vi.unstubAllGlobals();
   });
 
+  it.each(['/', '/indicadores', '/dashboard', '/relatorios'])('oferece acesso administrativo no cabeçalho de %s', async (caminho) => {
+    window.history.replaceState({}, '', caminho);
+    render(<App />);
+    const acesso = screen.getByRole('link', { name: 'Acesso Administrativo' });
+    expect(acesso).toHaveAttribute('href', '/admin/login');
+    expect(acesso.closest('header')).toHaveClass('topbar');
+    // Aguarda as consultas das páginas antes de encerrar o teste.
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it('abre a tela de login pelo acesso administrativo do cabeçalho', async () => {
+    window.sessionStorage.clear();
+    render(<App />);
+    fireEvent.click(screen.getByRole('link', { name: 'Acesso Administrativo' }));
+    expect(await screen.findByRole('heading', { name: 'Acesso Administrativo' })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/admin/login');
+    expect(screen.getByLabelText('E-mail')).toBeInTheDocument();
+    expect(screen.getByLabelText('Senha')).toHaveAttribute('type', 'password');
+    expect(screen.getByRole('button', { name: 'Entrar' })).toBeInTheDocument();
+  });
+
   it('renderiza os destaques com o card compartilhado', async () => {
     render(<App />);
     expect(await screen.findByRole('heading', { name: /indicadores do turismo/i })).toBeInTheDocument();

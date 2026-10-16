@@ -1,4 +1,4 @@
-import { BrowserRouter, NavLink, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, NavLink, Outlet, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
 import IndicadoresPage from './pages/IndicadoresPage';
@@ -27,6 +27,13 @@ function AppLayout() {
           <NavLink to="/dashboard">Dashboard</NavLink>
           <NavLink to="/relatorios">Relatórios</NavLink>
         </nav>
+        <Link className="ot-button-primary topbar-admin-link" to="/admin/login">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="5" y="10" width="14" height="11" rx="2" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+          Acesso Administrativo
+        </Link>
       </header>
 
       <main className="page-shell">
