@@ -1,5 +1,6 @@
 ﻿import { API_URL } from '../config';
 import { mockSetores, mockIndicadores, mockPeriodos, montarDestaques } from '../mocks/dados';
+import { getToken } from './auth';
 
 // Mock é uma opção explícita; falhas da API devem chegar às telas.
 async function request(path, mockData, filtros = {}) {
@@ -8,7 +9,10 @@ async function request(path, mockData, filtros = {}) {
     return structuredClone(typeof mockData === 'function' ? mockData(params) : mockData);
   }
   const query = params.size ? `?${params}` : '';
-  const response = await fetch(`${API_URL}/api/${path}${query}`);
+  const token = getToken();
+  const response = await fetch(`${API_URL}/api/${path}${query}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
   if (!response.ok) throw new Error(`Falha ao consultar ${path} (HTTP ${response.status})`);
   return response.json();
 }
