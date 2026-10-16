@@ -37,6 +37,20 @@ describe('serviços da API', () => {
     await expect(getSetores()).rejects.toThrow('HTTP 404');
   });
 
+  it('envia o token da sessão no cabeçalho Authorization', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'false');
+    window.sessionStorage.setItem('ot-srs-token', 'jwt-de-teste');
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => [] });
+    vi.stubGlobal('fetch', fetchMock);
+
+    await getSetores();
+
+    expect(fetchMock).toHaveBeenCalledWith('http://localhost:3000/api/setores', {
+      headers: { Authorization: 'Bearer jwt-de-teste' },
+    });
+    window.sessionStorage.clear();
+  });
+
   it('envia apenas filtros preenchidos nas duas rotas', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'false');
     const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => [] });
