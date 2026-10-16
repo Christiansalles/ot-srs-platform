@@ -207,4 +207,24 @@ describe('DashboardPage', () => {
     expect(screen.getAllByRole('article')).toHaveLength(1)
   })
 
+  it('mostra o gráfico comparativo anual', async () => {
+    render(<DashboardPage />)
+
+    const comparativo = await screen.findByRole('region', {
+      name: 'Comparativo anual',
+    })
+
+    expect(comparativo).toBeInTheDocument()
+
+    expect(
+      within(comparativo).getByRole('heading', {
+        name: 'Comparativo anual',
+      }),
+    ).toBeInTheDocument()
+
+    expect(
+      within(comparativo).getByText('Variação das 4 dimensões-chave'),
+    ).toBeInTheDocument()
+  })
+
 })

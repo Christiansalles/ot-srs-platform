@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { montarCards } from '../pages/Dashboard/montarCards'
+import { montarCards } from '../utils/montarCards'
 
 const item = (nome) => ({ id: nome, nome })
 

@@ -1,0 +1,154 @@
+.grafico-comparativo {
+  width: 100%;
+  padding: 1.25rem 1.5rem 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.grafico-comparativo__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.grafico-comparativo__title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.grafico-comparativo__subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.grafico-comparativo__legenda {
+  display: flex;
+  gap: 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.grafico-comparativo__legenda span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.grafico-comparativo__legenda-cor {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 2px;
+}
+
+.grafico-comparativo__legenda-cor--anterior {
+  background: var(--chart-cyan);
+}
+
+.grafico-comparativo__legenda-cor--atual {
+  background: var(--chart-violet);
+}
+
+.grafico-comparativo__chart {
+  width: 100%;
+  height: 280px;
+}
+
+.grafico-comparativo__empty {
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .grafico-comparativo {
+    padding: 1rem;
+  }
+
+  .grafico-comparativo__header {
+    flex-direction: column;
+  }
+
+  .grafico-comparativo__chart {
+    height: 250px;
+  }
+
+  /* Os quatro rótulos do eixo X precisam caber lado a lado. */
+  .grafico-comparativo .recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value {
+    font-size: 10px;
+  }
+}
+
+.grafico-comparativo__tooltip {
+  min-width: 240px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-background);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.grafico-comparativo__tooltip-titulo {
+  margin: 0 0 12px;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.grafico-comparativo__tooltip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.grafico-comparativo__tooltip-item + .grafico-comparativo__tooltip-item {
+  margin-top: 9px;
+}
+
+.grafico-comparativo__tooltip-indicador {
+  width: 8px;
+  height: 8px;
+  margin-top: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.grafico-comparativo__tooltip-indicador--anterior {
+  background: var(--chart-cyan);
+}
+
+.grafico-comparativo__tooltip-indicador--atual {
+  background: var(--chart-violet);
+}
+
+.grafico-comparativo__tooltip-ano {
+  margin-right: 6px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.grafico-comparativo__tooltip-valor {
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.grafico-comparativo__tooltip-percentual {
+  margin-left: 4px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
