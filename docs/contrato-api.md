@@ -177,7 +177,7 @@ Em caso de sucesso, responde `200` com o token e os dados públicos do usuário:
 {
   "token": "<jwt>",
   "usuario": {
-    "id": 2,
+    "id": 1,
     "nome": "Administrador",
     "email": "admin@observatorio.local"
   }
@@ -201,7 +201,7 @@ Em caso de sucesso, responde `200` diretamente com o objeto do usuário:
 
 ```json
 {
-  "id": 2,
+  "id": 1,
   "nome": "Administrador",
   "email": "admin@observatorio.local"
 }
