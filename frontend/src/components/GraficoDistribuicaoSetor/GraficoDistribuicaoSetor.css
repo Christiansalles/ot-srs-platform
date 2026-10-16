@@ -1,4 +1,5 @@
 .grafico-distribuicao {
+  container-type: inline-size;
   width: 100%;
   padding: 1.25rem 1.5rem 1.5rem;
   background: var(--color-surface);
@@ -87,12 +88,18 @@
 
 .grafico-distribuicao__nome {
   flex: 1;
+  min-width: 0;
   color: var(--color-text-secondary);
 }
 
+/* Coluna fixa à direita: os percentuais ficam alinhados e nunca encostam no nome. */
 .grafico-distribuicao__valor {
+  flex: 0 0 auto;
+  min-width: 2.75rem;
   color: var(--color-text);
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 .grafico-distribuicao__nota {
@@ -114,6 +121,22 @@
   color: var(--color-text-muted);
   font-size: 0.9rem;
   text-align: center;
+}
+
+/* Card estreito com rosca e legenda lado a lado (dois gráficos por linha em
+   telas médias): rosca menor para a legenda caber sem quebrar os nomes. */
+@media (min-width: 641px) {
+  @container (max-width: 520px) {
+    .grafico-distribuicao__conteudo {
+      gap: 1.25rem;
+    }
+
+    .grafico-distribuicao__rosca {
+      flex-basis: 150px;
+      width: 150px;
+      height: 150px;
+    }
+  }
 }
 
 @media (max-width: 640px) {
