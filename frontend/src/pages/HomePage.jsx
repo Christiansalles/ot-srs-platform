@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom';
 import CardIndicador from '../components/CardIndicador/CardIndicador';
 import { getDestaques } from '../services/api';
 
+// Os quatro destaques da Home seguem a ordem dos cards principais do dashboard.
+const DESTAQUES_DA_HOME = [
+  'Número de leitos',
+  'Fluxo de visitantes',
+  'Número de empresas',
+  'Empregos no setor',
+];
+
 export default function HomePage() {
   const [destaques, setDestaques] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +22,9 @@ export default function HomePage() {
     getDestaques()
       .then((dados) => {
         if (active) {
-          setDestaques(dados);
+          setDestaques(DESTAQUES_DA_HOME
+            .map((nome) => dados.find((indicador) => indicador.nome === nome))
+            .filter(Boolean));
           setLoading(false);
         }
       })
@@ -37,7 +47,7 @@ export default function HomePage() {
           <p className="eyebrow">Portal de inteligência territorial · SRS-MG</p>
           <h1>Indicadores do Turismo</h1>
           <p className="lead">
-            Dados e informações abertas para acompanhar a hospedagem e impulsionar o
+            Dados e informações abertas para acompanhar o turismo e impulsionar o
             desenvolvimento turístico de Santa Rita do Sapucaí.
           </p>
           <div className="hero-actions">

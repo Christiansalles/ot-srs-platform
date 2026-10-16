@@ -20,6 +20,12 @@ describe('App', () => {
     expect(within(card).getByText('350')).toBeInTheDocument();
     expect(within(card).getByText('2025/2')).toBeInTheDocument();
     expect(within(card).getByText('12,2%')).toBeInTheDocument();
+    const destaques = screen.getAllByRole('article');
+    expect(destaques).toHaveLength(4);
+    expect(destaques.map((item) => within(item).getByRole('heading').textContent)).toEqual([
+      'Número de leitos', 'Fluxo de visitantes', 'Número de empresas', 'Empregos no setor',
+    ]);
+    expect(screen.queryByRole('heading', { name: 'Participação econômica' })).not.toBeInTheDocument();
   });
 
   it('exibe cada medição do mock nas colunas da tabela', async () => {
