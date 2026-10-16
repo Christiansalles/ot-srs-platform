@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import CardIndicador from '../../components/CardIndicador/CardIndicador'
+import FiltrosPainel from '../../components/FiltrosPainel/FiltrosPainel'
 import GraficoSerieHistorica from '../../components/GraficoSerieHistorica/GraficoSerieHistorica'
 import { getDestaques, getIndicadores } from '../../services/api'
 import GraficoDistribuicaoSetor from '../../components/GraficoDistribuicaoSetor/GraficoDistribuicaoSetor'
 import GraficoComparativoAnual from '../../components/GraficoComparativoAnual/GraficoComparativoAnual'
+
+import {
+  lerFiltros,
+} from '../../components/FiltrosPainel/filtros'
 
 import {
   montarDistribuicao,
@@ -22,14 +28,92 @@ import './DashboardPage.css'
 const NOTA_DISTRIBUICAO =
   'Metodologia: Mapeamento contínuo SMCELT & COMTUR Santa Rita do Sapucaí'
 
+function combinarIndicadores(indicadores) {
+  const agrupados = new Map()
+
+  indicadores.forEach((indicador) => {
+    const chave = indicador.id
+
+    if (!agrupados.has(chave)) {
+      agrupados.set(chave, {
+        ...indicador,
+        medicoes: [...indicador.medicoes],
+      })
+      return
+    }
+
+    const existente = agrupados.get(chave)
+
+    existente.medicoes.push(...indicador.medicoes)
+  })
+
+  return [...agrupados.values()]
+}
+
+async function buscarIndicadoresComparativo({
+  setor,
+  ano,
+  semestre,
+}) {
+  if (!ano) {
+    return getIndicadores({
+      setor,
+      semestre,
+    })
+  }
+
+  const anoAtual = Number(ano)
+
+  const [indicadoresAnterior, indicadoresAtual] =
+    await Promise.all([
+      getIndicadores({
+        setor,
+        ano: String(anoAtual - 1),
+        semestre,
+      }),
+      getIndicadores({
+        setor,
+        ano,
+        semestre,
+      }),
+    ])
+
+  return combinarIndicadores([
+    ...indicadoresAnterior,
+    ...indicadoresAtual,
+  ])
+}
+
 function DashboardPage() {
   const [estado, setEstado] = useState({ status: 'loading' })
+  const [params] = useSearchParams()
+  const {
+    setor: setorFiltro,
+    ano: anoFiltro,
+    semestre: semestreFiltro,
+  } = lerFiltros(params)
 
   useEffect(() => {
     let active = true
 
-    Promise.all([getDestaques(), getIndicadores()])
-      .then(([destaques, indicadores]) => {
+    Promise.all([
+      getDestaques({
+        setor: setorFiltro,
+        ano: anoFiltro,
+        semestre: semestreFiltro,
+      }),
+      getIndicadores({
+        setor: setorFiltro,
+        ano: anoFiltro,
+        semestre: semestreFiltro,
+      }),
+      buscarIndicadoresComparativo({
+        setor: setorFiltro,
+        ano: anoFiltro,
+        semestre: semestreFiltro,
+      }),
+    ])
+      .then(([destaques, indicadores, indicadoresComparativo]) => {
         if (!active) return
 
         const cards = montarCards(destaques)
@@ -45,7 +129,10 @@ function DashboardPage() {
           indicadores,
           distribuicao: montarDistribuicao(indicadores),
           ano: periodoMaisRecente(indicadores)?.ano,
-          comparativoAnual: montarComparativoAnual(indicadores),
+          comparativoAnual: montarComparativoAnual(indicadoresComparativo, {
+            ano: anoFiltro,
+            semestre: semestreFiltro,
+          }),
         })
       })
       .catch(() => {
@@ -55,7 +142,7 @@ function DashboardPage() {
     return () => {
       active = false
     }
-  }, [])
+  }, [setorFiltro, anoFiltro, semestreFiltro])
 
   const { status, cards, indicadores, distribuicao, ano, comparativoAnual } = estado
 
@@ -68,6 +155,10 @@ function DashboardPage() {
           Observatório do Turismo de Santa Rita do Sapucaí
         </p>
       </header>
+
+      <div className="dashboard__filtros">
+        <FiltrosPainel />
+      </div>
 
       <div aria-live="polite">
         {status === 'loading' && (
