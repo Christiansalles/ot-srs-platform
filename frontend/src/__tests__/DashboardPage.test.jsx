@@ -75,6 +75,12 @@ function renderDashboard(url = '/') {
   )
 }
 
+function chamadaComUrl(fetchMock, trecho) {
+  return fetchMock.mock.calls.some(([url]) =>
+    url.includes(trecho),
+  )
+}
+
 // As regras de filtro e de ordem têm testes próprios em montarCards.test.js.
 // Aqui ficam só a ligação da página com a API, com o card e com o gráfico.
 describe('DashboardPage', () => {
@@ -302,17 +308,19 @@ describe('DashboardPage', () => {
 
     await screen.findAllByRole('article')
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining(
+    expect(
+      chamadaComUrl(
+        fetchMock,
         '/api/indicadores/destaques?setor=1&ano=2024&semestre=2',
-      ),
-    )
+      )
+    ).toBe(true)
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining(
+    expect(
+      chamadaComUrl(
+        fetchMock,
         '/api/indicadores?setor=1&ano=2024&semestre=2',
-      ),
-    )
+      )
+    ).toBe(true)
   })
 
   it('reconsulta a API quando o filtro de ano muda', async () => {
@@ -345,17 +353,19 @@ describe('DashboardPage', () => {
       )
     })
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining(
+    expect(
+      chamadaComUrl(
+        fetchMock,
         '/api/indicadores/destaques?ano=2024',
-      ),
-    )
+      )
+    ).toBe(true)
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      expect.stringContaining(
+    expect(
+      chamadaComUrl(
+        fetchMock,
         '/api/indicadores?ano=2024',
-      ),
-    )
+      )
+    ).toBe(true)
   })
 
   it('consulta a API com os filtros de ano, semestre e setor', async () => {
@@ -397,17 +407,15 @@ describe('DashboardPage', () => {
     })
 
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringContaining(
-          '/api/indicadores/destaques?setor=1&ano=2024&semestre=2',
-        ),
-      )
+      expect(chamadaComUrl(
+        fetchMock,
+        '/api/indicadores/destaques?setor=1&ano=2024&semestre=2',
+      )).toBe(true)
 
-      expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringContaining(
-          '/api/indicadores?setor=1&ano=2024&semestre=2',
-        ),
-      )
+      expect(chamadaComUrl(
+        fetchMock,
+        '/api/indicadores?setor=1&ano=2024&semestre=2',
+      )).toBe(true)
     })
   })
 
