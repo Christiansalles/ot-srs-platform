@@ -52,6 +52,23 @@ migrations e executa o seed antes de iniciar a API.
 | Health check da API | <http://localhost:3000/api/health> |
 | Adminer | <http://localhost:8081> |
 
+### Painel administrativo
+
+Com os serviços iniciados pelo Docker Compose, abra <http://localhost:8080/admin/login>
+e entre com a conta de desenvolvimento criada pelo seed:
+
+| Campo | Valor local |
+| --- | --- |
+| E-mail | `admin@observatorio.local` |
+| Senha | `senha-admin-local-nao-usar-em-producao` |
+
+Esses valores são fictícios e servem apenas para desenvolvimento local. O Compose
+usa esses mesmos valores como padrão. Para substituí-los, defina `ADMIN_EMAIL`,
+`ADMIN_SENHA` e `JWT_SECRET` no ambiente ou em um arquivo `.env` na raiz do projeto.
+Para executar o backend fora do Docker, configure as mesmas variáveis em
+`backend/.env`, usando `backend/.env.example` como referência. Nunca use os valores
+de exemplo em ambientes compartilhados ou de produção.
+
 No Adminer, informe `db` como servidor, `ot` como usuário, `ot` como senha e
 `ot_srs` como banco. Para parar os serviços, pressione Ctrl+C ou execute
 `docker compose down` em outro terminal na raiz do projeto.
@@ -188,6 +205,9 @@ conjunta dos serviços é feita pelo Docker Compose, documentado acima.
 | `DATABASE_URL` | `backend/.env` | Conexão PostgreSQL usada pela integração do banco | `postgresql://ot:ot@localhost:5432/ot_srs` |
 | `PORT` | `backend/.env` | Porta HTTP da API; padrão `3000` | `3000` |
 | `CORS_ORIGIN` | `backend/.env` ou ambiente/`.env` do Compose | Origem permitida para chamadas do navegador; vazio libera todas | `http://localhost:5173` |
+| `ADMIN_EMAIL` | `backend/.env` ou ambiente/`.env` do Compose | E-mail do administrador de desenvolvimento criado pelo seed | `admin@observatorio.local` |
+| `ADMIN_SENHA` | `backend/.env` ou ambiente/`.env` do Compose | Senha local do administrador de desenvolvimento | `senha-admin-local-nao-usar-em-producao` |
+| `JWT_SECRET` | `backend/.env` ou ambiente/`.env` do Compose | Segredo que assina os tokens de autenticação; use um valor forte fora do desenvolvimento | `jwt-secret-local-nao-usar-em-producao` |
 | `VITE_API_URL` | `frontend/.env` | Endereço público da API, sem `/api` no final | `http://localhost:3000` |
 
 As credenciais do exemplo são ilustrativas: o banco, usuário e senha precisam existir
