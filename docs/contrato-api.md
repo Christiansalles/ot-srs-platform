@@ -171,7 +171,7 @@ Requisição:
 { "email": "admin@observatorio.local", "senha": "sua-senha" }
 ```
 
-Em caso de sucesso, responde `200` com o token e os dados públicos do usuário:
+Em caso de sucesso, responde `200` com o token e os dados públicos do usuário, incluindo `perfil` (`admin` ou `editor`):
 
 ```json
 {
@@ -179,12 +179,13 @@ Em caso de sucesso, responde `200` com o token e os dados públicos do usuário:
   "usuario": {
     "id": 1,
     "nome": "Administrador",
-    "email": "admin@observatorio.local"
+    "email": "admin@observatorio.local",
+    "perfil": "admin"
   }
 }
 ```
 
-O token é assinado com HS256 e expira em 8 horas. No M5, ele não contém perfil ou papel de acesso. `senha_hash` nunca é enviado ao cliente.
+O token é assinado com HS256, inclui o perfil do usuário e expira em 8 horas. `senha_hash` nunca é enviado ao cliente.
 
 Erros:
 
@@ -203,7 +204,8 @@ Em caso de sucesso, responde `200` diretamente com o objeto do usuário:
 {
   "id": 1,
   "nome": "Administrador",
-  "email": "admin@observatorio.local"
+  "email": "admin@observatorio.local",
+  "perfil": "admin"
 }
 ```
 
@@ -214,6 +216,73 @@ Responde `401` se o token estiver ausente, inválido ou expirado, ou se o usuár
 ```
 
 `senha_hash` não aparece na resposta.
+
+## Perfis e rotas administrativas
+
+O login e `/api/auth/me` incluem `perfil` no objeto `usuario`. Os valores permitidos são `admin` e `editor`. O perfil também é incluído como claim no JWT; `admin` pode acessar todas as rotas administrativas e `editor` pode operar indicadores, medições e relatórios. As rotas `GET`, `POST`, `PUT` e `PATCH` em `/api/admin/*` exigem `Authorization: Bearer <jwt>` e usuário ativo. Ausência, expiração ou invalidação do token responde `401`; perfil sem autorização para a operação responde `403`.
+
+### Indicadores e medições
+
+Todas as rotas abaixo exigem autenticação e perfil com acesso administrativo.
+
+#### `GET /api/admin/indicadores`
+
+Retorna todos os indicadores, inclusive os sem medições, ordenados por nome. Cada item inclui `id`, `nome`, `unidade`, `descricao`, setor `{ id, nome }` e `medicoes`, ordenadas por ano e semestre. Cada medição inclui `id`, `ano`, `semestre`, `valor` (número) e `status` (`rascunho` ou `publicado`). A resposta não expõe `id_usuario`.
+
+#### `POST /api/admin/indicadores`
+
+Cria indicador. Corpo obrigatório: `nome`, `unidade` e `setorId` (inteiro positivo existente); `descricao` é opcional e pode ser `null`.
+
+#### `PUT /api/admin/indicadores/:id`
+
+Atualiza `nome`, `unidade`, `setorId` e `descricao` do indicador. O corpo segue os mesmos campos de `POST`.
+
+#### `POST /api/admin/indicadores/:id/medicoes`
+
+Cria medição com `ano` (inteiro de quatro dígitos), `semestre` (`1` ou `2`), `valor` (número finito compatível com `NUMERIC(12,2)`) e `status` (`rascunho` ou `publicado`). A API associa o usuário autenticado à medição. A combinação de indicador, ano e semestre deve ser única.
+
+#### `PUT /api/admin/medicoes/:id`
+
+Atualiza `ano`, `semestre`, `valor` e `status`, com as mesmas validações de criação. A API não permite mudar o indicador associado à medição.
+
+#### `PATCH /api/admin/medicoes/:id/status`
+
+Atualiza somente o status. Corpo: `{ "status": "publicado" }` ou `{ "status": "rascunho" }`.
+
+### Relatórios
+
+#### `GET /api/relatorios?ano=2025&categoria=Turismo`
+
+Rota pública. Os filtros `ano` e `categoria` são opcionais e combináveis. Retorna somente relatórios publicados, ordenados por data de publicação decrescente. Cada item contém `id`, `titulo`, `edicao`, `categoria`, `data_publicacao` (`YYYY-MM-DD`), `descricao`, `tamanho_kb` e `url_arquivo`. Não retorna o caminho físico nem o usuário que cadastrou o relatório. Filtro válido sem resultados responde `200` com `[]`.
+
+Categorias válidas: `Hospedagem`, `Turismo`, `Participação econômica` e `Indicadores turísticos`. O filtro deve corresponder exatamente a um desses valores.
+
+#### `GET /api/relatorios/:id/arquivo`
+
+Rota pública para baixar o PDF de um relatório publicado. Responde com `Content-Type: application/pdf` e nome de arquivo seguro em `Content-Disposition`. Relatório inexistente, em rascunho ou arquivo ausente responde `404` com `{ "erro": "Relatório não encontrado" }`.
+
+#### `GET /api/admin/relatorios`
+
+Rota autenticada para listar relatórios de qualquer status. Cada item contém os mesmos campos públicos, mais `status` (`rascunho` ou `publicado`).
+
+#### `POST /api/admin/relatorios`
+
+Rota autenticada para cadastrar relatório. Envie `multipart/form-data` com os campos obrigatórios `titulo`, `edicao`, `categoria`, `data_publicacao`, `descricao` e `arquivo` (um PDF). O servidor define `id_usuario`, `tamanho_kb`, `arquivo_url` e o status inicial (`rascunho`). Categoria deve ser uma das quatro categorias documentadas. O limite do arquivo é 10 MiB; arquivo ausente, inválido ou não PDF responde `400`, arquivo acima do limite responde `413`.
+
+Os PDFs ficam no diretório `uploads/` do backend, persistido no volume Docker `uploads_data` montado em `/app/uploads`. `arquivo_url` guarda somente o nome relativo do arquivo; o cliente acessa o conteúdo pela rota pública de download, nunca por um caminho do sistema de arquivos. O nome armazenado é gerado pelo servidor. O volume precisa ser declarado no Compose junto com a implementação do upload.
+
+### Erros das rotas administrativas e de relatórios
+
+Erros seguem `{ "erro": "mensagem legível" }`.
+
+- `400`: JSON/campos inválidos, categoria ou status inválido, ano/semestre fora do formato, arquivo ausente ou que não seja PDF. Mensagens: `"JSON inválido"`, `"Campos obrigatórios inválidos"`, `"Categoria inválida"`, `"Status inválido"`, `"Arquivo PDF obrigatório"`.
+- `401`: credencial ausente/inválida ou usuário inativo: `"Token inválido ou expirado"`.
+- `403`: perfil sem permissão para a operação: `"Acesso negado"`.
+- `404`: indicador, medição ou relatório inexistente: `"Recurso não encontrado"`; para download público, `"Relatório não encontrado"`.
+- `409`: conflito com unicidade (e-mail já cadastrado ou indicador já existente no período): `"Já existe um registro com esses dados"`.
+- `413`: upload acima de 10 MiB: `"Arquivo muito grande"`.
+
+As rotas públicas de relatório nunca incluem rascunhos. Uma categoria desconhecida ou ano malformado retorna `400`, em vez de ser ignorado.
 
 ## Erros
 
