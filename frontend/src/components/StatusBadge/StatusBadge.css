@@ -1,0 +1,35 @@
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .3rem .75rem;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.status-badge__dot {
+  width: .5rem;
+  height: .5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-badge--publicado {
+  background: #E6EEFB;
+  color: var(--color-primary);
+}
+
+/* Tom escuro do acento: o --color-accent puro não tem contraste com texto pequeno */
+.status-badge--rascunho {
+  background: #FBE8FD;
+  color: #8A059D;
+}
+
+.status-badge--desconhecido {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+}
