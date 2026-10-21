@@ -11,7 +11,7 @@ function AdminPage() {
           <h1 id="admin-heading">Olá, {usuario.nome}</h1>
         </div>
       </div>
-      <p className="state-message">O painel de gestão dos indicadores chega no Milestone 6.</p>
+      <p className="state-message">O painel de gestão dos indicadores está em construção.</p>
     </section>
   );
 }

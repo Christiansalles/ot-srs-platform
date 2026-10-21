@@ -10,6 +10,13 @@
   --color-background: #F8FAFC;
   --color-surface: #FFFFFF;
   --color-surface-muted: #F1F5F9;
+  --color-surface-translucent: rgba(255, 255, 255, 0.92);
+  --color-overlay: rgba(15, 23, 42, 0.4);
+  --shadow-elevated: 0 20px 45px rgba(11, 28, 48, 0.18);
+
+  /* Destaques suaves e texto sobre o gradiente */
+  --color-primary-soft: #EEF0FF;
+  --color-on-brand: #FFFFFF;
 
   /* Texto e bordas */
   --color-text: #0F172A;

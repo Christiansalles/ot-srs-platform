@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { getUsuarioLogado, logout } from '../../services/auth';
 import './AdminLayout.css';
 
-// Perfis definidos no contrato do M6; usuários antigos ainda não trazem o campo.
-const PERFIS = { admin: 'Administrador', editor: 'Editor' };
+// Perfis da visão geral do M6 (migração do #150).
+const PERFIS = { administrador: 'Administrador', editor: 'Editor' };
+
+// Sessão antiga sem perfil continua como Administrador; perfil desconhecido aparece como veio.
+function rotuloPerfil(perfil) {
+  if (!perfil) return PERFIS.administrador;
+  return Object.hasOwn(PERFIS, perfil) ? PERFIS[perfil] : perfil;
+}
 
 const MENU = [
   {
@@ -14,7 +20,7 @@ const MENU = [
     icon: <><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M9 3v18M9 12h12" /></>,
   },
   {
-    to: '/admin/medicoes',
+    to: '/admin/medicoes/nova',
     label: 'Cadastrar medição',
     icon: <><path d="M10 17l5-5-5-5" /><path d="M15 12H3" /><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /></>,
   },
@@ -32,11 +38,25 @@ function iniciais(nome) {
 function AdminLayout() {
   const navigate = useNavigate();
   const [menuAberto, setMenuAberto] = useState(false);
+  const botaoMenuRef = useRef(null);
   const usuario = getUsuarioLogado();
+
+  useEffect(() => {
+    if (!menuAberto) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key !== 'Escape') return;
+      setMenuAberto(false);
+      botaoMenuRef.current?.focus();
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [menuAberto]);
 
   if (!usuario) return <Navigate to="/admin/login" replace />;
 
-  const perfil = PERFIS[usuario.perfil] ?? PERFIS.admin;
+  const perfil = rotuloPerfil(usuario.perfil);
 
   function handleLogout() {
     logout();
@@ -82,6 +102,7 @@ function AdminLayout() {
             aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
             className="admin-menu-toggle"
             onClick={() => setMenuAberto((aberto) => !aberto)}
+            ref={botaoMenuRef}
             type="button"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">

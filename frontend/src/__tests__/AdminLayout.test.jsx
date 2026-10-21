@@ -17,7 +17,7 @@ function renderAdmin(caminho = '/admin') {
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminPage />} />
-          <Route path="medicoes" element={<h1>Cadastrar medição</h1>} />
+          <Route path="medicoes/nova" element={<h1>Cadastrar medição</h1>} />
           <Route path="relatorios" element={<h1>Relatórios</h1>} />
         </Route>
       </Routes>
@@ -59,8 +59,26 @@ describe('AdminLayout', () => {
     expect(within(screen.getByRole('banner')).getByText('Administrador')).toBeInTheDocument();
   });
 
+  it('mostra Administrador para o perfil administrador', () => {
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
+
+    renderAdmin();
+
+    expect(within(screen.getByRole('banner')).getByText('Administrador')).toBeInTheDocument();
+  });
+
+  it('mostra o valor recebido quando o perfil é desconhecido, sem promover a Administrador', () => {
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'visitante' });
+
+    renderAdmin();
+
+    const topo = screen.getByRole('banner');
+    expect(within(topo).getByText('visitante')).toBeInTheDocument();
+    expect(within(topo).queryByText('Administrador')).not.toBeInTheDocument();
+  });
+
   it('encerra a sessão e volta para o login ao sair', () => {
-    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'admin' });
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
 
     renderAdmin();
     fireEvent.click(screen.getByRole('button', { name: 'Sair' }));
@@ -71,9 +89,9 @@ describe('AdminLayout', () => {
   });
 
   it('lista os módulos e marca o item ativo conforme a rota', () => {
-    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'admin' });
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
 
-    renderAdmin('/admin/medicoes');
+    renderAdmin('/admin/medicoes/nova');
 
     const menu = screen.getByRole('navigation', { name: 'Menu administrativo' });
     const links = within(menu).getAllByRole('link');
@@ -89,7 +107,7 @@ describe('AdminLayout', () => {
   });
 
   it('abre e fecha o menu pelo botão do celular', () => {
-    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'admin' });
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
 
     renderAdmin();
     const botao = screen.getByRole('button', { name: 'Abrir menu' });
@@ -102,5 +120,17 @@ describe('AdminLayout', () => {
     // Escolher um item fecha o menu.
     fireEvent.click(screen.getByRole('link', { name: 'Relatórios' }));
     expect(screen.getByRole('button', { name: 'Abrir menu' })).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('fecha o menu com Esc e devolve o foco ao botão', () => {
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
+
+    renderAdmin();
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir menu' }));
+    fireEvent.keyDown(document, { key: 'Escape' });
+
+    const botao = screen.getByRole('button', { name: 'Abrir menu' });
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    expect(botao).toHaveFocus();
   });
 });

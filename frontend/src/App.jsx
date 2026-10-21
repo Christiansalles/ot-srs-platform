@@ -60,7 +60,7 @@ function AdminEmBreve({ titulo }) {
   return (
     <section className="page" aria-labelledby="admin-em-breve">
       <h1 id="admin-em-breve">{titulo}</h1>
-      <p className="state-message">Esta tela chega no Milestone 6.</p>
+      <p className="state-message">Em construção.</p>
     </section>
   );
 }
@@ -73,7 +73,7 @@ function App() {
         <Route element={<RotaProtegida />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminPage />} />
-            <Route path="medicoes" element={<AdminEmBreve titulo="Cadastrar medição" />} />
+            <Route path="medicoes/nova" element={<AdminEmBreve titulo="Cadastrar medição" />} />
             <Route path="relatorios" element={<AdminEmBreve titulo="Relatórios" />} />
           </Route>
         </Route>

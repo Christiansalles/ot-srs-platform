@@ -11,6 +11,11 @@ export const colors = {
   background: '#F8FAFC',
   surface: '#FFFFFF',
   surfaceMuted: '#F1F5F9',
+  surfaceTranslucent: 'rgba(255, 255, 255, 0.92)',
+  overlay: 'rgba(15, 23, 42, 0.4)',
+
+  primarySoft: '#EEF0FF',
+  onBrand: '#FFFFFF',
 
   text: '#0F172A',
   textMuted: '#64748B',
