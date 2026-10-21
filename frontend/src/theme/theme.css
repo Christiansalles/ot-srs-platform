@@ -3,6 +3,7 @@
 :root {
   /* Identidade principal */
   --color-primary: #0A4AAD;
+  --color-primary-soft: #E6EEFB;
   --color-secondary: #6C5CE0;
   --color-accent: #C750D6;
 
@@ -13,9 +14,6 @@
   --color-surface-translucent: rgba(255, 255, 255, 0.92);
   --color-overlay: rgba(15, 23, 42, 0.4);
   --shadow-elevated: 0 20px 45px rgba(11, 28, 48, 0.18);
-
-  /* Destaques suaves e texto sobre o gradiente */
-  --color-primary-soft: #EEF0FF;
   --color-on-brand: #FFFFFF;
 
   /* Texto e bordas */
