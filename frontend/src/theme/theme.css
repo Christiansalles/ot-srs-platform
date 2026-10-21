@@ -3,8 +3,12 @@
 :root {
   /* Identidade principal */
   --color-primary: #0A4AAD;
+  --color-primary-soft: #E6EEFB;
   --color-secondary: #6C5CE0;
   --color-accent: #C750D6;
+  --color-accent-soft: #FBE8FD;
+  /* Acento escurecido para texto pequeno: o --color-accent puro não atinge o contraste AA */
+  --color-accent-strong: #8A059D;
 
   /* Superfícies */
   --color-background: #F8FAFC;

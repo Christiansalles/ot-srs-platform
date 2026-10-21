@@ -1,0 +1,34 @@
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .3rem .75rem;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.status-badge__dot {
+  width: .5rem;
+  height: .5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-badge--publicado {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.status-badge--rascunho {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+}
+
+.status-badge--desconhecido {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+}
