@@ -5,8 +5,11 @@
 
 export const colors = {
   primary: '#0A4AAD',
+  primarySoft: '#E6EEFB',
   secondary: '#6C5CE0',
   accent: '#C750D6',
+  accentSoft: '#FBE8FD',
+  accentStrong: '#8A059D',
 
   background: '#F8FAFC',
   surface: '#FFFFFF',

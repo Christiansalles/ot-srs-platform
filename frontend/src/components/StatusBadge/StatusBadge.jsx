@@ -1,6 +1,6 @@
 import './StatusBadge.css'
 
-// Status das medições definidos no contrato do M6
+// Status de medições e relatórios definidos no contrato do M6
 const STATUS = {
   rascunho: 'Rascunho',
   publicado: 'Publicado',

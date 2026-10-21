@@ -19,14 +19,13 @@
 }
 
 .status-badge--publicado {
-  background: #E6EEFB;
+  background: var(--color-primary-soft);
   color: var(--color-primary);
 }
 
-/* Tom escuro do acento: o --color-accent puro não tem contraste com texto pequeno */
 .status-badge--rascunho {
-  background: #FBE8FD;
-  color: #8A059D;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
 }
 
 .status-badge--desconhecido {
