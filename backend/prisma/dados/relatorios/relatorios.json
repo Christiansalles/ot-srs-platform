@@ -1,11 +1,20 @@
 [
   {
-    "titulo": "Indicadores do turismo: hospedagem, turismo e participação econômica",
-    "edicao": "Milestone III",
-    "categoria": "Indicadores turísticos",
-    "data": "2026-10-20",
-    "descricao": "Documento ilustrativo com os indicadores de hospedagem, turismo e participação econômica presentes nos mockups do Milestone III. Aguarda os relatórios oficiais da SMCELT.",
-    "arquivo": "indicadores-turisticos-m3.pdf",
-    "fonte": "Mockups do Milestone III: dados hospedagem.json, turismo.json e participacao.json; fontes individuais indicadas nas tabelas."
+    "titulo": "Indicadores do setor hoteleiro",
+    "edicao": "OT-ILUS-01/2025",
+    "categoria": "Setor Hoteleiro",
+    "data_publicacao": "2026-10-21",
+    "descricao": "Indicadores ilustrativos de leitos disponíveis e taxa de ocupação dos meios de hospedagem, derivados dos protótipos do Milestone III. Aguarda os dados oficiais da SMCELT.",
+    "arquivo": "OT-ILUS-01-2025-setor-hoteleiro.pdf",
+    "fonte": "Valores ilustrativos dos mockups do Milestone III; dados carregados em hospedagem.json. Aguarda os dados oficiais da SMCELT."
+  },
+  {
+    "titulo": "Participação econômica do turismo",
+    "edicao": "OT-ILUS-01/2025",
+    "categoria": "Impacto Econômico",
+    "data_publicacao": "2026-10-21",
+    "descricao": "Distribuição ilustrativa da participação econômica entre setores relacionados ao turismo, derivada dos protótipos do Milestone III. Aguarda os dados oficiais da SMCELT.",
+    "arquivo": "OT-ILUS-01-2025-impacto-economico.pdf",
+    "fonte": "Valores ilustrativos dos mockups do Milestone III; dados carregados em participacao.json. Aguarda os dados oficiais da SMCELT."
   }
 ]
