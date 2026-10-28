@@ -144,3 +144,14 @@
     min-width: 140px;
   }
 }
+
+@media (max-width: 640px) {
+  .grafico-serie__header {
+    flex-direction: column;
+  }
+
+  .grafico-serie__seletor,
+  .grafico-serie__seletor select {
+    width: 100%;
+  }
+}
