@@ -1,24 +1,44 @@
 ﻿import { API_URL } from '../config';
 import { mockSetores, mockIndicadores, mockPeriodos, montarDestaques } from '../mocks/dados';
+import { filtrarRelatoriosMock } from '../mocks/relatorios';
 import { AUTH_UNAUTHORIZED_EVENT, getToken, logout } from './auth';
 
 // Mock é uma opção explícita; falhas da API devem chegar às telas.
-async function request(path, mockData, filtros = {}) {
-  const params = montarQuery(filtros);
+async function request(path, mockData, filtros = {}, {
+  campos = ['setor', 'ano', 'semestre'], mensagemErro,
+} = {}) {
+  const params = montarQuery(filtros, campos);
   if (import.meta.env.VITE_USE_MOCK === 'true') {
     return structuredClone(typeof mockData === 'function' ? mockData(params) : mockData);
   }
   const query = params.size ? `?${params}` : '';
   const token = getToken();
-  const response = await fetch(`${API_URL}/api/${path}${query}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
+  let response;
+  try {
+    response = await fetch(`${API_URL}/api/${path}${query}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+  } catch (erro) {
+    if (mensagemErro) throw new Error(mensagemErro);
+    throw erro;
+  }
   if (response.status === 401) {
     logout();
     window.dispatchEvent(new Event(AUTH_UNAUTHORIZED_EVENT));
   }
-  if (!response.ok) throw new Error(`Falha ao consultar ${path} (HTTP ${response.status})`);
-  return response.json();
+  if (!response.ok) {
+    if (mensagemErro) {
+      const dados = await response.json().catch(() => null);
+      throw new Error(typeof dados?.erro === 'string' && dados.erro.trim() ? dados.erro : mensagemErro);
+    }
+    throw new Error(`Falha ao consultar ${path} (HTTP ${response.status})`);
+  }
+  try {
+    return await response.json();
+  } catch (erro) {
+    if (mensagemErro) throw new Error(mensagemErro);
+    throw erro;
+  }
 }
 
 export function getSetores() {
@@ -29,9 +49,9 @@ export function getPeriodos() {
   return request('periodos', mockPeriodos);
 }
 
-function montarQuery(filtros) {
+function montarQuery(filtros, campos) {
   const params = new URLSearchParams();
-  for (const campo of ['setor', 'ano', 'semestre']) {
+  for (const campo of campos) {
     const valor = filtros[campo];
     if (valor !== undefined && valor !== null && valor !== '') params.set(campo, valor);
   }
@@ -67,4 +87,15 @@ export function getIndicadores(filtros = {}) {
 
 export function getDestaques(filtros = {}) {
   return request('indicadores/destaques', (params) => montarDestaques(filtrarMock(params)), filtros);
+}
+
+export function getRelatorios(filtros = {}) {
+  return request('relatorios', filtrarRelatoriosMock, filtros, {
+    campos: ['ano', 'categoria'],
+    mensagemErro: 'Não foi possível consultar os relatórios. Tente novamente.',
+  });
+}
+
+export function urlDownloadRelatorio(id) {
+  return `${API_URL}/api/relatorios/${encodeURIComponent(id)}/arquivo`;
 }
