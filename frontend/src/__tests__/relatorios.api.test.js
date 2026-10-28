@@ -1,5 +1,6 @@
 import { readFileSync, statSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { getRelatorios, urlDownloadRelatorio } from '../services/api';
 import { mockRelatorios } from '../mocks/relatorios';
@@ -98,7 +99,7 @@ describe('serviços de relatórios', () => {
 
 describe('mocks de relatórios', () => {
   it('acompanha todos os metadados da carga, os IDs em banco vazio e os tamanhos dos PDFs', () => {
-    const pasta = resolve('../backend/prisma/dados/relatorios');
+    const pasta = resolve(dirname(fileURLToPath(import.meta.url)), '../../../backend/prisma/dados/relatorios');
     const carga = JSON.parse(readFileSync(resolve(pasta, 'relatorios.json'), 'utf8'));
     expect(mockRelatorios).toEqual(carga.map((relatorio, indice) => ({
       id: indice + 1,

@@ -47,6 +47,14 @@ npm run lint
 npm run build
 ```
 
+Após a revisão, o caminho da carga no teste passou a ser resolvido a partir de `import.meta.url`, sem depender do diretório de execução. Também foi conferida a execução a partir da raiz do repositório:
+
+```bash
+node frontend/node_modules/vitest/vitest.mjs run --root frontend --maxWorkers=2 src/__tests__/relatorios.api.test.js
+```
+
+Os 18 testes de relatórios passaram nessa execução.
+
 - 23 arquivos e 203 testes passaram, incluindo 18 testes novos de relatórios.
 - Lint aprovado.
 - Build aprovado, com o aviso existente de bundle acima de 500 kB.
