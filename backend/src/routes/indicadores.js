@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const dados = require('../services/dados');
 const { formatarIndicadores, montarDestaques } = require('../services/indicadores');
+const { lerAno } = require('../services/filtros');
 
 const router = Router();
 
@@ -19,10 +20,8 @@ function lerSetor(query) {
 function lerFiltros(query) {
   const setor = lerSetor(query);
   if (setor.erro) return setor;
-  if (query.ano !== undefined &&
-    (typeof query.ano !== 'string' || !/^\d{4}$/.test(query.ano))) {
-    return { erro: 'ano deve ser um número inteiro de 4 dígitos' };
-  }
+  const { ano, erro } = lerAno(query);
+  if (erro) return { erro };
   if (query.semestre !== undefined &&
     (typeof query.semestre !== 'string' || !/^[12]$/.test(query.semestre))) {
     return { erro: 'semestre deve ser 1 ou 2' };
@@ -32,7 +31,7 @@ function lerFiltros(query) {
   }
   return {
     setorId: setor.setorId,
-    ano: query.ano === undefined ? undefined : Number(query.ano),
+    ano,
     semestre: query.semestre === undefined ? undefined : Number(query.semestre),
   };
 }
