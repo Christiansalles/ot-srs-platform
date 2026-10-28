@@ -10,11 +10,11 @@
   },
   {
     "titulo": "Participação econômica do turismo",
-    "edicao": "OT-ILUS-01/2025",
+    "edicao": "OT-ILUS-02/2025",
     "categoria": "Impacto Econômico",
     "data_publicacao": "2026-10-21",
     "descricao": "Distribuição ilustrativa da participação econômica entre setores relacionados ao turismo, derivada dos protótipos do Milestone III. Aguarda os dados oficiais da SMCELT.",
-    "arquivo": "OT-ILUS-01-2025-impacto-economico.pdf",
+    "arquivo": "OT-ILUS-02-2025-impacto-economico.pdf",
     "fonte": "Valores ilustrativos dos mockups do Milestone III; dados carregados em participacao.json. Aguarda os dados oficiais da SMCELT."
   }
 ]
