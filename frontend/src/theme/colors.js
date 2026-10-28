@@ -7,6 +7,7 @@ export const colors = {
   primary: '#0A4AAD',
   primarySoft: '#E6EEFB',
   secondary: '#6C5CE0',
+  secondaryStrong: '#5746CA',
   accent: '#C750D6',
   accentSoft: '#FBE8FD',
   accentStrong: '#8A059D',
@@ -21,9 +22,14 @@ export const colors = {
   text: '#0F172A',
   textMuted: '#64748B',
   border: '#E2E8F0',
+  borderStrong: '#CBD5E1',
 
   success: '#0D9488',
+  successBright: '#34D399',
   danger: '#DC2626',
+  dangerSoft: '#FEF2F2',
+  dangerBorder: '#FECACA',
+  dangerStrong: '#B91C1C',
 
   chart: {
     cyan: '#5FE6E0',
