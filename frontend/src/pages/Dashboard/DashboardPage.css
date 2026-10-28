@@ -4,15 +4,15 @@
 }
 
 .dashboard__header {
-  width: min(100%, 1200px);
+  width: 100%;
   margin: 0 auto 2rem;
 }
 
+/* Mesmo título das outras páginas do portal (.page-heading) */
 .dashboard__header h1 {
   margin: 0;
-  color: var(--color-text);
-  font-size: 2rem;
-  font-weight: 800;
+  color: var(--color-primary);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
 }
 
 .dashboard__header p {
@@ -21,7 +21,7 @@
 }
 
 .dashboard__indicators {
-  width: min(100%, 1200px);
+  width: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -35,17 +35,17 @@
 }
 
 .dashboard__chart {
-  width: min(100%, 1200px);
+  width: 100%;
   margin: 1.5rem auto 0;
 }
 
 .dashboard__state {
-  width: min(100%, 1200px);
+  width: 100%;
   margin: 0 auto;
 }
 
 .dashboard__graficos {
-  width: min(100%, 1200px);
+  width: 100%;
   margin: 1.5rem auto 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -60,7 +60,6 @@
 
 .dashboard__filtros {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   box-sizing: border-box;
 }

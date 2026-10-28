@@ -4,7 +4,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  box-shadow: var(--shadow-card);
 }
 
 .grafico-serie__header {
@@ -55,7 +55,7 @@
 
 .grafico-serie__seletor select:focus {
   border-color: var(--color-secondary);
-  box-shadow: 0 0 0 3px rgb(108 92 224 / 12%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-secondary) 12%, transparent);
 }
 
 /* Gráfico */
@@ -83,7 +83,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-text) 8%, transparent);
 }
 
 .grafico-serie__tooltip-titulo {
