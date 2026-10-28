@@ -63,7 +63,7 @@ export default function IndicadoresPage() {
         ) : linhas.length === 0 ? (
           <p className="state-message" role="status">Sem dados para os filtros selecionados. Use "Limpar filtros" para consultar todos os indicadores.</p>
         ) : (
-          <div className="table-wrap">
+          <div className="table-wrap" role="region" aria-label="Tabela de indicadores turísticos" tabIndex={0}>
             <table>
               <thead>
                 <tr>
