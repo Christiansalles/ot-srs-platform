@@ -14,6 +14,10 @@
     "dev": "node --watch src/server.js",
     "test": "jest --runInBand"
   },
+  "jest": {
+    "setupFiles": ["<rootDir>/tests/setup-env.js"],
+    "maxWorkers": 1
+  },
   "engines": {
     "node": ">=20"
   },

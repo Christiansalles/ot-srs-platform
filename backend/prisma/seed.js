@@ -4,9 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const { gerarHash } = require('../src/services/senha');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env'), quiet: true });
+const { uploadsDir } = require('../src/config/uploads');
 
 const prisma = new PrismaClient();
 const dadosPath = path.join(__dirname, 'dados');
+const relatoriosPath = path.join(dadosPath, 'relatorios');
 
 function setoresDoArquivo(dados, arquivo) {
   if (dados.setor) {
@@ -134,6 +136,49 @@ async function carregarSetor(setorDados, usuario) {
   }
 }
 
+async function carregarRelatorios(usuario) {
+  const arquivoDados = path.join(relatoriosPath, 'relatorios.json');
+  const relatorios = JSON.parse(fs.readFileSync(arquivoDados, 'utf8'));
+  fs.mkdirSync(uploadsDir, { recursive: true });
+
+  for (const dados of relatorios) {
+    const nomeArquivo = path.basename(dados.arquivo);
+    if (nomeArquivo !== dados.arquivo) {
+      throw new Error(`Nome de arquivo inválido no cadastro do relatório: ${dados.arquivo}`);
+    }
+
+    const origem = path.join(relatoriosPath, nomeArquivo);
+    const destino = path.join(uploadsDir, nomeArquivo);
+    if (!fs.existsSync(origem) || !fs.statSync(origem).isFile()) {
+      throw new Error(`PDF não encontrado para o relatório ${dados.edicao}: ${origem}`);
+    }
+
+    fs.copyFileSync(origem, destino);
+    const tamanhoKb = Math.ceil(fs.statSync(destino).size / 1024);
+    const relatorio = {
+      id_usuario: usuario.id_usuario,
+      titulo: dados.titulo,
+      edicao: dados.edicao,
+      categoria: dados.categoria,
+      data_publicacao: new Date(`${dados.data_publicacao}T00:00:00.000Z`),
+      descricao: dados.descricao,
+      arquivo_url: nomeArquivo,
+      tamanho_kb: tamanhoKb,
+      status: 'publicado',
+    };
+    const existente = await prisma.relatorio.findFirst({ where: { edicao: dados.edicao } });
+    if (existente) {
+      await prisma.relatorio.update({
+        where: { id_relatorio: existente.id_relatorio },
+        data: relatorio,
+      });
+    } else {
+      await prisma.relatorio.create({ data: relatorio });
+    }
+    console.log(`Carga do relatório ${dados.edicao} executada com sucesso.`);
+  }
+}
+
 async function main() {
   const admin = lerUsuarioDesenvolvimento('ADMIN', 'Administrador', 'administrador');
   const editor = lerUsuarioDesenvolvimento('EDITOR', 'Editor', 'editor');
@@ -172,6 +217,8 @@ async function main() {
       console.log(`Carga do setor ${setorDados.setor.nome} executada com sucesso.`);
     }
   }
+
+  await carregarRelatorios(usuario);
 }
 
 main()

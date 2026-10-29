@@ -34,9 +34,12 @@ services:
       EDITOR_EMAIL: ${EDITOR_EMAIL:-editor@observatorio.local}
       EDITOR_SENHA: ${EDITOR_SENHA:-senha-editor-local-nao-usar-em-producao}
       JWT_SECRET: ${JWT_SECRET:-jwt-secret-local-nao-usar-em-producao}
+      UPLOADS_DIR: /app/uploads
       DATABASE_URL: postgresql://${POSTGRES_USER:-ot}:${POSTGRES_PASSWORD:-ot}@db:5432/${POSTGRES_DB:-ot_srs}
     ports:
       - "${BACKEND_PORT:-3000}:3000"
+    volumes:
+      - uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -65,3 +68,4 @@ services:
 
 volumes:
   postgres_data:
+  uploads:
