@@ -14,6 +14,7 @@ const usuarioAtivo = {
   email: 'maria@example.com',
   senha_hash: 'hash-que-nao-deve-aparecer',
   ativo: true,
+  perfil: 'administrador',
 };
 
 describe('GET /api/auth/me', () => {
@@ -48,9 +49,26 @@ describe('GET /api/auth/me', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ id: 42, nome: 'Maria Clara', email: 'maria@example.com' });
+    expect(res.body).toEqual({
+      id: 42,
+      nome: 'Maria Clara',
+      email: 'maria@example.com',
+      perfil: 'administrador',
+    });
     expect(JSON.stringify(res.body)).not.toContain('senha_hash');
     expect(prisma.usuario.findUnique).toHaveBeenCalledWith({ where: { id_usuario: 42 } });
+  });
+
+  it('devolve o perfil lido do banco, mesmo que tenha mudado depois do login', async () => {
+    const token = criarToken();
+    prisma.usuario.findUnique.mockResolvedValue({ ...usuarioAtivo, perfil: 'editor' });
+
+    const res = await request(app)
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.perfil).toBe('editor');
   });
 
   it.each([

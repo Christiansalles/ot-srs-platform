@@ -82,7 +82,15 @@ jobs:
           token=$(curl --fail --silent --show-error -H 'Content-Type: application/json' \
             -d "{\"email\":\"$email\",\"senha\":\"$senha\"}" "$api/auth/login" \
             | node -e 'process.stdout.write(JSON.parse(require("fs").readFileSync(0, "utf8")).token)')
-          curl --fail --silent --show-error -H "Authorization: Bearer $token" "$api/auth/me" | grep -q "\"email\":\"$email\""
+          curl --fail --silent --show-error -H "Authorization: Bearer $token" "$api/auth/me" \
+            | grep -q "\"email\":\"$email\",\"perfil\":\"administrador\""
+
+          # O seed também cria o editor, que entra com o próprio perfil.
+          email_editor=$(docker compose exec -T backend printenv EDITOR_EMAIL)
+          senha_editor=$(docker compose exec -T backend printenv EDITOR_SENHA)
+          curl --fail --silent --show-error -H 'Content-Type: application/json' \
+            -d "{\"email\":\"$email_editor\",\"senha\":\"$senha_editor\"}" "$api/auth/login" \
+            | grep -q "\"email\":\"$email_editor\",\"perfil\":\"editor\""
           test "$(curl --silent -o /dev/null -w '%{http_code}' -H 'Authorization: Bearer invalido' "$api/auth/me")" = 401
       - name: Comparar o mock do front com a API real
         working-directory: frontend

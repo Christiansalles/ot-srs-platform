@@ -31,6 +31,8 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN:-}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@observatorio.local}
       ADMIN_SENHA: ${ADMIN_SENHA:-senha-admin-local-nao-usar-em-producao}
+      EDITOR_EMAIL: ${EDITOR_EMAIL:-editor@observatorio.local}
+      EDITOR_SENHA: ${EDITOR_SENHA:-senha-editor-local-nao-usar-em-producao}
       JWT_SECRET: ${JWT_SECRET:-jwt-secret-local-nao-usar-em-producao}
       DATABASE_URL: postgresql://${POSTGRES_USER:-ot}:${POSTGRES_PASSWORD:-ot}@db:5432/${POSTGRES_DB:-ot_srs}
     ports:
