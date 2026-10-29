@@ -246,6 +246,10 @@ describe('GET /api/relatorios/:id/arquivo', () => {
         'attachment; filename="2096-12-turismo-relatorio-final.pdf"'
       );
     } finally {
+      await prisma.relatorio.update({
+        where: { id_relatorio: ids.impactoRecente },
+        data: { titulo: `Relatório impactoRecente ${sufixo}` },
+      });
       fs.rmSync(caminho, { force: true });
     }
   });
