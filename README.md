@@ -14,7 +14,7 @@ ot-srs-platform/
 │   └── tests/           testes Jest + Supertest
 ├── frontend/            React + Vite
 │   └── src/             components/, pages/, services/, mocks/, theme/, __tests__/
-├── docs/                contrato da API, fluxo de trabalho e relatórios dos milestones
+├── docs/                contrato da API, fluxo, escopo, decisões, mockups e evidências (índice em docs/README.md)
 └── .github/workflows/   CI
 ```
 

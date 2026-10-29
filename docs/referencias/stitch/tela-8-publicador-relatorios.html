@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-container": "#8a059d", "tertiary-fixed": "#ffd6fc", "outline": "#737784", "on-tertiary-fixed": "#36003e", "on-primary": "#ffffff", "surface-container": "#e5eeff", "tertiary-fixed-dim": "#fbaaff", "inverse-on-surface": "#eaf1ff", "outline-variant": "#c3c6d5", "secondary-fixed": "#e4dfff", "secondary-fixed-dim": "#c7bfff", "on-tertiary-fixed-variant": "#7c008d", "on-secondary-fixed-variant": "#412cb4", "surface-container-high": "#dce9ff", "on-secondary-fixed": "#170065", "secondary": "#5746ca", "surface": "#f8f9ff", "background": "#f8f9ff", "primary-fixed-dim": "#b1c5ff", "secondary-container": "#7061e5", "on-surface-variant": "#434653", "on-background": "#0b1c30", "error-container": "#ffdad6", "on-primary-fixed-variant": "#00419e", "on-tertiary-container": "#faa3ff", "primary": "#003482", "on-tertiary": "#ffffff", "primary-fixed": "#dae2ff", "surface-container-low": "#eff4ff", "on-secondary-container": "#fffbff", "surface-tint": "#2559bc", "on-secondary": "#ffffff", "primary-container": "#0a4aad", "on-error-container": "#93000a", "surface-bright": "#f8f9ff", "inverse-primary": "#b1c5ff", "surface-variant": "#d3e4fe", "surface-container-highest": "#d3e4fe", "on-error": "#ffffff", "tertiary": "#660074", "error": "#ba1a1a", "surface-dim": "#cbdbf5", "on-primary-fixed": "#001946", "inverse-surface": "#213145", "on-surface": "#0b1c30", "surface-container-lowest": "#ffffff", "on-primary-container": "#abc1ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-sm": "0.5rem", "space-md": "1rem", "space-2xl": "3rem", "space-lg": "1.5rem", "gutter-mobile": "1rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin-mobile": "1rem", "margin": "2rem" }, "fontFamily": { "title-md": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "display-lg-mobile": [ "Plus Jakarta Sans" ], "label-lg": [ "Plus Jakarta Sans" ], "headline-lg-mobile": [ "Plus Jakarta Sans" ], "label-md": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "title-lg": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "label-sm": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-lg": [ "Plus Jakarta Sans" ] }, "fontSize": { "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "display-lg-mobile": [ "28px", { "lineHeight": "36px", "fontWeight": "800" } ], "label-lg": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "fontWeight": "700" } ], "label-md": [ "12px", { "lineHeight": "16px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "fontWeight": "700" } ], "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "display-lg": [ "40px", { "lineHeight": "48px", "fontWeight": "800" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="p-space-lg flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-container via-secondary to-tertiary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">terrain</span></div><div><div class="flex items-center gap-space-xs"><span class="font-title-md text-title-md text-primary font-bold">OT-SRS</span><span class="font-label-sm text-label-sm text-secondary font-bold">GESTOR</span></div><span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Backoffice Municipal</span></div></div><div class="px-space-md py-space-xs"><div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm mb-space-xs font-bold">Módulos de Gestão</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-administrativa" href="#"><span class="material-symbols-outlined text-[20px]">space_dashboard</span><span>Painel Geral</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-coleta-dados" href="#"><span class="material-symbols-outlined text-[20px]">input</span><span>Entrada de Dados</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-hospedagem" href="#"><span class="material-symbols-outlined text-[20px]">hotel</span><span>Ocupação Hoteleira</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-pesquisas" href="#"><span class="material-symbols-outlined text-[20px]">quiz</span><span>Pesquisas de Demanda</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-relatorios" href="#"><span class="material-symbols-outlined text-[20px]">summarize</span><span>Publicador de Relatórios</span></a></nav></div><div class="px-space-md py-space-xs mt-space-md"><div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm mb-space-xs font-bold">Governança &amp; Sistema</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-usuarios" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span>Usuários &amp; COMTUR</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-configuracoes" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Configurações</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="inicio" href="#"><span class="material-symbols-outlined text-[20px]">visibility</span><span>Ver Portal Público</span></a></nav></div><div class="mt-auto p-space-md bg-surface-container-low mx-space-sm mb-space-sm rounded-xl"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-label-md">SR</div><div class="flex-1 min-w-0"><div class="font-label-md text-label-md text-on-surface truncate font-bold">SMCELT Admin</div><div class="font-body-sm text-body-sm text-on-surface-variant truncate">Prefeitura de SRS</div></div><a class="text-on-surface-variant hover:text-error transition-colors" data-path="login" href="#"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-md"><span class="font-title-md text-title-md text-primary font-bold hidden sm:inline">Painel de Gestão Municipal</span><div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-xs rounded-full"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span><input class="bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none w-48 lg:w-64" placeholder="Buscar registros, pesquisas..." type="search"/></div></div><div class="flex items-center gap-space-md"><button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors relative" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error"></span></button><button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="w-full px-margin py-space-xl"><div class="flex flex-col w-full">
+<!-- Script para ativar o item correto da sidebar do app shell -->
+<script>
+    (function () {
+      const currentPath = "gestao-relatorios";
+      const links = document.querySelectorAll('aside nav a');
+      links.forEach(link => {
+        const path = link.getAttribute('data-path');
+        if (path === currentPath) {
+          link.className = "flex items-center gap-space-sm px-space-md py-space-sm rounded-lg bg-surface-container text-primary font-bold transition-all shadow-sm";
+          const icon = link.querySelector('.material-symbols-outlined');
+          if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+        } else if (path === "gestao-administrativa") {
+          link.className = "flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all font-normal";
+        }
+      });
+    })();
+  </script>
+<!-- Top Breadcrumbs & Cycle Indicator -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<a class="hover:text-primary transition-colors" data-path="gestao-administrativa" href="#">Painel Geral</a>
+<span class="material-symbols-outlined text-[16px] text-outline-variant">chevron_right</span>
+<span>Relatórios</span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant">chevron_right</span>
+<span class="text-primary font-bold">Publicador de Relatórios</span>
+</div>
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 bg-surface-container-high text-primary rounded-full font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Ciclo 2025/1 • SMCELT</span>
+</div>
+</div>
+<!-- Header da Seção -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
+<div>
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Publicador de Relatórios</h1>
+<span class="px-space-sm py-0.5 bg-surface-container text-secondary font-label-sm text-label-sm font-bold rounded-md">SRS 2025/1</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-3xl">
+        Gerencie e publique os relatórios técnicos, cadernos de pesquisa e diagnósticos oficiais do Observatório de Turismo de Santa Rita do Sapucaí.
+      </p>
+</div>
+<div class="flex items-center gap-space-sm">
+<a class="inline-flex items-center gap-space-xs px-space-md py-2.5 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-lg shadow-sm hover:bg-surface-container transition-all" data-path="gestao-relatorios-preview" href="#">
+<span class="material-symbols-outlined text-[18px] text-secondary">visibility</span>
+<span>Ver Repositório Público</span>
+</a>
+</div>
+</div>
+<!-- 1. BLOCO DE CADASTRO / UPLOAD -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm mb-space-2xl">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-md mb-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">post_add</span>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Cadastro de Documento Oficial</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Publique novos cadernos de pesquisa consolidados em formato PDF</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container-low px-space-sm py-1 rounded">
+        Campos com <span class="text-error font-bold">*</span> são obrigatórios
+      </span>
+</div>
+<!-- Área de Drag & Drop e Arquivo Selecionado -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-lg">
+<!-- Drag & Drop Zone -->
+<div class="lg:col-span-5 flex flex-col justify-center items-center p-space-lg rounded-xl bg-surface-container-lowest text-center cursor-pointer hover:bg-surface-container-low/40 transition-colors relative" style="outline: 2px dashed #b1c5ff; outline-offset: -2px;">
+<input accept=".pdf" class="absolute inset-0 opacity-0 cursor-pointer" id="relatorioFileInput" type="file"/>
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary mb-space-sm">
+<span class="material-symbols-outlined text-[26px]">cloud_upload</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface font-semibold mb-0.5">Arraste o PDF aqui ou clique para selecionar</p>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Formato aceito: PDF institucional • Limite de até 10 MB</span>
+</div>
+<!-- Componente Arquivo Carregado (Preview do Upload Concluído) -->
+<div class="lg:col-span-7 bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between">
+<div class="flex items-start justify-between gap-space-md">
+<div class="flex items-start gap-space-md min-w-0">
+<!-- PDF Icon Badge -->
+<div class="w-12 h-12 rounded-lg bg-error-container/70 text-error flex flex-col items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">picture_as_pdf</span>
+<span class="font-label-sm text-[9px] font-extrabold uppercase leading-none mt-0.5">PDF</span>
+</div>
+<div class="min-w-0">
+<div class="flex items-center gap-space-xs flex-wrap">
+<p class="font-title-md text-title-md text-on-surface font-bold truncate">Relatório_OT_004_2025_Perfil_Demanda_SRS.pdf</p>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary font-semibold bg-surface-container px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                  100% concluído
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">2.4 MB • Gerado via Tabulação SMCELT/COMTUR</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" title="Substituir arquivo" type="button">
+<span class="material-symbols-outlined text-[20px]">swap_horiz</span>
+</button>
+<button class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/40 transition-colors" title="Remover anexo" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Barra de Progresso Fictícia Concluída -->
+<div class="mt-space-md">
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="h-full rounded-full transition-all duration-500" style="width: 100%; background: linear-gradient(90deg, #0a4aad, #5746ca, #8a059d);"></div>
+</div>
+<div class="flex items-center justify-between mt-1 text-on-surface-variant font-label-sm text-label-sm">
+<span>Verificação antivírus &amp; assinatura digital: OK</span>
+<span class="text-primary font-bold">Pronto para catalogação</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Grid de Campos de Metadados -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-md mb-space-lg">
+<!-- Título -->
+<div class="lg:col-span-6 flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-bold" for="doc-title">
+          Título do relatório <span class="text-error">*</span>
+</label>
+<input class="w-full px-space-md py-2.5 rounded-lg bg-surface font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:bg-surface-container-lowest focus:outline-none transition-all shadow-inner" id="doc-title" placeholder="Ex.: Diagnóstico Semestral da Rede Hoteleira" type="text" value="Perfil dos turistas e movimentação no município 2025/1"/>
+</div>
+<!-- Edição / Código Oficial -->
+<div class="lg:col-span-2 flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-bold" for="doc-code">
+          Edição / Código <span class="text-error">*</span>
+</label>
+<input class="w-full px-space-md py-2.5 rounded-lg bg-surface font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:bg-surface-container-lowest focus:outline-none transition-all font-mono shadow-inner" id="doc-code" placeholder="000/0000" type="text" value="004/2025"/>
+</div>
+<!-- Categoria Temática -->
+<div class="lg:col-span-2 flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-bold" for="doc-cat">
+          Categoria temática <span class="text-error">*</span>
+</label>
+<select class="w-full px-space-md py-2.5 rounded-lg bg-surface font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none transition-all cursor-pointer shadow-inner" id="doc-cat">
+<option selected="" value="perfil">Perfil de Demanda</option>
+<option value="hospedagem">Setor Hoteleiro</option>
+<option value="impacto">Impacto Econômico</option>
+<option value="estrategico">Diagnóstico Estratégico</option>
+</select>
+</div>
+<!-- Data de Publicação -->
+<div class="lg:col-span-2 flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-bold" for="doc-date">
+          Data de publicação <span class="text-error">*</span>
+</label>
+<input class="w-full px-space-md py-2.5 rounded-lg bg-surface font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:outline-none transition-all shadow-inner cursor-pointer" id="doc-date" type="date" value="2025-06-15"/>
+</div>
+<!-- Resumo Executivo / Descrição -->
+<div class="lg:col-span-12 flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface font-bold" for="doc-desc">
+            Descrição curta / Resumo executivo <span class="text-error">*</span>
+</label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">248 / 500 caracteres</span>
+</div>
+<textarea class="w-full px-space-md py-2.5 rounded-lg bg-surface font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:bg-surface-container-lowest focus:outline-none transition-all resize-none shadow-inner" id="doc-desc" placeholder="Síntese das principais conclusões apresentadas no documento..." rows="3">Levantamento analítico semestral do fluxo de visitantes em Santa Rita do Sapucaí durante o primeiro semestre de 2025. Inclui perfil sociodemográfico, motivação de viagem (tecnologia, eventos e cafés especiais) e ticket médio consolidado.</textarea>
+</div>
+</div>
+<!-- Seletor de Status e Ações -->
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-lg pt-space-md">
+<!-- Seletor de Status (Cards lado a lado) -->
+<div class="flex flex-col sm:flex-row items-center gap-space-md">
+<span class="font-label-md text-label-md text-on-surface font-bold self-start sm:self-center">Estado de visibilidade:</span>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<!-- Card Rascunho -->
+<label class="flex-1 sm:flex-initial flex items-center gap-space-sm px-space-md py-2.5 rounded-xl bg-surface cursor-pointer hover:bg-surface-container transition-all">
+<input class="text-secondary focus:ring-0" name="status_visibilidade" type="radio" value="rascunho"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">Rascunho Interno</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Privado • Somente SMCELT</span>
+</div>
+</label>
+<!-- Card Publicado (Selecionado) -->
+<label class="flex-1 sm:flex-initial flex items-center gap-space-sm px-space-md py-2.5 rounded-xl bg-surface-container text-primary cursor-pointer shadow-sm transition-all">
+<input checked="" class="text-primary focus:ring-0" name="status_visibilidade" type="radio" value="publicado"/>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-primary font-bold">Publicado Oficialmente</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+</div>
+<span class="font-body-sm text-[11px] text-primary/80">Disponível no Portal Público</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Botões de Ação -->
+<div class="flex items-center justify-end gap-space-sm">
+<button class="px-space-lg py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors font-semibold" type="button">
+          Cancelar
+        </button>
+<button class="inline-flex items-center gap-space-xs px-space-xl py-2.5 rounded-lg text-on-primary font-label-lg text-label-lg font-bold shadow-md hover:brightness-105 active:scale-[0.99] transition-all" style="background: linear-gradient(135deg, #0A4AAD 0%, #5746CA 50%, #8A059D 100%);" type="button">
+<span class="material-symbols-outlined text-[20px]">publish</span>
+<span>Publicar Relatório</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 2. TABELA COMPACTA DE RELATÓRIOS JÁ CADASTRADOS -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm mb-space-2xl">
+<!-- Barra Superior da Tabela -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-md mb-space-md">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Relatórios no Repositório</h2>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-bold">
+          4 cadastrados
+        </span>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs bg-surface px-space-md py-1.5 rounded-lg min-w-[240px] focus-within:bg-surface-container-lowest focus-within:shadow-sm transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">filter_list</span>
+<input class="bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none w-full" placeholder="Filtrar nesta lista..." type="search"/>
+</div>
+<button class="inline-flex items-center gap-space-xs px-space-md py-1.5 bg-surface text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg font-label-md text-label-md font-semibold transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Exportar CSV</span>
+</button>
+</div>
+</div>
+<!-- Tabela Estruturada -->
+<div class="overflow-x-auto -mx-space-lg px-space-lg">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-md px-space-md font-bold rounded-l-lg">Nome / Título do Documento</th>
+<th class="py-space-md px-space-md font-bold">Edição</th>
+<th class="py-space-md px-space-md font-bold">Setor / Categoria</th>
+<th class="py-space-md px-space-md font-bold">Data</th>
+<th class="py-space-md px-space-md font-bold">Status</th>
+<th class="py-space-md px-space-md font-bold text-right rounded-r-lg">Ações</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface">
+<!-- Linha 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-error-container/60 text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">picture_as_pdf</span>
+</div>
+<div class="min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-bold hover:text-primary cursor-pointer block truncate">
+                    Perfil dos turistas e movimentação no município 2025/1
+                  </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">PDF • 2.4 MB • 1.200 amostras validadas</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-mono text-on-surface-variant font-medium">004/2025</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container text-primary">
+                Perfil de Demanda
+              </span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Junho/2025</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container text-primary">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                Publicado
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="inline-flex items-center gap-space-xs">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors" title="Editar relatório" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors" title="Baixar cópia" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/40 rounded-lg transition-colors" title="Excluir relatório" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Linha 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-error-container/60 text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">picture_as_pdf</span>
+</div>
+<div class="min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-bold hover:text-primary cursor-pointer block truncate">
+                    Censo e Capacidade da Rede Hoteleira e Pousadas
+                  </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">PDF • 1.8 MB • 14 meios cadastrados</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-mono text-on-surface-variant font-medium">003/2024</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container-high text-on-surface">
+                Setor Hoteleiro
+              </span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Dezembro/2024</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container text-primary">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                Publicado
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="inline-flex items-center gap-space-xs">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors" title="Editar relatório" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors" title="Baixar cópia" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/40 rounded-lg transition-colors" title="Excluir relatório" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Linha 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-error-container/60 text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">picture_as_pdf</span>
+</div>
+<div class="min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-bold hover:text-primary cursor-pointer block truncate">
+                    Impacto Econômico de Festivais e Hackathons no Vale
+                  </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">PDF • 3.1 MB • Amostragem de grandes eventos</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-mono text-on-surface-variant font-medium">002/2024</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-fixed text-on-secondary-fixed">
+                Impacto Econômico
+              </span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Julho/2024</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full font-label-sm text-label-sm font-semibold bg-secondary-fixed text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                Rascunho
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="inline-flex items-center gap-space-xs">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors" title="Editar relatório" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors" title="Baixar cópia" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/40 rounded-lg transition-colors" title="Excluir relatório" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Linha 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-error-container/60 text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">picture_as_pdf</span>
+</div>
+<div class="min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-bold hover:text-primary cursor-pointer block truncate">
+                    Plano Diretor de Turismo e Diagnóstico Estratégico COMTUR
+                  </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">PDF • 5.6 MB • Documento orientador plurianual</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-mono text-on-surface-variant font-medium">001/2023</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm font-semibold bg-tertiary-fixed text-tertiary">
+                Diagnóstico Estratégico
+              </span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Dezembro/2023</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full font-label-sm text-label-sm font-semibold bg-surface-container text-primary">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                Publicado
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="inline-flex items-center gap-space-xs">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors" title="Editar relatório" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-lg transition-colors" title="Baixar cópia" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/40 rounded-lg transition-colors" title="Excluir relatório" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Paginação Rodapé -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-lg mt-space-md">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+        Mostrando <span class="font-bold text-on-surface">1</span> a <span class="font-bold text-on-surface">4</span> de <span class="font-bold text-on-surface">4</span> resultados
+      </span>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-1 rounded-lg font-label-md text-label-md text-on-surface-variant/50 cursor-not-allowed" disabled="" type="button">
+          Anterior
+        </button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shadow-sm" type="button">
+          1
+        </button>
+<button class="px-space-md py-1 rounded-lg font-label-md text-label-md text-on-surface-variant/50 cursor-not-allowed" disabled="" type="button">
+          Próxima
+        </button>
+</div>
+</div>
+</section>
+<!-- 3. BANNER DE GOVERNANÇA: CICLO DE VALIDAÇÃO COMTUR -->
+<div class="bg-surface-container rounded-2xl p-space-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-space-lg shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[26px]">verified_user</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface font-bold">Ciclo de Validação COMTUR</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-2xl mt-0.5">
+          Relatórios técnicos com status <strong class="text-on-surface font-semibold">Rascunho</strong> só serão exibidos ao público e integrados ao portal após a chancela oficial da Secretaria Municipal de Cultura, Esporte, Lazer e Turismo e plenária do COMTUR.
+        </p>
+</div>
+</div>
+<button class="px-space-lg py-2.5 bg-surface-container-lowest text-primary font-label-md text-label-md font-bold rounded-lg shadow-sm hover:bg-surface transition-all shrink-0" type="button">
+      Manual de Operação
+    </button>
+</div>
+</div></div></main></div></body></html>
