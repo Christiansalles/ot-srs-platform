@@ -1,5 +1,18 @@
 # ot-srs-platform
 
+[![CI](https://img.shields.io/github/actions/workflow/status/Christiansalles/ot-srs-platform/ci.yml?branch=main&label=CI&logo=githubactions&logoColor=white)](https://github.com/Christiansalles/ot-srs-platform/actions/workflows/ci.yml)
+[![Docker](https://img.shields.io/github/actions/workflow/status/Christiansalles/ot-srs-platform/docker.yml?branch=main&label=Docker&logo=docker&logoColor=white)](https://github.com/Christiansalles/ot-srs-platform/actions/workflows/docker.yml)
+[![Docker Compose](https://img.shields.io/github/actions/workflow/status/Christiansalles/ot-srs-platform/compose.yml?branch=main&label=Docker%20Compose&logo=docker&logoColor=white)](https://github.com/Christiansalles/ot-srs-platform/actions/workflows/compose.yml)
+![C317](https://img.shields.io/badge/C317-Inatel%20%C2%B7%20Grupo%208-0B3D91)
+
+![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A520-5FA04E?logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Jest](https://img.shields.io/badge/testes-Jest%20%2B%20Vitest-C21325?logo=jest&logoColor=white)
+
 Plataforma do Observatório do Turismo para consultar e visualizar os indicadores dos relatórios de turismo. O Milestone 4 começa pelo setor de Hospedagem: banco, API e tela.
 
 Projeto da disciplina C317 (Inatel), Grupo 8.
@@ -14,7 +27,7 @@ ot-srs-platform/
 │   └── tests/           testes Jest + Supertest
 ├── frontend/            React + Vite
 │   └── src/             components/, pages/, services/, mocks/, theme/, __tests__/
-├── docs/                contrato da API, fluxo de trabalho e relatórios dos milestones
+├── docs/                contrato da API, fluxo, escopo, decisões, mockups e evidências (índice em docs/README.md)
 └── .github/workflows/   CI
 ```
 
@@ -254,7 +267,7 @@ Leia [docs/fluxo-de-trabalho.md](docs/fluxo-de-trabalho.md) antes de abrir a pri
 
 A URL VITE_API_URL contém somente a base (por exemplo, http://localhost:3000); os serviços adicionam /api às rotas. VITE_USE_MOCK=false usa a API e exibe erros de consulta na tela. Para desenvolver ou conferir os dados ilustrativos sem backend, configure VITE_USE_MOCK=true no frontend/.env e reinicie o Vite. O mock não é ativado automaticamente em caso de erro.
 
-As referências visuais e capturas de tela do frontend estão em [docs/pr-48](docs/pr-48/README.md).
+As referências visuais e capturas de tela do frontend estão em [docs/evidencias/pr-48](docs/evidencias/pr-48/README.md).
 
 ### Filtros dos serviços (#109)
 

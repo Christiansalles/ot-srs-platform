@@ -98,8 +98,15 @@ jobs:
           # Com VITE_USE_MOCK=true o front precisa ver exatamente o que a API devolve.
           node --input-type=module -e '
             import { mockSetores, mockPeriodos, mockIndicadores, mockDestaques } from "./src/mocks/dados.js";
+            import { filtrarRelatoriosMock } from "./src/mocks/relatorios.js";
             const api = (rota) => fetch(`http://localhost:3000/api/${rota}`).then((resposta) => resposta.json());
-            const pares = { setores: mockSetores, periodos: mockPeriodos, indicadores: mockIndicadores, "indicadores/destaques": mockDestaques };
+            const pares = {
+              setores: mockSetores,
+              periodos: mockPeriodos,
+              indicadores: mockIndicadores,
+              "indicadores/destaques": mockDestaques,
+              relatorios: filtrarRelatoriosMock(new URLSearchParams()),
+            };
             let divergiu = false;
             for (const [rota, mock] of Object.entries(pares)) {
               const igual = JSON.stringify(await api(rota)) === JSON.stringify(mock);

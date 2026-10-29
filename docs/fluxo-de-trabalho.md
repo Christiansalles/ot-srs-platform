@@ -53,11 +53,14 @@ fix(frontend): corrige formato da variação no card
 
 - **Base certa.** PR de tarefa aponta para a `develop`, não para a `main`. No GitHub, confira o campo "base" antes de criar.
 - **Pequeno.** PR pequeno é revisado rápido.
-- **Descrição com três partes:**
+- **Descrição pelo modelo.** O GitHub preenche o PR com o [modelo](../.github/pull_request_template.md), que tem três partes:
   1. O que faz.
   2. Como testar (comandos ou passos).
   3. Qualquer informação adicional que ajude a entender o contexto.
+
+  Depois vêm as evidências e um checklist. Os comentários do modelo explicam cada parte e somem quando o PR é criado.
 - **`Closes #N`** na descrição, para a issue fechar sozinha no merge e o quadro se atualizar.
+- **Prints em PR de tela.** Todo PR que muda o frontend leva prints do celular (375 ou 390 px) e do desktop (1280 px) na seção "Evidências". Os arquivos ficam em `docs/evidencias/pr-N/` na própria branch, com um README.md curto e uma linha no [índice das evidências](evidencias/README.md). No corpo do PR, as imagens entram com a URL raw fixada no SHA do commit (o modelo traz o exemplo). Assim a imagem continua aparecendo depois que a branch é apagada.
 - **Revisor:** o da tabela da visão geral do Milestone. Quem revisa roda o código, não só lê.
 - Depois do merge, apague a branch e avise no grupo se a tarefa bloqueava alguém.
 
