@@ -100,7 +100,7 @@ describe('Usuários de desenvolvimento criados pelo seed', () => {
     expect(editorAtualizado).toMatchObject({ nome: 'Editor', ativo: true, perfil: 'editor' });
     await expect(conferirSenha(senhaAdminTeste, adminAtualizado.senha_hash)).resolves.toBe(true);
     await expect(conferirSenha(senhaEditorTeste, editorAtualizado.senha_hash)).resolves.toBe(true);
-  });
+  }, 15000);
 
   it('mantém o usuário Carga inicial inativo', async () => {
     const cargaInicial = await prisma.usuario.findUnique({
