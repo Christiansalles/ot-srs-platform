@@ -38,3 +38,4 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [issue-176](issue-176/README.md) | #197 | #176 | E18 | Ajuste final da identidade visual, antes e depois |
 | [pr-199](pr-199/README.md) | #199 | #186 | E15 | Serviços e mocks de relatórios (testes, sem tela) |
 | [pr-203](pr-203/README.md) | #203 | #187 | E15 | Página pública de relatórios e estados de carregando, vazio e erro |
+| [pr-207](pr-207/README.md) | #207 | #188 | E15 | Filtros de ano e categoria na página de relatórios, na URL, em 375, 768 e 1280 px |
