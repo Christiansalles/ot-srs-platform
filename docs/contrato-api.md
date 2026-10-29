@@ -30,6 +30,8 @@ Base: `http://localhost:3000`. Todas as respostas são JSON.
 
 ### `GET /api/periodos`
 
+Só os períodos com pelo menos uma medição publicada, em ordem cronológica. Um período que só tem medições em rascunho (o cadastro do painel cria o período se ele não existe) fica de fora até o administrador publicar.
+
 ```json
 [ { "id": 1, "ano": 2025, "semestre": 1 } ]
 ```

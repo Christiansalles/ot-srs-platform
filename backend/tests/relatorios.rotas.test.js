@@ -41,7 +41,7 @@ beforeAll(async () => {
   await criar('hoteleiroRecente', { data: `${ANO_RECENTE}-01-01`, categoria: 'Setor Hoteleiro', status: 'publicado', tamanho_kb: null });
   await criar('impactoRecente', { data: `${ANO_RECENTE}-12-31`, categoria: 'Impacto Econômico', status: 'publicado' });
   await criar('rascunhoRecente', { data: `${ANO_RECENTE}-06-15`, categoria: 'Setor Hoteleiro', status: 'rascunho' });
-});
+}, 15000);
 
 afterAll(async () => {
   if (usuario) {
@@ -49,7 +49,7 @@ afterAll(async () => {
     await prisma.usuario.delete({ where: { id_usuario: usuario.id_usuario } });
   }
   await prisma.$disconnect();
-});
+}, 15000);
 
 const idsDaResposta = (body) => body.map((item) => item.id);
 
