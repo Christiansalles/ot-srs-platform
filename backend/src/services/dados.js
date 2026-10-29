@@ -294,6 +294,15 @@ async function buscarRelatoriosPublicados({ ano, categoria } = {}) {
   }));
 }
 
+async function buscarRelatorioPublicadoArquivo(id) {
+  const relatorio = await prisma.relatorio.findFirst({
+    where: { id_relatorio: id, status: 'publicado' },
+    select: { titulo: true, edicao: true, arquivo_url: true },
+  });
+  if (!relatorio) return null;
+  return relatorio;
+}
+
 // P2025: o Prisma não achou o registro para atualizar.
 async function atualizarOuNulo(atualizar) {
   try {
@@ -351,6 +360,7 @@ module.exports = {
   criarMedicao,
   atualizarMedicao,
   buscarRelatoriosPublicados,
+  buscarRelatorioPublicadoArquivo,
   atualizarStatusMedicao,
   atualizarStatusRelatorio,
 };
