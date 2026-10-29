@@ -38,5 +38,6 @@ export function filtrarRelatoriosMock(params) {
     .filter((relatorio) =>
       (!params.has('ano') || relatorio.data_publicacao.slice(0, 4) === params.get('ano')) &&
       (!params.has('categoria') || relatorio.categoria === params.get('categoria')))
-    .sort((a, b) => b.data_publicacao.localeCompare(a.data_publicacao));
+    // Mesma ordem da API: publicação mais recente e, na mesma data, maior id.
+    .sort((a, b) => b.data_publicacao.localeCompare(a.data_publicacao) || b.id - a.id);
 }
