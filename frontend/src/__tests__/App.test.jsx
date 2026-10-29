@@ -23,6 +23,19 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
   });
 
+  it('mostra no rodapé as logos de realização, apoio e contexto regional da Proposta', async () => {
+    render(<App />);
+    const rodape = screen.getByRole('contentinfo');
+    [
+      'Prefeitura Municipal de Santa Rita do Sapucaí',
+      'Secretaria Municipal de Cultura, Esporte, Lazer e Turismo (SMCELT)',
+      'Conselho Municipal de Turismo (COMTUR)',
+      'Circuito Turístico Caminhos da Mantiqueira',
+      'Minas Gerais',
+    ].forEach((nome) => expect(within(rodape).getByRole('img', { name: nome })).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
   it('abre a tela de login pelo acesso administrativo do cabeçalho', async () => {
     window.sessionStorage.clear();
     render(<App />);

@@ -100,4 +100,134 @@ async function buscarIndicadores({ setorId, ano, semestre } = {}) {
   }));
 }
 
-module.exports = { buscarSetores, buscarPeriodos, buscarIndicadores };
+// Consulta administrativa: inclui todos os indicadores e medições de qualquer
+// status. Os filtros não alteram a consulta pública acima.
+async function buscarIndicadoresAdmin({ setorId, status } = {}) {
+  const indicadores = await prisma.indicador.findMany({
+    where: {
+      ...(setorId === undefined ? {} : { id_setor: setorId }),
+      ...(status === undefined ? {} : { medicoes: { some: { status } } }),
+    },
+    include: {
+      setor: true,
+      medicoes: {
+        ...(status === undefined ? {} : { where: { status } }),
+        include: { periodo: true },
+      },
+    },
+  });
+
+  return indicadores
+    .map((indicador) => ({
+      id: indicador.id_indicador,
+      nome: indicador.nome,
+      unidade: indicador.unidade,
+      descricao: indicador.descricao,
+      setor: { id: indicador.setor.id_setor, nome: indicador.setor.nome },
+      medicoes: indicador.medicoes
+        .map((medicao) => ({
+          id: medicao.id_medicao,
+          ano: medicao.periodo.ano,
+          semestre: medicao.periodo.semestre,
+          valor: Number(medicao.valor),
+          status: medicao.status,
+        }))
+        .sort((a, b) => a.ano - b.ano || a.semestre - b.semestre),
+    }))
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+}
+
+// Só relatórios publicados. `ano` filtra pelo ano de data_publicacao e
+// `categoria` pelo texto exato; os dois são opcionais.
+// arquivo_url e id_usuario não saem desta camada.
+async function buscarRelatoriosPublicados({ ano, categoria } = {}) {
+  const relatorios = await prisma.relatorio.findMany({
+    where: {
+      status: STATUS_PUBLICADO,
+      ...(ano === undefined ? {} : {
+        data_publicacao: {
+          gte: new Date(Date.UTC(ano, 0, 1)),
+          lt: new Date(Date.UTC(ano + 1, 0, 1)),
+        },
+      }),
+      ...(categoria === undefined ? {} : { categoria }),
+    },
+    orderBy: [{ data_publicacao: 'desc' }, { id_relatorio: 'desc' }],
+    select: {
+      id_relatorio: true,
+      titulo: true,
+      edicao: true,
+      categoria: true,
+      data_publicacao: true,
+      descricao: true,
+      tamanho_kb: true,
+    },
+  });
+
+  return relatorios.map((relatorio) => ({
+    id: relatorio.id_relatorio,
+    titulo: relatorio.titulo,
+    edicao: relatorio.edicao,
+    categoria: relatorio.categoria,
+    data_publicacao: relatorio.data_publicacao,
+    descricao: relatorio.descricao,
+    tamanho_kb: relatorio.tamanho_kb,
+  }));
+}
+
+// P2025: o Prisma não achou o registro para atualizar.
+async function atualizarOuNulo(atualizar) {
+  try {
+    return await atualizar();
+  } catch (erro) {
+    if (erro.code === 'P2025') return null;
+    throw erro;
+  }
+}
+
+// Devolvem null para id inexistente; a rota responde 404.
+async function atualizarStatusMedicao(id, status) {
+  const medicao = await atualizarOuNulo(() => prisma.medicao.update({
+    where: { id_medicao: id },
+    data: { status },
+    include: { periodo: true },
+  }));
+  if (!medicao) return null;
+
+  return {
+    id: medicao.id_medicao,
+    ano: medicao.periodo.ano,
+    semestre: medicao.periodo.semestre,
+    valor: Number(medicao.valor),
+    status: medicao.status,
+  };
+}
+
+async function atualizarStatusRelatorio(id, status) {
+  const relatorio = await atualizarOuNulo(() => prisma.relatorio.update({
+    where: { id_relatorio: id },
+    data: { status },
+  }));
+  if (!relatorio) return null;
+
+  return {
+    id: relatorio.id_relatorio,
+    titulo: relatorio.titulo,
+    edicao: relatorio.edicao,
+    categoria: relatorio.categoria,
+    data_publicacao: relatorio.data_publicacao,
+    descricao: relatorio.descricao,
+    tamanho_kb: relatorio.tamanho_kb,
+    status: relatorio.status,
+  };
+}
+
+module.exports = {
+  buscarSetores,
+  buscarPeriodos,
+  buscarIndicadores,
+  buscarIndicadoresAdmin,
+  buscarRelatoriosPublicados,
+  atualizarStatusMedicao,
+  atualizarStatusRelatorio,
+};

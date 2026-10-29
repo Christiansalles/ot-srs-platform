@@ -14,7 +14,7 @@
   overflow: hidden;
   border-radius: 12px;
   background: var(--color-surface);
-  box-shadow: 0 20px 45px rgba(11, 28, 48, .14);
+  box-shadow: 0 20px 45px color-mix(in srgb, var(--color-text) 14%, transparent);
 }
 
 .admin-login-brand {
@@ -36,14 +36,14 @@
   width: 14rem;
   height: 14rem;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .09);
+  background: color-mix(in srgb, var(--color-on-brand) 9%, transparent);
   content: '';
   filter: blur(26px);
   pointer-events: none;
 }
 
 .admin-login-brand::before { top: -6rem; right: -5rem; }
-.admin-login-brand::after { bottom: -7rem; left: -5rem; background: rgba(138, 5, 157, .3); }
+.admin-login-brand::after { bottom: -7rem; left: -5rem; background: color-mix(in srgb, var(--color-accent-strong) 30%, transparent); }
 
 .admin-login-secure,
 .admin-login-brand-center,
@@ -57,9 +57,9 @@
   align-items: center;
   gap: .45rem;
   padding: .35rem .75rem;
-  border: 1px solid rgba(255, 255, 255, .14);
+  border: 1px solid color-mix(in srgb, var(--color-on-brand) 14%, transparent);
   border-radius: 999px;
-  background: rgba(255, 255, 255, .15);
+  background: color-mix(in srgb, var(--color-on-brand) 15%, transparent);
   color: var(--color-surface);
   font-size: .67rem;
   font-weight: 700;
@@ -71,8 +71,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #34d399;
-  box-shadow: 0 0 0 3px rgba(52, 211, 153, .16);
+  background: var(--color-success-bright);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-success-bright) 16%, transparent);
 }
 
 .admin-login-brand-center {
@@ -89,10 +89,10 @@
   height: 80px;
   place-items: center;
   margin-bottom: 1rem;
-  border: 1px solid rgba(255, 255, 255, .12);
+  border: 1px solid color-mix(in srgb, var(--color-on-brand) 12%, transparent);
   border-radius: 16px;
-  background: rgba(255, 255, 255, .12);
-  box-shadow: inset 0 1px 8px rgba(255, 255, 255, .08);
+  background: color-mix(in srgb, var(--color-on-brand) 12%, transparent);
+  box-shadow: inset 0 1px 8px color-mix(in srgb, var(--color-on-brand) 8%, transparent);
 }
 
 .admin-login-emblem svg {
@@ -104,8 +104,8 @@
   stroke-width: 2;
 }
 
-.admin-login-emblem circle { fill: rgba(255, 255, 255, .28); stroke: none; }
-.admin-login-emblem path:nth-of-type(2) { fill: rgba(255, 255, 255, .18); stroke: none; }
+.admin-login-emblem circle { fill: color-mix(in srgb, var(--color-on-brand) 28%, transparent); stroke: none; }
+.admin-login-emblem path:nth-of-type(2) { fill: color-mix(in srgb, var(--color-on-brand) 18%, transparent); stroke: none; }
 
 .admin-login-brand-center h1 {
   margin: 0;
@@ -117,21 +117,21 @@
 
 .admin-login-brand-name {
   margin: .25rem 0 0;
-  color: rgba(255, 255, 255, .95);
+  color: color-mix(in srgb, var(--color-on-brand) 95%, transparent);
   font-size: 1rem;
   font-weight: 600;
 }
 
 .admin-login-location {
   margin: .25rem 0 0;
-  color: rgba(255, 255, 255, .8);
+  color: color-mix(in srgb, var(--color-on-brand) 80%, transparent);
   font-size: .75rem;
   font-weight: 500;
 }
 
 .admin-login-brand-footer { text-align: center; }
-.admin-login-brand-footer p { margin: 0; color: rgba(255, 255, 255, .92); font-size: .8rem; font-style: italic; font-weight: 600; }
-.admin-login-brand-footer > span { display: block; margin-top: .5rem; color: rgba(255, 255, 255, .65); font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.admin-login-brand-footer p { margin: 0; color: color-mix(in srgb, var(--color-on-brand) 92%, transparent); font-size: .8rem; font-style: italic; font-weight: 600; }
+.admin-login-brand-footer > span { display: block; margin-top: .5rem; color: color-mix(in srgb, var(--color-on-brand) 65%, transparent); font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 
 .admin-login-form-panel {
   display: flex;
@@ -174,17 +174,17 @@
   padding: .65rem .75rem .65rem 2.5rem;
   border: 1px solid transparent;
   border-radius: 8px;
-  background: #eff4ff;
+  background: var(--color-primary-soft);
   color: var(--color-text);
   font: inherit;
   font-size: .875rem;
-  box-shadow: 0 1px 2px rgba(11, 28, 48, .08);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text) 8%, transparent);
   transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
 .admin-login-input-wrap input::placeholder { color: var(--color-text-muted); opacity: 1; }
-.admin-login-input-wrap input:focus { border-color: var(--color-secondary); outline: 0; background: var(--color-surface); box-shadow: 0 0 0 3px rgba(108, 92, 224, .13); }
-.admin-login-input-wrap input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #eff4ff inset; }
+.admin-login-input-wrap input:focus { border-color: var(--color-secondary); outline: 0; background: var(--color-surface); box-shadow: var(--shadow-focus); }
+.admin-login-input-wrap input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px var(--color-primary-soft) inset; }
 
 .admin-login-password-toggle {
   position: absolute;
@@ -204,7 +204,7 @@
 .admin-login-password-toggle:hover { color: var(--color-text); }
 .admin-login-password-toggle svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
 
-.admin-login-error { margin: 0; padding: .65rem .75rem; border: 1px solid #fecaca; border-radius: 7px; background: #fef2f2; color: #b91c1c; font-size: .8rem; line-height: 1.5; }
+.admin-login-error { margin: 0; padding: .65rem .75rem; border: 1px solid var(--color-danger-border); border-radius: 7px; background: var(--color-danger-soft); color: var(--color-danger-strong); font-size: .8rem; line-height: 1.5; }
 
 .admin-login-submit {
   display: flex;
@@ -222,7 +222,7 @@
   font: inherit;
   font-size: .875rem;
   font-weight: 700;
-  box-shadow: 0 4px 10px rgba(10, 74, 173, .18);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--color-primary) 18%, transparent);
   cursor: pointer;
   transition: filter 150ms ease, transform 150ms ease;
 }
@@ -232,7 +232,7 @@
 .admin-login-submit:disabled { cursor: wait; opacity: .8; }
 .admin-login-submit svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 
-.admin-login-spinner { width: 15px; height: 15px; border: 2px solid rgba(255, 255, 255, .45); border-top-color: #fff; border-radius: 50%; animation: admin-login-spin .7s linear infinite; }
+.admin-login-spinner { width: 15px; height: 15px; border: 2px solid color-mix(in srgb, var(--color-on-brand) 45%, transparent); border-top-color: var(--color-on-brand); border-radius: 50%; animation: admin-login-spin .7s linear infinite; }
 
 .admin-login-institution {
   display: flex;
@@ -242,7 +242,7 @@
   margin-top: 1.5rem;
   padding: .65rem .75rem;
   border-radius: 8px;
-  background: rgba(239, 244, 255, .7);
+  background: color-mix(in srgb, var(--color-primary-soft) 70%, transparent);
   color: var(--color-text-secondary);
 }
 

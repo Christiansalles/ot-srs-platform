@@ -63,8 +63,9 @@ model Usuario {
   email       String     @unique @db.VarChar(120)
   senha_hash  String     @db.VarChar(255)
   ativo       Boolean
+  perfil      String     @default("administrador") @db.VarChar(20)
 
-  medicoes    Medicao[]
+  medicoes   Medicao[]
   relatorios  Relatorio[]
 
   @@map("usuario")

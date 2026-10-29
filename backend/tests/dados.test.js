@@ -99,6 +99,32 @@ describe('services/dados', () => {
     expect(Number(indicadores[0].medicoes[0].valor)).toBe(312);
   });
 
+  it('buscarIndicadoresAdmin traz medições em rascunho e publicadas', async () => {
+    const indicadores = await dados.buscarIndicadoresAdmin({ setorId: hospedagem.id_setor });
+
+    expect(indicadores).toHaveLength(1);
+    expect(indicadores[0]).toMatchObject({
+      id: leitos.id_indicador,
+      nome: 'Número de leitos',
+      unidade: 'leitos',
+      descricao: null,
+      setor: { id: hospedagem.id_setor, nome: hospedagem.nome },
+    });
+    expect(indicadores[0].medicoes).toEqual([
+      { id: expect.any(Number), ano: ANO_TESTE, semestre: 1, valor: 312, status: 'publicado' },
+      { id: expect.any(Number), ano: ANO_TESTE, semestre: 2, valor: 350, status: 'rascunho' },
+    ]);
+  });
+
+  it('buscarIndicadoresAdmin filtra medições por status e exclui indicadores sem esse status', async () => {
+    const indicadores = await dados.buscarIndicadoresAdmin({ status: 'rascunho' });
+
+    expect(indicadores.map((indicador) => indicador.id)).toContain(leitos.id_indicador);
+    expect(indicadores.map((indicador) => indicador.id)).not.toContain(restaurantes.id_indicador);
+    expect(indicadores.find((indicador) => indicador.id === leitos.id_indicador).medicoes)
+      .toEqual([{ id: expect.any(Number), ano: ANO_TESTE, semestre: 2, valor: 350, status: 'rascunho' }]);
+  });
+
   it('buscarIndicadores sem setor traz indicadores de todos os setores', async () => {
     const indicadores = await dados.buscarIndicadores();
     const ids = indicadores.map((i) => i.id);

@@ -171,7 +171,7 @@ Requisição:
 { "email": "admin@observatorio.local", "senha": "sua-senha" }
 ```
 
-Em caso de sucesso, responde `200` com o token e os dados públicos do usuário:
+Em caso de sucesso, responde `200` com o token e os dados públicos do usuário, incluindo `perfil` (`administrador` ou `editor`):
 
 ```json
 {
@@ -179,12 +179,13 @@ Em caso de sucesso, responde `200` com o token e os dados públicos do usuário:
   "usuario": {
     "id": 1,
     "nome": "Administrador",
-    "email": "admin@observatorio.local"
+    "email": "admin@observatorio.local",
+    "perfil": "administrador"
   }
 }
 ```
 
-O token é assinado com HS256 e expira em 8 horas. No M5, ele não contém perfil ou papel de acesso. `senha_hash` nunca é enviado ao cliente.
+O token é assinado com HS256 e expira em 8 horas. Ele pode levar o perfil como claim, mas quem decide o acesso é o perfil lido do banco a cada requisição (veja "Perfis e rotas administrativas"). `senha_hash` nunca é enviado ao cliente.
 
 Erros:
 
@@ -203,7 +204,8 @@ Em caso de sucesso, responde `200` diretamente com o objeto do usuário:
 {
   "id": 1,
   "nome": "Administrador",
-  "email": "admin@observatorio.local"
+  "email": "admin@observatorio.local",
+  "perfil": "administrador"
 }
 ```
 
@@ -214,6 +216,165 @@ Responde `401` se o token estiver ausente, inválido ou expirado, ou se o usuár
 ```
 
 `senha_hash` não aparece na resposta.
+
+## Perfis e rotas administrativas
+
+O login e `/api/auth/me` incluem `perfil` no objeto `usuario`. Os valores permitidos são `administrador` e `editor`, os dois da equipe da SMCELT:
+
+- `administrador`: cadastra e edita indicadores e medições, sobe PDFs, **publica e despublica**;
+- `editor`: cadastra e edita indicadores e medições e sobe PDFs, sempre como rascunho. **Não publica nem despublica.**
+
+Tudo o que é cadastrado ou enviado pelo painel nasce como `rascunho`. O status só muda pelas rotas `PATCH .../status`, que são exclusivas do administrador. Nenhuma rota de cadastro ou edição aceita `status` no corpo; se vier, é ignorado.
+
+Todas as rotas em `/api/admin/*` exigem `Authorization: Bearer <jwt>` de um usuário ativo; token ausente, inválido ou expirado responde `401`. O middleware `autenticar` já busca o usuário no banco a cada requisição, então a checagem de perfil (`exigirPerfil`) usa `req.usuario.perfil`: se o perfil mudar no banco, vale na próxima requisição. O perfil pode estar no JWT, mas não é ele que decide o acesso.
+
+Editor chamando uma rota de status responde `403`:
+
+```json
+{ "erro": "Seu perfil não pode publicar conteúdo" }
+```
+
+### Indicadores e medições
+
+#### `GET /api/admin/indicadores?setor=1&status=rascunho`
+
+Retorna todos os indicadores, inclusive os sem medições, ordenados por nome. Cada item inclui `id`, `nome`, `unidade`, `descricao`, setor `{ id, nome }` e `medicoes`, com **todas** as medições (rascunho e publicadas), ordenadas por ano e semestre. Cada medição inclui `id`, `ano`, `semestre`, `valor` (número) e `status`. A resposta não expõe `id_usuario`.
+
+Filtros opcionais e combináveis:
+
+- `setor`: só os indicadores daquele setor. Mesma validação da rota pública: fora de inteiro positivo, `400` com `{ "erro": "setor deve ser um número inteiro positivo" }`.
+- `status`: só as medições com aquele status (`rascunho` ou `publicado`); indicador sem nenhuma medição nesse status fica de fora. Qualquer outro valor responde `400` com `{ "erro": "Status inválido" }`.
+
+```json
+[
+  {
+    "id": 3,
+    "nome": "Leitos",
+    "unidade": "leitos",
+    "descricao": null,
+    "setor": { "id": 1, "nome": "Hospedagem" },
+    "medicoes": [
+      { "id": 7, "ano": 2025, "semestre": 2, "valor": 350, "status": "rascunho" }
+    ]
+  }
+]
+```
+
+#### `POST /api/admin/indicadores`
+
+Cria indicador. Corpo: `{ "id_setor": 1, "nome": "Leitos", "descricao": null, "unidade": "leitos" }`. `id_setor`, `nome` (até 80 caracteres) e `unidade` (até 20) são obrigatórios; `descricao` é opcional (até 200) e pode ser `null`. Responde `201` com o indicador criado. Setor inexistente ou campo obrigatório faltando ou inválido responde `400`.
+
+#### `PUT /api/admin/indicadores/:id`
+
+Atualiza `id_setor`, `nome`, `descricao` e `unidade`, com as mesmas regras do `POST`. Responde `200` com o indicador atualizado; id inexistente responde `404`.
+
+#### `POST /api/admin/medicoes`
+
+Cria medição. Corpo: `{ "id_indicador": 3, "ano": 2025, "semestre": 2, "valor": 350 }`.
+
+- `id_indicador`: inteiro positivo de um indicador existente;
+- `ano`: inteiro de quatro dígitos; `semestre`: `1` ou `2`;
+- `valor`: número finito compatível com `NUMERIC(12,2)`.
+
+Responde `201` com a medição, sempre com `"status": "rascunho"`. A API grava `id_usuario` com o usuário logado e, se o período (`ano`, `semestre`) ainda não existe, cria o período.
+
+Já existir medição desse indicador nesse ano e semestre responde `409` (o banco tem `@@unique([id_indicador, id_periodo])`; a rota converte o erro do Prisma em `409`, nunca em `500`):
+
+```json
+{ "erro": "Já existe uma medição deste indicador em 2025/2" }
+```
+
+#### `PUT /api/admin/medicoes/:id`
+
+Atualiza `valor` e, se vierem, `ano` e `semestre`, com as mesmas validações e a mesma regra do `409` do `POST`. O indicador da medição não muda. Responde `200` com a medição atualizada; id inexistente responde `404`.
+
+Medição publicada não se edita direto: o administrador despublica, alguém corrige e ele publica de novo. Editar uma medição com `status = 'publicado'` responde `409`:
+
+```json
+{ "erro": "Despublique a medição antes de editar" }
+```
+
+#### `PATCH /api/admin/medicoes/:id/status`
+
+Só `administrador`. Corpo: `{ "status": "publicado" }` ou `{ "status": "rascunho" }`. Responde `200` com a medição atualizada. Editor responde `403`; status fora de `rascunho`/`publicado` responde `400` (`"Status inválido"`); id inexistente responde `404`.
+
+### Relatórios
+
+Categorias válidas (as do mockup da Tela 8): `Perfil de Demanda`, `Setor Hoteleiro`, `Impacto Econômico` e `Diagnóstico Estratégico`. Os filtros e o cadastro aceitam só esses valores, escritos exatamente assim.
+
+#### `GET /api/relatorios?ano=2025&categoria=Setor%20Hoteleiro`
+
+Rota pública. Os filtros `ano` e `categoria` são opcionais e combináveis. `ano` filtra pelo ano de `data_publicacao`, com a mesma validação de quatro dígitos das rotas de indicadores; categoria fora da lista responde `400` (`"Categoria inválida"`). Filtro válido sem resultados responde `200` com `[]`.
+
+Retorna somente relatórios publicados, do mais recente para o mais antigo (`data_publicacao` decrescente). Relatórios com a mesma data saem pelo `id` decrescente, ou seja, o cadastrado por último vem primeiro:
+
+```json
+[
+  {
+    "id": 1,
+    "titulo": "Boletim ilustrativo de indicadores",
+    "edicao": "2025/2",
+    "categoria": "Setor Hoteleiro",
+    "data_publicacao": "2026-10-20",
+    "descricao": "Documento ilustrativo gerado pelo grupo a partir dos mockups do Milestone III.",
+    "tamanho_kb": 182,
+    "url_arquivo": "/api/relatorios/1/arquivo"
+  }
+]
+```
+
+`url_arquivo` é o caminho da rota de download (`/api/relatorios/:id/arquivo`), não do disco. A resposta nunca traz `arquivo_url` (o nome interno do arquivo) nem o usuário que cadastrou.
+
+#### `GET /api/relatorios/:id/arquivo`
+
+Rota pública que devolve o PDF de um relatório publicado, com:
+
+```text
+Content-Type: application/pdf
+Content-Disposition: attachment; filename="<edição>-<título>.pdf"
+```
+
+O nome do arquivo é montado a partir de `edicao` e `titulo`, em minúsculas, sem acento e sem espaço (acentos removidos; qualquer caractere fora de `a-z` e `0-9` vira `-`, sem `-` repetido nem nas pontas). Exemplo: edição `2025/2` e título `Boletim ilustrativo de indicadores` → `2025-2-boletim-ilustrativo-de-indicadores.pdf`.
+
+Relatório inexistente, em rascunho ou com o arquivo sumido responde `404` com `{ "erro": "Relatório não encontrado" }`, sem revelar que existe um rascunho.
+
+#### `GET /api/admin/relatorios`
+
+Lista os relatórios de qualquer status. Cada item tem os mesmos campos da rota pública, mais `status` (`rascunho` ou `publicado`).
+
+#### `POST /api/admin/relatorios`
+
+Cadastra relatório. Envie `multipart/form-data` com:
+
+- `titulo`: obrigatório, até 150 caracteres;
+- `edicao`: obrigatório, até 20 caracteres;
+- `categoria`: obrigatório, uma das quatro categorias;
+- `data_publicacao`: obrigatório, `YYYY-MM-DD`;
+- `descricao`: obrigatório, até 500 caracteres;
+- `arquivo`: obrigatório, o PDF.
+
+Os limites de texto são os do `schema.prisma`; passar deles responde `400`, nunca `500`. O arquivo só é aceito se o tipo for `application/pdf` **e** o conteúdo começar com `%PDF`; senão, `400` (`"Arquivo PDF obrigatório"`). Acima de 10 MiB responde `413` (`"Arquivo muito grande"`), com o limite configurado no `multer`.
+
+O servidor define `id_usuario`, `tamanho_kb`, `arquivo_url` e o status inicial, que é sempre `rascunho`. Responde `201` com o relatório no formato de `GET /api/admin/relatorios`, sem o caminho interno do arquivo.
+
+Os PDFs ficam no diretório `uploads/` do backend, persistido no volume Docker `uploads` montado em `/app/uploads` (o mesmo da #164). O nome salvo é gerado pelo servidor, nunca o que veio do navegador. `arquivo_url` guarda só o caminho relativo dentro de `uploads/`. Ninguém acessa a pasta direto: o download passa pela rota, que confere o status.
+
+#### `PATCH /api/admin/relatorios/:id/status`
+
+Só `administrador`. Corpo: `{ "status": "publicado" }` ou `{ "status": "rascunho" }`. Responde `200` com o relatório atualizado. Editor responde `403`; status fora de `rascunho`/`publicado` responde `400` (`"Status inválido"`); id inexistente responde `404`.
+
+### Erros das rotas administrativas e de relatórios
+
+Erros seguem `{ "erro": "mensagem legível" }`.
+
+- `400`: `"JSON inválido"`, `"Campos obrigatórios inválidos"` (campo ausente, com tipo errado ou acima do limite), `"Categoria inválida"`, `"Status inválido"`, `"Arquivo PDF obrigatório"`; filtros `setor` e `ano` com as mesmas mensagens das rotas de indicadores.
+- `401`: token ausente, inválido ou expirado, ou usuário inativo: `"Token inválido ou expirado"`.
+- `403`: editor tentando publicar ou despublicar: `"Seu perfil não pode publicar conteúdo"`.
+- `404`: indicador, medição ou relatório inexistente no painel: `"Recurso não encontrado"`; no download público: `"Relatório não encontrado"`.
+- `409`: medição duplicada: `"Já existe uma medição deste indicador em <ano>/<semestre>"`; edição de medição publicada: `"Despublique a medição antes de editar"`.
+- `413`: upload acima de 10 MiB: `"Arquivo muito grande"`.
+
+As rotas públicas de relatório nunca incluem rascunhos. Categoria desconhecida ou ano malformado responde `400`, em vez de ser ignorado.
 
 ## Erros
 
