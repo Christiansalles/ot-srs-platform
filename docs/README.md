@@ -4,6 +4,7 @@
 |---|---|
 | [contrato-api.md](contrato-api.md) | Rotas da API, formato das respostas e regras de consulta. O front programa contra isso. |
 | [fluxo-de-trabalho.md](fluxo-de-trabalho.md) | Branches, pull requests, revisão, uso de IA e a regra de "pronto". |
+| [evidencias/](evidencias/README.md) | Prints e conferências de cada PR, com índice por milestone. |
 | [milestones/](milestones/) | Relatórios entregues em cada Milestone (PDF). |
 
 ## Relatórios dos Milestones

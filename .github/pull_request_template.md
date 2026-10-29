@@ -36,13 +36,14 @@ Closes #
 <!--
 OBRIGATÓRIO em PR que muda tela (frontend). Opcional no backend: resposta da API, saída dos testes ou do Adminer.
 
-1. Salve os prints em `docs/pr-<número do PR>/` nesta branch, com um README.md curto
-   dizendo como foram tirados (mock ou API real, larguras, navegador).
+1. Salve os prints em `docs/evidencias/pr-<número do PR>/` nesta branch, com um README.md curto,
+   dizendo como foram tirados (mock ou API real, larguras, navegador), e acrescente uma
+   linha em `docs/evidencias/README.md`.
 2. Tire pelo menos celular (375 ou 390 px) e desktop (1280 px). Inclua estados de
    carregando, vazio e erro quando a tela tiver, e antes/depois quando for correção.
 3. No corpo do PR, use a URL raw fixada no SHA do commit dos prints, para a imagem
    não quebrar quando a branch for apagada:
-   <img src="https://raw.githubusercontent.com/Christiansalles/ot-srs-platform/<sha>/docs/pr-<N>/home-375.png" width="240">
+   <img src="https://raw.githubusercontent.com/Christiansalles/ot-srs-platform/<sha>/docs/evidencias/pr-<N>/home-375.png" width="240">
 -->
 
 | Celular (375 px) | Desktop (1280 px) |
