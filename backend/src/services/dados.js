@@ -12,8 +12,13 @@ async function buscarSetores() {
   return setores.map((setor) => ({ id: setor.id_setor, nome: setor.nome }));
 }
 
+// Só períodos com alguma medição publicada: o cadastro de uma medição em
+// rascunho cria o período, e ele não pode aparecer no filtro público antes
+// de o administrador publicar.
 async function buscarPeriodos() {
-  const periodos = await prisma.periodo.findMany();
+  const periodos = await prisma.periodo.findMany({
+    where: { medicoes: { some: { status: STATUS_PUBLICADO } } },
+  });
   return periodos.map((periodo) => ({
     id: periodo.id_periodo,
     ano: periodo.ano,
