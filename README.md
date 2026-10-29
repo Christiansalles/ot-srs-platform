@@ -14,7 +14,7 @@ ot-srs-platform/
 │   └── tests/           testes Jest + Supertest
 ├── frontend/            React + Vite
 │   └── src/             components/, pages/, services/, mocks/, theme/, __tests__/
-├── docs/                contrato da API, fluxo de trabalho e relatórios dos milestones
+├── docs/                contrato da API, fluxo, escopo, decisões, mockups e evidências (índice em docs/README.md)
 └── .github/workflows/   CI
 ```
 
@@ -254,7 +254,7 @@ Leia [docs/fluxo-de-trabalho.md](docs/fluxo-de-trabalho.md) antes de abrir a pri
 
 A URL VITE_API_URL contém somente a base (por exemplo, http://localhost:3000); os serviços adicionam /api às rotas. VITE_USE_MOCK=false usa a API e exibe erros de consulta na tela. Para desenvolver ou conferir os dados ilustrativos sem backend, configure VITE_USE_MOCK=true no frontend/.env e reinicie o Vite. O mock não é ativado automaticamente em caso de erro.
 
-As referências visuais e capturas de tela do frontend estão em [docs/pr-48](docs/pr-48/README.md).
+As referências visuais e capturas de tela do frontend estão em [docs/evidencias/pr-48](docs/evidencias/pr-48/README.md).
 
 ### Filtros dos serviços (#109)
 

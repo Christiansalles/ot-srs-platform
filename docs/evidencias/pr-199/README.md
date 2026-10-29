@@ -1,6 +1,6 @@
 # Evidências do PR #199: serviços e mocks de relatórios
 
-Entrega da #186, conforme o [contrato da API](../contrato-api.md). Foram adicionados os serviços de consulta e URL de download, os mocks de relatórios e seus testes. Esta tarefa não altera telas, componentes visuais ou estilos; a página do Stitch será implementada na #187.
+Entrega da #186, conforme o [contrato da API](../../contrato-api.md). Foram adicionados os serviços de consulta e URL de download, os mocks de relatórios e seus testes. Esta tarefa não altera telas, componentes visuais ou estilos; a página do Stitch será implementada na #187.
 
 ## Serviços
 
