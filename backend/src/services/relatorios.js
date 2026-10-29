@@ -23,4 +23,14 @@ function formatarRelatorio(relatorio) {
   };
 }
 
-module.exports = { CATEGORIAS_RELATORIO, formatarRelatorio };
+// Formato do painel (GET /api/admin/relatorios e PATCH .../status):
+// os mesmos campos da rota pública, mais o status.
+function formatarRelatorioAdmin(relatorio) {
+  return { ...formatarRelatorio(relatorio), status: relatorio.status };
+}
+
+module.exports = {
+  CATEGORIAS_RELATORIO,
+  formatarRelatorio,
+  formatarRelatorioAdmin,
+};
