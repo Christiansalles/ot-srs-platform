@@ -3,6 +3,7 @@ const cors = require('cors');
 const setoresRouter = require('./routes/setores');
 const periodosRouter = require('./routes/periodos');
 const indicadoresRouter = require('./routes/indicadores');
+const relatoriosRouter = require('./routes/relatorios');
 const authRouter = require('./routes/auth');
 const adminIndicadoresRouter = require('./routes/admin-indicadores');
 const errorHandler = require('./middlewares/error-handler');
@@ -20,6 +21,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/setores', setoresRouter);
 app.use('/api/periodos', periodosRouter);
 app.use('/api/indicadores', indicadoresRouter);
+app.use('/api/relatorios', relatoriosRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/admin/indicadores', adminIndicadoresRouter);
 

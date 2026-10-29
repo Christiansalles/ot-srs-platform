@@ -137,4 +137,48 @@ async function buscarIndicadoresAdmin({ setorId, status } = {}) {
     .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 }
 
-module.exports = { buscarSetores, buscarPeriodos, buscarIndicadores, buscarIndicadoresAdmin };
+// Só relatórios publicados. `ano` filtra pelo ano de data_publicacao e
+// `categoria` pelo texto exato; os dois são opcionais.
+// arquivo_url e id_usuario não saem desta camada.
+async function buscarRelatoriosPublicados({ ano, categoria } = {}) {
+  const relatorios = await prisma.relatorio.findMany({
+    where: {
+      status: STATUS_PUBLICADO,
+      ...(ano === undefined ? {} : {
+        data_publicacao: {
+          gte: new Date(Date.UTC(ano, 0, 1)),
+          lt: new Date(Date.UTC(ano + 1, 0, 1)),
+        },
+      }),
+      ...(categoria === undefined ? {} : { categoria }),
+    },
+    orderBy: [{ data_publicacao: 'desc' }, { id_relatorio: 'desc' }],
+    select: {
+      id_relatorio: true,
+      titulo: true,
+      edicao: true,
+      categoria: true,
+      data_publicacao: true,
+      descricao: true,
+      tamanho_kb: true,
+    },
+  });
+
+  return relatorios.map((relatorio) => ({
+    id: relatorio.id_relatorio,
+    titulo: relatorio.titulo,
+    edicao: relatorio.edicao,
+    categoria: relatorio.categoria,
+    data_publicacao: relatorio.data_publicacao,
+    descricao: relatorio.descricao,
+    tamanho_kb: relatorio.tamanho_kb,
+  }));
+}
+
+module.exports = {
+  buscarSetores,
+  buscarPeriodos,
+  buscarIndicadores,
+  buscarIndicadoresAdmin,
+  buscarRelatoriosPublicados,
+};

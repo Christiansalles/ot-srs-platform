@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const autenticar = require('../middlewares/autenticar');
 const dados = require('../services/dados');
-const { lerSetor } = require('../utils/filtros-indicadores');
+const { lerSetor } = require('../utils/filtros');
 
 const router = Router();
 const STATUS_VALIDOS = ['rascunho', 'publicado'];
