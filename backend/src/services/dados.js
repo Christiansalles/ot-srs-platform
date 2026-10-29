@@ -294,6 +294,15 @@ async function buscarRelatoriosPublicados({ ano, categoria } = {}) {
   }));
 }
 
+async function buscarRelatorioPublicadoArquivo(id) {
+  const relatorio = await prisma.relatorio.findFirst({
+    where: { id_relatorio: id, status: 'publicado' },
+    select: { titulo: true, edicao: true, arquivo_url: true },
+  });
+  if (!relatorio) return null;
+  return relatorio;
+}
+
 // Consulta administrativa: inclui relatórios em qualquer status.
 async function buscarRelatoriosAdmin() {
   const relatorios = await prisma.relatorio.findMany({
@@ -394,6 +403,7 @@ module.exports = {
   criarMedicao,
   atualizarMedicao,
   buscarRelatoriosPublicados,
+  buscarRelatorioPublicadoArquivo,
   buscarRelatoriosAdmin,
   criarRelatorio,
   atualizarStatusMedicao,

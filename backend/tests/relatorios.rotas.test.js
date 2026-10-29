@@ -3,8 +3,11 @@
 // depender dos PDFs ilustrativos nem colidir com outros testes.
 
 const request = require('supertest');
+const fs = require('node:fs');
+const path = require('node:path');
 const prisma = require('../src/db');
 const app = require('../src/app');
+const { uploadsDir } = require('../src/config/uploads');
 
 const sufixo = `relatorios-${Date.now()}`;
 const ANO_ANTIGO = 2095;
@@ -12,6 +15,7 @@ const ANO_RECENTE = 2096;
 
 let usuario;
 const ids = {};
+const arquivoTeste = Buffer.from('%PDF-1.4 conteudo teste');
 
 function relatorio(chave, { data, categoria, status, tamanho_kb = 120 }) {
   return {
@@ -44,6 +48,7 @@ beforeAll(async () => {
 }, 15000);
 
 afterAll(async () => {
+  fs.rmSync(path.join(uploadsDir, `${sufixo}-hoteleiroAntigo.pdf`), { force: true });
   if (usuario) {
     await prisma.relatorio.deleteMany({ where: { id_usuario: usuario.id_usuario } });
     await prisma.usuario.delete({ where: { id_usuario: usuario.id_usuario } });
@@ -192,5 +197,60 @@ describe('GET /api/relatorios', () => {
 
     expect(res.status).toBe(400);
     expect(res.body).toEqual({ erro: 'ano deve ser um número inteiro de 4 dígitos' });
+  });
+});
+
+describe('GET /api/relatorios/:id/arquivo', () => {
+  it('baixa os bytes do arquivo publicado e define os cabeçalhos', async () => {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    fs.writeFileSync(path.join(uploadsDir, `${sufixo}-hoteleiroAntigo.pdf`), arquivoTeste);
+    const res = await request(app).get(`/api/relatorios/${ids.hoteleiroAntigo}/arquivo`);
+
+    expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toMatch(/^application\/pdf/);
+    expect(res.headers['content-disposition']).toBe(
+      `attachment; filename="${ANO_ANTIGO}-03-relatorio-hoteleiroantigo-${sufixo}.pdf"`
+    );
+    expect(res.body).toEqual(arquivoTeste);
+  });
+
+  it.each([
+    ['rascunho', () => ids.rascunhoRecente],
+    ['inexistente', () => 2147483647],
+    ['id inválido', () => '0'],
+  ])('responde 404 para %s', async (_caso, id) => {
+    const res = await request(app).get(`/api/relatorios/${id()}/arquivo`);
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual({ erro: 'Relatório não encontrado' });
+  });
+
+  it('responde 404 quando o arquivo publicado sumiu', async () => {
+    const res = await request(app).get(`/api/relatorios/${ids.impactoRecente}/arquivo`);
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual({ erro: 'Relatório não encontrado' });
+  });
+
+  it('normaliza acentos, maiúsculas e pontuação no nome do anexo', async () => {
+    const caminho = path.join(uploadsDir, `${sufixo}-impactoRecente.pdf`);
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    fs.writeFileSync(caminho, arquivoTeste);
+    await prisma.relatorio.update({
+      where: { id_relatorio: ids.impactoRecente },
+      data: { titulo: 'Turismo - Relatório_final' },
+    });
+
+    try {
+      const res = await request(app).get(`/api/relatorios/${ids.impactoRecente}/arquivo`);
+      expect(res.status).toBe(200);
+      expect(res.headers['content-disposition']).toBe(
+        'attachment; filename="2096-12-turismo-relatorio-final.pdf"'
+      );
+    } finally {
+      await prisma.relatorio.update({
+        where: { id_relatorio: ids.impactoRecente },
+        data: { titulo: `Relatório impactoRecente ${sufixo}` },
+      });
+      fs.rmSync(caminho, { force: true });
+    }
   });
 });

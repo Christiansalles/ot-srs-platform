@@ -3,9 +3,12 @@
 // relatório (2093), fora do seed e dos anos usados por outros testes.
 
 const request = require('supertest');
+const fs = require('node:fs');
+const path = require('node:path');
 const prisma = require('../src/db');
 const app = require('../src/app');
 const { criarToken } = require('../src/services/auth');
+const { uploadsDir } = require('../src/config/uploads');
 
 const sufixo = `status-${Date.now()}`;
 const ANO_MEDICAO = 2094;
@@ -270,5 +273,28 @@ describe('efeito nas rotas públicas', () => {
 
     await alterarStatus('relatorios', relatorio.id_relatorio, { status: 'rascunho' });
     expect(await publicos()).toEqual([]);
+  });
+
+  it('o download acompanha a publicação e despublicação do relatório', async () => {
+    const nomeArquivo = `${sufixo}.pdf`;
+    const conteudo = Buffer.from('%PDF-1.4 fluxo de publicação');
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    fs.writeFileSync(path.join(uploadsDir, nomeArquivo), conteudo);
+    try {
+      const url = `/api/relatorios/${relatorio.id_relatorio}/arquivo`;
+      expect((await request(app).get(url)).status).toBe(404);
+
+      await alterarStatus('relatorios', relatorio.id_relatorio, { status: 'publicado' });
+      const download = await request(app).get(url);
+      expect(download.status).toBe(200);
+      expect(download.body).toEqual(conteudo);
+
+      await alterarStatus('relatorios', relatorio.id_relatorio, { status: 'rascunho' });
+      const oculto = await request(app).get(url);
+      expect(oculto.status).toBe(404);
+      expect(oculto.body).toEqual({ erro: 'Relatório não encontrado' });
+    } finally {
+      fs.rmSync(path.join(uploadsDir, nomeArquivo), { force: true });
+    }
   });
 });
