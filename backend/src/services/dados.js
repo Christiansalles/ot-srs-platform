@@ -100,6 +100,43 @@ async function buscarIndicadores({ setorId, ano, semestre } = {}) {
   }));
 }
 
+// Consulta administrativa: inclui todos os indicadores e medições de qualquer
+// status. Os filtros não alteram a consulta pública acima.
+async function buscarIndicadoresAdmin({ setorId, status } = {}) {
+  const indicadores = await prisma.indicador.findMany({
+    where: {
+      ...(setorId === undefined ? {} : { id_setor: setorId }),
+      ...(status === undefined ? {} : { medicoes: { some: { status } } }),
+    },
+    include: {
+      setor: true,
+      medicoes: {
+        ...(status === undefined ? {} : { where: { status } }),
+        include: { periodo: true },
+      },
+    },
+  });
+
+  return indicadores
+    .map((indicador) => ({
+      id: indicador.id_indicador,
+      nome: indicador.nome,
+      unidade: indicador.unidade,
+      descricao: indicador.descricao,
+      setor: { id: indicador.setor.id_setor, nome: indicador.setor.nome },
+      medicoes: indicador.medicoes
+        .map((medicao) => ({
+          id: medicao.id_medicao,
+          ano: medicao.periodo.ano,
+          semestre: medicao.periodo.semestre,
+          valor: Number(medicao.valor),
+          status: medicao.status,
+        }))
+        .sort((a, b) => a.ano - b.ano || a.semestre - b.semestre),
+    }))
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+}
+
 // Só relatórios publicados. `ano` filtra pelo ano de data_publicacao e
 // `categoria` pelo texto exato; os dois são opcionais.
 // arquivo_url e id_usuario não saem desta camada.
@@ -142,5 +179,6 @@ module.exports = {
   buscarSetores,
   buscarPeriodos,
   buscarIndicadores,
+  buscarIndicadoresAdmin,
   buscarRelatoriosPublicados,
 };

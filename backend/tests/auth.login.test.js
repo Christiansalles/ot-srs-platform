@@ -18,6 +18,7 @@ const usuarioAtivo = {
   email: 'maria@example.com',
   senha_hash: `${salt}:${hash}`,
   ativo: true,
+  perfil: 'administrador',
 };
 
 describe('POST /api/auth/login', () => {
@@ -47,6 +48,7 @@ describe('POST /api/auth/login', () => {
       id: 42,
       nome: 'Maria Clara',
       email: 'maria@example.com',
+      perfil: 'administrador',
     });
     expect(Object.keys(res.body).sort()).toEqual(['token', 'usuario']);
     const claims = jwt.verify(res.body.token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
@@ -62,8 +64,24 @@ describe('POST /api/auth/login', () => {
       .get('/api/auth/me')
       .set('Authorization', `Bearer ${res.body.token}`);
     expect(resMe.status).toBe(200);
-    expect(resMe.body).toEqual({ id: 42, nome: 'Maria Clara', email: 'maria@example.com' });
+    expect(resMe.body).toEqual({
+      id: 42,
+      nome: 'Maria Clara',
+      email: 'maria@example.com',
+      perfil: 'administrador',
+    });
     expect(JSON.stringify(resMe.body)).not.toContain('senha_hash');
+  });
+
+  it('devolve o perfil de editor para quem entra como editor', async () => {
+    prisma.usuario.findUnique.mockResolvedValue({ ...usuarioAtivo, perfil: 'editor' });
+
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'maria@example.com', senha: senhaCorreta });
+
+    expect(res.status).toBe(200);
+    expect(res.body.usuario.perfil).toBe('editor');
   });
 
   it.each([

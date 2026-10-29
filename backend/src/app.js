@@ -5,6 +5,7 @@ const periodosRouter = require('./routes/periodos');
 const indicadoresRouter = require('./routes/indicadores');
 const relatoriosRouter = require('./routes/relatorios');
 const authRouter = require('./routes/auth');
+const adminIndicadoresRouter = require('./routes/admin-indicadores');
 const errorHandler = require('./middlewares/error-handler');
 
 const app = express();
@@ -22,6 +23,7 @@ app.use('/api/periodos', periodosRouter);
 app.use('/api/indicadores', indicadoresRouter);
 app.use('/api/relatorios', relatoriosRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/admin/indicadores', adminIndicadoresRouter);
 
 // Deve vir depois das rotas para que rotas inválidas recebam JSON 404.
 app.use((req, res) => {

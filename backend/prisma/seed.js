@@ -27,6 +27,39 @@ function setoresDoArquivo(dados, arquivo) {
   );
 }
 
+function lerUsuarioDesenvolvimento(prefixo, nome, perfil) {
+  const email = process.env[`${prefixo}_EMAIL`]?.trim().toLowerCase();
+  const senha = process.env[`${prefixo}_SENHA`];
+  if (!email || !senha?.trim()) {
+    throw new Error(`${prefixo}_EMAIL e ${prefixo}_SENHA precisam estar configuradas para executar o seed.`);
+  }
+  if (email === 'carga-inicial@observatorio.local') {
+    throw new Error(`${prefixo}_EMAIL não pode usar o e-mail reservado para Carga inicial.`);
+  }
+
+  return { nome, email, senha, perfil };
+}
+
+async function carregarUsuarioDesenvolvimento({ nome, email, senha, perfil }) {
+  const senhaHash = await gerarHash(senha);
+  await prisma.usuario.upsert({
+    where: { email },
+    update: {
+      nome,
+      senha_hash: senhaHash,
+      ativo: true,
+      perfil,
+    },
+    create: {
+      nome,
+      email,
+      senha_hash: senhaHash,
+      ativo: true,
+      perfil,
+    },
+  });
+}
+
 async function carregarSetor(setorDados, usuario) {
   const setor = await prisma.setor.upsert({
     where: { nome: setorDados.setor.nome },
@@ -102,30 +135,14 @@ async function carregarSetor(setorDados, usuario) {
 }
 
 async function main() {
-  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-  const adminSenha = process.env.ADMIN_SENHA;
-  if (!adminEmail || !adminSenha?.trim()) {
-    throw new Error('ADMIN_EMAIL e ADMIN_SENHA precisam estar configuradas para executar o seed.');
-  }
-  if (adminEmail === 'carga-inicial@observatorio.local') {
-    throw new Error('ADMIN_EMAIL não pode usar o e-mail reservado para Carga inicial.');
+  const admin = lerUsuarioDesenvolvimento('ADMIN', 'Administrador', 'administrador');
+  const editor = lerUsuarioDesenvolvimento('EDITOR', 'Editor', 'editor');
+  if (admin.email === editor.email) {
+    throw new Error('ADMIN_EMAIL e EDITOR_EMAIL precisam ser e-mails diferentes.');
   }
 
-  const adminSenhaHash = await gerarHash(adminSenha);
-  await prisma.usuario.upsert({
-    where: { email: adminEmail },
-    update: {
-      nome: 'Administrador',
-      senha_hash: adminSenhaHash,
-      ativo: true,
-    },
-    create: {
-      nome: 'Administrador',
-      email: adminEmail,
-      senha_hash: adminSenhaHash,
-      ativo: true,
-    },
-  });
+  await carregarUsuarioDesenvolvimento(admin);
+  await carregarUsuarioDesenvolvimento(editor);
 
   const usuario = await prisma.usuario.upsert({
     where: { email: 'carga-inicial@observatorio.local' },
