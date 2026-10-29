@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const dados = require('../services/dados');
 const { CATEGORIAS_RELATORIO, formatarRelatorio } = require('../services/relatorios');
-const { lerAno } = require('../services/filtros');
+const { lerAno } = require('../utils/filtros');
 
 const router = Router();
 

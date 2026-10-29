@@ -1,21 +1,9 @@
 const { Router } = require('express');
 const dados = require('../services/dados');
 const { formatarIndicadores, montarDestaques } = require('../services/indicadores');
-const { lerAno } = require('../services/filtros');
+const { lerSetor, lerAno } = require('../utils/filtros');
 
 const router = Router();
-
-// `?setor=` é opcional. Quando vem, precisa ser um inteiro positivo;
-// qualquer outra coisa (abc, 1.5, -1, vazio, repetido) é 400.
-function lerSetor(query) {
-  if (query.setor === undefined) {
-    return { setorId: undefined };
-  }
-  if (typeof query.setor !== 'string' || !/^[1-9]\d*$/.test(query.setor)) {
-    return { erro: 'setor deve ser um número inteiro positivo' };
-  }
-  return { setorId: Number(query.setor) };
-}
 
 function lerFiltros(query) {
   const setor = lerSetor(query);
