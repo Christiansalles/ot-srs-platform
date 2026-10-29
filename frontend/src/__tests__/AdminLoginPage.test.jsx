@@ -32,6 +32,12 @@ describe('tela de login administrativa', () => {
     expect(screen.queryByRole('heading', { name: 'Acesso Administrativo' })).not.toBeInTheDocument();
   });
 
+  it('oferece um link para voltar ao portal público', () => {
+    renderLogin();
+
+    expect(screen.getByRole('link', { name: 'Voltar ao portal' })).toHaveAttribute('href', '/');
+  });
+
   it('mostra e esconde a senha e não oferece recuperação de senha', () => {
     renderLogin();
     const senha = screen.getByLabelText('Senha');
