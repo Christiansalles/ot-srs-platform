@@ -1,3 +1,6 @@
+// Com extensão: o job compose do CI importa este arquivo direto no Node, sem o Vite.
+import { CATEGORIAS_RELATORIO } from '../config/relatorios.js';
+
 // Metadados de backend/prisma/dados/relatorios/relatorios.json.
 // IDs seguem a ordem do seed do PR #198 em banco vazio; tamanhos em KB,
 // arredondados para cima a partir dos bytes dos PDFs, como na carga.
@@ -24,13 +27,11 @@ export const mockRelatorios = [
   },
 ];
 
-const CATEGORIAS = ['Perfil de Demanda', 'Setor Hoteleiro', 'Impacto Econômico', 'Diagnóstico Estratégico'];
-
 export function filtrarRelatoriosMock(params) {
   if (params.has('ano') && !/^\d{4}$/.test(params.get('ano'))) {
     throw new Error('ano deve ser um número inteiro de 4 dígitos');
   }
-  if (params.has('categoria') && !CATEGORIAS.includes(params.get('categoria'))) {
+  if (params.has('categoria') && !CATEGORIAS_RELATORIO.includes(params.get('categoria'))) {
     throw new Error('Categoria inválida');
   }
 

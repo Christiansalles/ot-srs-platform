@@ -4,12 +4,24 @@ import { getPeriodos, getSetores } from '../../services/api';
 import { lerFiltros } from './filtros';
 import './FiltrosPainel.css';
 
-export default function FiltrosPainel() {
+export default function FiltrosPainel({ opcoes, statusOpcoes = 'pronto' }) {
   const [params, setParams] = useSearchParams();
   const [dados, setDados] = useState({ anos: [], setores: [], status: 'carregando' });
-  const filtros = lerFiltros(params, dados);
+  const filtros = opcoes
+    ? Object.fromEntries(opcoes.map(({ campo }) => [campo, params.get(campo) ?? '']))
+    : lerFiltros(params, dados);
+  const status = opcoes ? statusOpcoes : dados.status;
+  const campos = opcoes ?? [
+    { campo: 'ano', rotulo: 'Período', todos: 'Todos os períodos',
+      valores: dados.anos.map((ano, indice) => ({ valor: String(ano), nome: `${ano}${indice === 0 ? ' (Atual)' : ''}` })) },
+    { campo: 'semestre', rotulo: 'Semestre', todos: 'Todos', desabilitado: !filtros.ano,
+      valores: [{ valor: '1', nome: '1º semestre' }, { valor: '2', nome: '2º semestre' }] },
+    { campo: 'setor', rotulo: 'Setor', todos: 'Todos os setores',
+      valores: dados.setores.map((setor) => ({ valor: String(setor.id), nome: setor.nome })) },
+  ];
 
   useEffect(() => {
+    if (opcoes) return;
     let ativo = true;
     Promise.all([getPeriodos(), getSetores()])
       .then(([periodos, setores]) => {
@@ -22,10 +34,10 @@ export default function FiltrosPainel() {
         if (ativo) setDados({ anos: [], setores: [], status: 'erro' });
       });
     return () => { ativo = false; };
-  }, []);
+  }, [opcoes]);
 
   useEffect(() => {
-    if (dados.status !== 'pronto') return;
+    if (opcoes || dados.status !== 'pronto') return;
     const validos = lerFiltros(params, dados);
     const proximos = new URLSearchParams(params);
     for (const [campo, valor] of Object.entries(validos)) {
@@ -34,14 +46,14 @@ export default function FiltrosPainel() {
     if (proximos.toString() !== params.toString()) {
       setParams(proximos, { replace: true });
     }
-  }, [params, setParams, dados]);
+  }, [params, setParams, dados, opcoes]);
 
   function alterarFiltro(campo, valor) {
     setParams((anteriores) => {
       const proximos = new URLSearchParams(anteriores);
       if (valor) proximos.set(campo, valor);
       else proximos.delete(campo);
-      if (campo === 'ano' && !valor) proximos.delete('semestre');
+      if (!opcoes && campo === 'ano' && !valor) proximos.delete('semestre');
       return proximos;
     });
   }
@@ -49,41 +61,29 @@ export default function FiltrosPainel() {
   function limparFiltros() {
     setParams((anteriores) => {
       const proximos = new URLSearchParams(anteriores);
-      for (const campo of ['ano', 'semestre', 'setor']) proximos.delete(campo);
+      for (const { campo } of campos) proximos.delete(campo);
       return proximos;
     });
   }
 
   return (
     <div className="filter-bar filtros-painel">
-      <label className="select-control">
-        <span>Período</span>
-        <select value={filtros.ano} disabled={dados.status !== 'pronto'}
-          onChange={(evento) => alterarFiltro('ano', evento.target.value)}>
-          <option value="">Todos os períodos</option>
-          {dados.anos.map((ano, indice) => <option key={ano} value={ano}>{ano}{indice === 0 ? ' (Atual)' : ''}</option>)}
-        </select>
-      </label>
-      <label className="select-control">
-        <span>Semestre</span>
-        <select value={filtros.semestre} disabled={dados.status !== 'pronto' || !filtros.ano}
-          onChange={(evento) => alterarFiltro('semestre', evento.target.value)}>
-          <option value="">Todos</option>
-          <option value="1">1º semestre</option>
-          <option value="2">2º semestre</option>
-        </select>
-      </label>
-      <label className="select-control">
-        <span>Setor</span>
-        <select value={filtros.setor} disabled={dados.status !== 'pronto'}
-          onChange={(evento) => alterarFiltro('setor', evento.target.value)}>
-          <option value="">Todos os setores</option>
-          {dados.setores.map((setor) => <option key={setor.id} value={setor.id}>{setor.nome}</option>)}
-        </select>
-      </label>
+      {campos.map(({ campo, rotulo, todos, valores, desabilitado }) => (
+        <label className="select-control" key={campo}>
+          <span>{rotulo}</span>
+          <select value={filtros[campo]} disabled={status !== 'pronto' || desabilitado}
+            onChange={(evento) => alterarFiltro(campo, evento.target.value)}>
+            <option value="">{todos}</option>
+            {opcoes && filtros[campo] && !valores.some(({ valor }) => valor === filtros[campo]) && (
+              <option value={filtros[campo]} hidden>{filtros[campo]}</option>
+            )}
+            {valores.map(({ valor, nome }) => <option key={valor} value={valor}>{nome}</option>)}
+          </select>
+        </label>
+      ))}
       <button type="button" className="ot-button-secondary" onClick={limparFiltros}>Limpar filtros</button>
-      {dados.status === 'carregando' && <p role="status">Carregando filtros...</p>}
-      {dados.status === 'erro' && <p role="alert">Não foi possível carregar os filtros.</p>}
+      {status === 'carregando' && <p role="status">Carregando filtros...</p>}
+      {status === 'erro' && <p role="alert">Não foi possível carregar os filtros.</p>}
     </div>
   );
 }

@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import FiltrosPainel from '../components/FiltrosPainel/FiltrosPainel';
+import { CATEGORIAS_RELATORIO } from '../config/relatorios';
 import { getRelatorios } from '../services/api';
 import './RelatoriosPage.css';
 
@@ -14,22 +17,54 @@ function formatarTamanho(tamanhoKb) {
 }
 
 export default function RelatoriosPage() {
-  const [estado, setEstado] = useState({ status: 'carregando', relatorios: [], erro: '' });
+  const [params] = useSearchParams();
+  const ano = params.get('ano') ?? '';
+  const categoria = params.get('categoria') ?? '';
+  const consulta = JSON.stringify([ano, categoria]);
+  const temFiltros = Boolean(ano || categoria);
+  const [catalogo, setCatalogo] = useState({ status: 'carregando', relatorios: [], erro: '' });
+  const [resultado, setResultado] = useState({ consulta: null });
 
   useEffect(() => {
     let ativo = true;
     getRelatorios()
       .then((relatorios) => {
-        if (ativo) setEstado({ status: 'pronto', relatorios, erro: '' });
+        if (ativo) setCatalogo({ status: 'pronto', relatorios, erro: '' });
       })
       .catch((erro) => {
-        if (ativo) setEstado({
+        if (ativo) setCatalogo({
           status: 'erro', relatorios: [],
           erro: erro?.message || 'Não foi possível consultar os relatórios. Tente novamente.',
         });
       });
     return () => { ativo = false; };
   }, []);
+
+  useEffect(() => {
+    if (!temFiltros) return;
+    let ativo = true;
+    getRelatorios({ ano, categoria })
+      .then((relatorios) => {
+        if (ativo) setResultado({ consulta, status: 'pronto', relatorios, erro: '' });
+      })
+      .catch((erro) => {
+        if (ativo) setResultado({
+          consulta, status: 'erro', relatorios: [],
+          erro: erro?.message || 'Não foi possível consultar os relatórios. Tente novamente.',
+        });
+      });
+    return () => { ativo = false; };
+  }, [ano, categoria, consulta, temFiltros]);
+
+  const estado = !temFiltros ? catalogo : resultado.consulta === consulta ? resultado
+    : { status: 'carregando', relatorios: [], erro: '' };
+  const anos = [...new Set(catalogo.relatorios.map((relatorio) => relatorio.data_publicacao.slice(0, 4)))].sort().reverse();
+  const opcoes = [
+    { campo: 'ano', rotulo: 'Ano de publicação', todos: 'Todos os anos',
+      valores: anos.map((valor) => ({ valor, nome: valor })) },
+    { campo: 'categoria', rotulo: 'Categoria', todos: 'Todas as categorias',
+      valores: CATEGORIAS_RELATORIO.map((valor) => ({ valor, nome: valor })) },
+  ];
 
   return (
     <div className="page relatorios-page">
@@ -45,6 +80,7 @@ export default function RelatoriosPage() {
       </p>
 
       <section className="content-section" aria-labelledby="publicacoes-heading">
+        <FiltrosPainel opcoes={opcoes} statusOpcoes={catalogo.status} />
         <div className="relatorios-cabecalho">
           <h2 id="publicacoes-heading">Publicações disponíveis</h2>
           {estado.status === 'pronto' && (
@@ -53,7 +89,7 @@ export default function RelatoriosPage() {
             </span>
           )}
         </div>
-        <div aria-live="polite">
+        <div>
           {estado.status === 'carregando' ? (
             <p className="state-message" role="status">Carregando relatórios...</p>
           ) : estado.status === 'erro' ? (
