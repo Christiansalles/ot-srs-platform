@@ -9,11 +9,14 @@ const emailEditorTeste = `Editor-Teste-${Date.now()}@observatorio.local`;
 const emailEditorNormalizado = emailEditorTeste.trim().toLowerCase();
 const senhaEditorTeste = 'senha-editor-teste-ficticia';
 
-function executarSeed() {
+function executarSeed(variaveis = {}, stdio = 'inherit') {
   executarSeedComUploads({
     ADMIN_EMAIL: emailAdminTeste,
     ADMIN_SENHA: senhaAdminTeste,
-  });
+    EDITOR_EMAIL: emailEditorTeste,
+    EDITOR_SENHA: senhaEditorTeste,
+    ...variaveis,
+  }, stdio);
 }
 
 function erroDoSeed(envExtra) {

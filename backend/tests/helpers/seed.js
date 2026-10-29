@@ -7,10 +7,10 @@ const backendDir = path.resolve(__dirname, '../..');
 const seedPath = path.join(backendDir, 'prisma', 'seed.js');
 const uploadsDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ot-srs-uploads-'));
 
-function executarSeed(variaveis = {}) {
+function executarSeed(variaveis = {}, stdio = 'inherit') {
   execFileSync(process.execPath, [seedPath], {
     cwd: backendDir,
-    stdio: 'inherit',
+    stdio,
     env: {
       ...process.env,
       UPLOADS_DIR: uploadsDir,
