@@ -66,7 +66,7 @@ beforeAll(async () => {
       status: 'rascunho',
     },
   });
-});
+}, 15000);
 
 afterAll(async () => {
   const ids = [admin, editor, inativo].filter(Boolean).map((u) => u.id_usuario);
@@ -79,7 +79,7 @@ afterAll(async () => {
 
   if (segredoAnterior === undefined) delete process.env.JWT_SECRET;
   else process.env.JWT_SECRET = segredoAnterior;
-});
+}, 15000);
 
 function alterarStatus(recurso, id, corpo, token = tokens.admin) {
   const requisicao = request(app).patch(`/api/admin/${recurso}/${id}/status`);
@@ -95,6 +95,7 @@ const idDo = { medicoes: () => medicao.id_medicao, relatorios: () => relatorio.i
 
 describe.each(['medicoes', 'relatorios'])('PATCH /api/admin/%s/:id/status', (recurso) => {
   afterEach(async () => {
+    if (!admin || !medicao || !relatorio) return;
     // Cada teste começa com o item em rascunho.
     if (recurso === 'medicoes') {
       await prisma.medicao.update({ where: { id_medicao: medicao.id_medicao }, data: { status: 'rascunho' } });

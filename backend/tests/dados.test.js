@@ -80,6 +80,12 @@ describe('services/dados', () => {
     expect(periodos).toContainEqual({ id: periodo1.id_periodo, ano: ANO_TESTE, semestre: 1 });
   });
 
+  it('buscarPeriodos deixa de fora o período que só tem medição em rascunho', async () => {
+    const periodos = await dados.buscarPeriodos();
+
+    expect(periodos.map((periodo) => periodo.id)).not.toContain(periodo2.id_periodo);
+  });
+
   it('buscarIndicadores filtra pelo setor e traz só medições publicadas', async () => {
     const indicadores = await dados.buscarIndicadores({ setorId: hospedagem.id_setor });
 

@@ -1,9 +1,5 @@
-const { execFileSync } = require('child_process');
-const path = require('path');
 const prisma = require('../src/db');
-
-const backendDir = path.resolve(__dirname, '..');
-const seedPath = path.join(backendDir, 'prisma', 'seed.js');
+const { executarSeed, limparUploads } = require('./helpers/seed');
 
 describe('Seed da carga de hospedagem', () => {
   let setor;
@@ -11,10 +7,7 @@ describe('Seed da carga de hospedagem', () => {
   let medicoes;
 
   beforeAll(async () => {
-    execFileSync(process.execPath, [seedPath], {
-      cwd: backendDir,
-      stdio: 'inherit',
-    });
+    executarSeed();
 
     [setor, indicadores, medicoes] = await Promise.all([
       prisma.setor.findUnique({
@@ -54,6 +47,7 @@ describe('Seed da carga de hospedagem', () => {
 
   afterAll(async () => {
     await prisma.$disconnect();
+    limparUploads();
   });
 
   test('cria os indicadores e medições da hospedagem e da participação econômica', () => {
@@ -92,10 +86,7 @@ describe('Seed da carga de hospedagem', () => {
   });
 
   test('executar o seed novamente mantém exatamente 5 medições', async () => {
-    execFileSync(process.execPath, [seedPath], {
-      cwd: backendDir,
-      stdio: 'inherit',
-    });
+    executarSeed();
 
     const quantidade = await prisma.medicao.count({
       where: {

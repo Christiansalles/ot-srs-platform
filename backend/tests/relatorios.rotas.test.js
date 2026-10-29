@@ -41,7 +41,7 @@ beforeAll(async () => {
   await criar('hoteleiroRecente', { data: `${ANO_RECENTE}-01-01`, categoria: 'Setor Hoteleiro', status: 'publicado', tamanho_kb: null });
   await criar('impactoRecente', { data: `${ANO_RECENTE}-12-31`, categoria: 'Impacto Econômico', status: 'publicado' });
   await criar('rascunhoRecente', { data: `${ANO_RECENTE}-06-15`, categoria: 'Setor Hoteleiro', status: 'rascunho' });
-});
+}, 15000);
 
 afterAll(async () => {
   if (usuario) {
@@ -49,7 +49,7 @@ afterAll(async () => {
     await prisma.usuario.delete({ where: { id_usuario: usuario.id_usuario } });
   }
   await prisma.$disconnect();
-});
+}, 15000);
 
 const idsDaResposta = (body) => body.map((item) => item.id);
 
@@ -74,7 +74,8 @@ describe('GET /api/relatorios', () => {
     const res = await request(app).get(`/api/relatorios?ano=${ANO_RECENTE}`);
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([
+    const meus = res.body.filter((item) => Object.values(ids).includes(item.id));
+    expect(meus).toEqual([
       {
         id: ids.impactoRecente,
         titulo: `Relatório impactoRecente ${sufixo}`,
@@ -105,7 +106,8 @@ describe('GET /api/relatorios', () => {
     const res = await request(app).get(`/api/relatorios?ano=${ANO_ANTIGO}`);
 
     expect(res.status).toBe(200);
-    expect(idsDaResposta(res.body)).toEqual([ids.demandaAntigo, ids.hoteleiroAntigo]);
+    const meus = idsDaResposta(res.body).filter((id) => Object.values(ids).includes(id));
+    expect(meus).toEqual([ids.demandaAntigo, ids.hoteleiroAntigo]);
   });
 
   it('desempata relatórios da mesma data pelo cadastrado por último', async () => {
@@ -121,7 +123,10 @@ describe('GET /api/relatorios', () => {
     await prisma.relatorio.delete({ where: { id_relatorio: mesmaData.id_relatorio } });
 
     expect(res.status).toBe(200);
-    expect(idsDaResposta(res.body)).toEqual([
+    const meus = idsDaResposta(res.body).filter((id) =>
+      [...Object.values(ids), mesmaData.id_relatorio].includes(id)
+    );
+    expect(meus).toEqual([
       mesmaData.id_relatorio,
       ids.demandaAntigo,
       ids.hoteleiroAntigo,
@@ -143,7 +148,8 @@ describe('GET /api/relatorios', () => {
       .query({ ano: String(ANO_RECENTE), categoria: 'Setor Hoteleiro' });
 
     expect(res.status).toBe(200);
-    expect(idsDaResposta(res.body)).toEqual([ids.hoteleiroRecente]);
+    const meus = idsDaResposta(res.body).filter((id) => Object.values(ids).includes(id));
+    expect(meus).toEqual([ids.hoteleiroRecente]);
   });
 
   it('responde 200 com [] para filtro válido sem resultado', async () => {

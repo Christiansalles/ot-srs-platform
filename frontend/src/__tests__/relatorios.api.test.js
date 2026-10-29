@@ -98,6 +98,9 @@ describe('serviços de relatórios', () => {
 });
 
 describe('mocks de relatórios', () => {
+  // Os dois têm a mesma data; a API devolve o de maior id primeiro.
+  const naOrdemDaApi = [mockRelatorios[1], mockRelatorios[0]];
+
   it('acompanha todos os metadados da carga, os IDs em banco vazio e os tamanhos dos PDFs', () => {
     const pasta = resolve(dirname(fileURLToPath(import.meta.url)), '../../../backend/prisma/dados/relatorios');
     const carga = JSON.parse(readFileSync(resolve(pasta, 'relatorios.json'), 'utf8'));
@@ -118,7 +121,7 @@ describe('mocks de relatórios', () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     const dados = await getRelatorios();
-    expect(dados).toEqual([mockRelatorios[1], mockRelatorios[0]]);
+    expect(dados).toEqual(naOrdemDaApi);
     dados[0].titulo = 'Título alterado';
     expect((await getRelatorios())[0].titulo).toBe('Participação econômica do turismo');
     expect(fetchMock).not.toHaveBeenCalled();
@@ -126,24 +129,29 @@ describe('mocks de relatórios', () => {
 
   it('filtra pelo ano de publicação, combina categoria e aceita filtros vazios', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'true');
-    expect(await getRelatorios({ ano: 2026 })).toEqual([mockRelatorios[1], mockRelatorios[0]]);
+    expect(await getRelatorios({ ano: 2026 })).toEqual(naOrdemDaApi);
     expect(await getRelatorios({ ano: 2025 })).toEqual([]);
     expect(await getRelatorios({ ano: '2026', categoria: 'Impacto Econômico' })).toEqual([mockRelatorios[1]]);
     expect(await getRelatorios({ categoria: 'Setor Hoteleiro' })).toEqual([mockRelatorios[0]]);
-    expect(await getRelatorios({ ano: '', categoria: null })).toEqual([mockRelatorios[1], mockRelatorios[0]]);
+    expect(await getRelatorios({ ano: '', categoria: null })).toEqual(naOrdemDaApi);
     expect(await getRelatorios({ categoria: 'Perfil de Demanda' })).toEqual([]);
     expect(await getRelatorios({ categoria: 'Diagnóstico Estratégico' })).toEqual([]);
   });
 
   it('ordena os relatórios pela publicação mais recente', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'true');
-    const data = mockRelatorios[1].data_publicacao;
-    mockRelatorios[1].data_publicacao = '2026-10-22';
+    const data = mockRelatorios[0].data_publicacao;
+    mockRelatorios[0].data_publicacao = '2026-10-22';
     try {
-      expect((await getRelatorios()).map((relatorio) => relatorio.id)).toEqual([2, 1]);
+      expect((await getRelatorios()).map((relatorio) => relatorio.id)).toEqual([1, 2]);
     } finally {
-      mockRelatorios[1].data_publicacao = data;
+      mockRelatorios[0].data_publicacao = data;
     }
+  });
+
+  it('desempata a mesma data pelo maior id, como a API', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'true');
+    expect((await getRelatorios()).map((relatorio) => relatorio.id)).toEqual([2, 1]);
   });
 
   it.each([

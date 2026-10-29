@@ -1,13 +1,15 @@
-const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const prisma = require('../src/db');
 const dados = require('../src/services/dados');
 const { formatarIndicadores, montarDestaques } = require('../src/services/indicadores');
+const { executarSeed, limparUploads, uploadsDir } = require('./helpers/seed');
 
 const backendDir = path.resolve(__dirname, '..');
 const dadosDir = path.join(backendDir, 'prisma', 'dados');
-const seedPath = path.join(backendDir, 'prisma', 'seed.js');
+const relatoriosEsperados = JSON.parse(
+  fs.readFileSync(path.join(dadosDir, 'relatorios', 'relatorios.json'), 'utf8')
+);
 
 function setoresEsperados() {
   const setores = fs
@@ -44,13 +46,6 @@ function setoresEsperados() {
   return [...porNome.values()];
 }
 
-function executarSeed() {
-  execFileSync(process.execPath, [seedPath], {
-    cwd: backendDir,
-    stdio: 'inherit',
-  });
-}
-
 describe('Seed de todos os setores', () => {
   const esperados = setoresEsperados();
 
@@ -60,6 +55,7 @@ describe('Seed de todos os setores', () => {
 
   afterAll(async () => {
     await prisma.$disconnect();
+    limparUploads();
   });
 
   test('carrega indicadores e medições dos formatos setor e setores', async () => {
@@ -101,6 +97,32 @@ describe('Seed de todos os setores', () => {
     expect(Math.max(...periodos)).toBe(20252);
   });
 
+  test('publica os relatórios ilustrativos e copia seus PDFs para UPLOADS_DIR', async () => {
+    const relatorios = await prisma.relatorio.findMany({
+      where: { edicao: { in: relatoriosEsperados.map(({ edicao }) => edicao) } },
+    });
+
+    expect(relatorios).toHaveLength(relatoriosEsperados.length);
+    expect(fs.readdirSync(uploadsDir).sort()).toEqual(
+      relatoriosEsperados.map(({ arquivo }) => arquivo).sort()
+    );
+    for (const esperado of relatoriosEsperados) {
+      const relatorio = relatorios.find(({ edicao }) => edicao === esperado.edicao);
+      expect(relatorio).toMatchObject({
+        titulo: esperado.titulo,
+        edicao: esperado.edicao,
+        categoria: esperado.categoria,
+        arquivo_url: esperado.arquivo,
+        status: 'publicado',
+      });
+      expect(path.basename(relatorio.arquivo_url)).toBe(relatorio.arquivo_url);
+
+      const arquivo = path.join(uploadsDir, relatorio.arquivo_url);
+      expect(fs.existsSync(arquivo)).toBe(true);
+      expect(relatorio.tamanho_kb).toBe(Math.ceil(fs.statSync(arquivo).size / 1024));
+    }
+  });
+
   test('mantém os valores conhecidos e soma 100% na participação de 2025/2', async () => {
     const buscarValor = async (setor, indicador, ano = 2025) => {
       const medicao = await prisma.medicao.findFirst({
@@ -140,11 +162,33 @@ describe('Seed de todos os setores', () => {
       )
     );
 
+    const edicoes = relatoriosEsperados.map(({ edicao }) => edicao);
+    const relatoriosAntes = await prisma.relatorio.findMany({
+      where: { edicao: { in: edicoes } },
+      select: { id_relatorio: true, edicao: true },
+      orderBy: { edicao: 'asc' },
+    });
+    const arquivosAntes = fs.readdirSync(uploadsDir).sort();
+
     executarSeed();
 
-    expect(await prisma.medicao.count({
-      where: { usuario: { email: 'carga-inicial@observatorio.local' } },
-    })).toBe(23);
+    const [totalSetores, totalIndicadores, totalMedicoes, relatoriosDepois] = await Promise.all([
+      prisma.setor.count({ where: { nome: { in: esperados.map(({ setor }) => setor.nome) } } }),
+      prisma.indicador.count({ where: { setor: { nome: { in: esperados.map(({ setor }) => setor.nome) } } } }),
+      prisma.medicao.count({ where: { usuario: { email: 'carga-inicial@observatorio.local' } } }),
+      prisma.relatorio.findMany({
+        where: { edicao: { in: edicoes } },
+        select: { id_relatorio: true, edicao: true },
+        orderBy: { edicao: 'asc' },
+      }),
+    ]);
+
+    expect(totalSetores).toBe(6);
+    expect(totalIndicadores).toBe(12);
+    expect(totalMedicoes).toBe(23);
+    expect(relatoriosDepois).toHaveLength(relatoriosEsperados.length);
+    expect(relatoriosDepois).toEqual(relatoriosAntes);
+    expect(fs.readdirSync(uploadsDir).sort()).toEqual(arquivosAntes);
 
     const totaisDepois = await Promise.all(
       esperados.map(({ setor }) =>
