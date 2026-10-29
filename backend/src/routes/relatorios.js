@@ -34,7 +34,8 @@ function nomeSeguro(valor) {
   return String(valor)
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9_-]+/g, '-')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'relatorio';
 }
 

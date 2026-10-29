@@ -209,7 +209,7 @@ describe('GET /api/relatorios/:id/arquivo', () => {
     expect(res.status).toBe(200);
     expect(res.headers['content-type']).toMatch(/^application\/pdf/);
     expect(res.headers['content-disposition']).toBe(
-      `attachment; filename="${ANO_ANTIGO}-03-Relatorio-hoteleiroAntigo-${sufixo}.pdf"`
+      `attachment; filename="${ANO_ANTIGO}-03-relatorio-hoteleiroantigo-${sufixo}.pdf"`
     );
     expect(res.body).toEqual(arquivoTeste);
   });
@@ -228,5 +228,25 @@ describe('GET /api/relatorios/:id/arquivo', () => {
     const res = await request(app).get(`/api/relatorios/${ids.impactoRecente}/arquivo`);
     expect(res.status).toBe(404);
     expect(res.body).toEqual({ erro: 'Relatório não encontrado' });
+  });
+
+  it('normaliza acentos, maiúsculas e pontuação no nome do anexo', async () => {
+    const caminho = path.join(uploadsDir, `${sufixo}-impactoRecente.pdf`);
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    fs.writeFileSync(caminho, arquivoTeste);
+    await prisma.relatorio.update({
+      where: { id_relatorio: ids.impactoRecente },
+      data: { titulo: 'Turismo - Relatório_final' },
+    });
+
+    try {
+      const res = await request(app).get(`/api/relatorios/${ids.impactoRecente}/arquivo`);
+      expect(res.status).toBe(200);
+      expect(res.headers['content-disposition']).toBe(
+        'attachment; filename="2096-12-turismo-relatorio-final.pdf"'
+      );
+    } finally {
+      fs.rmSync(caminho, { force: true });
+    }
   });
 });
