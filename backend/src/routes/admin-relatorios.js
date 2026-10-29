@@ -3,6 +3,7 @@ const multer = require('multer');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const { uploadsDir } = require('../config/uploads');
 const autenticar = require('../middlewares/autenticar');
 const exigirPerfil = require('../middlewares/exigir-perfil');
 const dados = require('../services/dados');
@@ -15,13 +16,12 @@ const {
 } = require('../services/status');
 
 const router = Router();
-const DIRETORIO_UPLOADS = path.resolve(__dirname, '../../uploads');
 const LIMITE_ARQUIVO = 10 * 1024 * 1024;
-fs.mkdirSync(DIRETORIO_UPLOADS, { recursive: true });
+fs.mkdirSync(uploadsDir, { recursive: true });
 
 const upload = multer({
   storage: multer.diskStorage({
-    destination: DIRETORIO_UPLOADS,
+    destination: uploadsDir,
     filename: (req, file, callback) => callback(null, `${crypto.randomUUID()}.pdf`),
   }),
   limits: { fileSize: LIMITE_ARQUIVO, files: 1 },
@@ -30,6 +30,7 @@ const upload = multer({
 function receberArquivo(req, res, next) {
   upload.single('arquivo')(req, res, (erro) => {
     if (!erro) return next();
+    if (!(erro instanceof multer.MulterError)) return next(erro);
     if (erro.code === 'LIMIT_FILE_SIZE') return res.status(413).json({ erro: 'Arquivo muito grande' });
     return res.status(400).json({ erro: 'Arquivo PDF obrigatório' });
   });
@@ -41,7 +42,8 @@ function camposValidos(body) {
   if (Object.entries(limites).some(([campo, limite]) => (
     typeof body[campo] !== 'string' || body[campo].trim().length === 0 || body[campo].length > limite
   ))) return false;
-  if (!CATEGORIAS_RELATORIO.includes(body.categoria)) return false;
+  if (typeof body.categoria !== 'string' || body.categoria.trim().length === 0
+      || body.categoria.length > 40) return false;
   if (typeof body.data_publicacao !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(body.data_publicacao)) return false;
   const data = new Date(`${body.data_publicacao}T00:00:00.000Z`);
   return !Number.isNaN(data.valueOf()) && data.toISOString().slice(0, 10) === body.data_publicacao;
@@ -54,9 +56,16 @@ router.get('/', autenticar, async (req, res) => {
 
 router.post('/', autenticar, receberArquivo, async (req, res) => {
   const arquivo = req.file;
-  if (!camposValidos(req.body) || !arquivo) {
-    if (arquivo) await fs.promises.unlink(arquivo.path).catch(() => {});
+  if (!arquivo) {
+    return res.status(400).json({ erro: 'Arquivo PDF obrigatório' });
+  }
+  if (!camposValidos(req.body)) {
+    await fs.promises.unlink(arquivo.path).catch(() => {});
     return res.status(400).json({ erro: 'Campos obrigatórios inválidos' });
+  }
+  if (!CATEGORIAS_RELATORIO.includes(req.body.categoria)) {
+    await fs.promises.unlink(arquivo.path).catch(() => {});
+    return res.status(400).json({ erro: 'Categoria inválida' });
   }
 
   const inicio = Buffer.alloc(4);
