@@ -17,6 +17,7 @@ COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node package.json package-lock.json ./
 COPY --chown=node:node src ./src
 COPY --chown=node:node prisma ./prisma
+RUN mkdir -p /app/uploads && chown node:node /app/uploads
 USER node
 EXPOSE 3000
 CMD ["npm", "start"]
