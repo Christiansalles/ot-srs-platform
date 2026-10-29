@@ -1,4 +1,5 @@
-import { CATEGORIAS_RELATORIO } from '../config/relatorios';
+// Com extensão: o job compose do CI importa este arquivo direto no Node, sem o Vite.
+import { CATEGORIAS_RELATORIO } from '../config/relatorios.js';
 
 // Metadados de backend/prisma/dados/relatorios/relatorios.json.
 // IDs seguem a ordem do seed do PR #198 em banco vazio; tamanhos em KB,
