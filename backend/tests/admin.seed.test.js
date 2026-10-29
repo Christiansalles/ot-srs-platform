@@ -1,23 +1,15 @@
-const { execFileSync } = require('node:child_process');
-const path = require('node:path');
 const prisma = require('../src/db');
 const { conferirSenha, gerarHash } = require('../src/services/senha');
+const { executarSeed: executarSeedComUploads, limparUploads } = require('./helpers/seed');
 
-const backendDir = path.resolve(__dirname, '..');
-const seedPath = path.join(backendDir, 'prisma', 'seed.js');
 const emailAdminTeste = `Admin-Teste-${Date.now()}@observatorio.local`;
 const emailAdminNormalizado = emailAdminTeste.trim().toLowerCase();
 const senhaAdminTeste = 'senha-admin-teste-ficticia';
 
 function executarSeed() {
-  execFileSync(process.execPath, [seedPath], {
-    cwd: backendDir,
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-      ADMIN_EMAIL: emailAdminTeste,
-      ADMIN_SENHA: senhaAdminTeste,
-    },
+  executarSeedComUploads({
+    ADMIN_EMAIL: emailAdminTeste,
+    ADMIN_SENHA: senhaAdminTeste,
   });
 }
 
@@ -30,6 +22,7 @@ describe('Admin criado pelo seed', () => {
   afterAll(async () => {
     await prisma.usuario.deleteMany({ where: { email: emailAdminNormalizado } });
     await prisma.$disconnect();
+    limparUploads();
   });
 
   it('cria o admin ativo usando e-mail normalizado e hash compatível', async () => {

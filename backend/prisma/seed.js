@@ -4,11 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const { gerarHash } = require('../src/services/senha');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env'), quiet: true });
+const { uploadsDir } = require('../src/config/uploads');
 
 const prisma = new PrismaClient();
 const dadosPath = path.join(__dirname, 'dados');
 const relatoriosPath = path.join(dadosPath, 'relatorios');
-const uploadsPath = path.resolve(process.env.UPLOADS_DIR || path.join(__dirname, '..', 'uploads'));
 
 function setoresDoArquivo(dados, arquivo) {
   if (dados.setor) {
@@ -106,7 +106,7 @@ async function carregarSetor(setorDados, usuario) {
 async function carregarRelatorios(usuario) {
   const arquivoDados = path.join(relatoriosPath, 'relatorios.json');
   const relatorios = JSON.parse(fs.readFileSync(arquivoDados, 'utf8'));
-  fs.mkdirSync(uploadsPath, { recursive: true });
+  fs.mkdirSync(uploadsDir, { recursive: true });
 
   for (const dados of relatorios) {
     const nomeArquivo = path.basename(dados.arquivo);
@@ -115,7 +115,7 @@ async function carregarRelatorios(usuario) {
     }
 
     const origem = path.join(relatoriosPath, nomeArquivo);
-    const destino = path.join(uploadsPath, nomeArquivo);
+    const destino = path.join(uploadsDir, nomeArquivo);
     if (!fs.existsSync(origem) || !fs.statSync(origem).isFile()) {
       throw new Error(`PDF não encontrado para o relatório ${dados.edicao}: ${origem}`);
     }
