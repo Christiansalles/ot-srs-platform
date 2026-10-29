@@ -166,6 +166,7 @@ describe('Seed de todos os setores', () => {
     const relatoriosAntes = await prisma.relatorio.findMany({
       where: { edicao: { in: edicoes } },
       select: { id_relatorio: true, edicao: true },
+      orderBy: { edicao: 'asc' },
     });
     const arquivosAntes = fs.readdirSync(uploadsDir).sort();
 
@@ -178,6 +179,7 @@ describe('Seed de todos os setores', () => {
       prisma.relatorio.findMany({
         where: { edicao: { in: edicoes } },
         select: { id_relatorio: true, edicao: true },
+        orderBy: { edicao: 'asc' },
       }),
     ]);
 
