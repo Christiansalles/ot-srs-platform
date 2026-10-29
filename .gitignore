@@ -1,5 +1,6 @@
 # Dependências
 node_modules/
+uploads/
 
 # Build e cobertura
 dist/
