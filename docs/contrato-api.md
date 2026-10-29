@@ -306,7 +306,7 @@ Categorias válidas (as do mockup da Tela 8): `Perfil de Demanda`, `Setor Hotele
 
 Rota pública. Os filtros `ano` e `categoria` são opcionais e combináveis. `ano` filtra pelo ano de `data_publicacao`, com a mesma validação de quatro dígitos das rotas de indicadores; categoria fora da lista responde `400` (`"Categoria inválida"`). Filtro válido sem resultados responde `200` com `[]`.
 
-Retorna somente relatórios publicados, do mais recente para o mais antigo (`data_publicacao` decrescente):
+Retorna somente relatórios publicados, do mais recente para o mais antigo (`data_publicacao` decrescente). Relatórios com a mesma data saem pelo `id` decrescente, ou seja, o cadastrado por último vem primeiro:
 
 ```json
 [
