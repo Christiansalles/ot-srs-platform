@@ -294,6 +294,49 @@ async function buscarRelatoriosPublicados({ ano, categoria } = {}) {
   }));
 }
 
+// Consulta administrativa: inclui relatórios em qualquer status.
+async function buscarRelatoriosAdmin() {
+  const relatorios = await prisma.relatorio.findMany({
+    orderBy: [{ data_publicacao: 'desc' }, { id_relatorio: 'desc' }],
+  });
+  return relatorios.map((relatorio) => ({
+    id: relatorio.id_relatorio,
+    titulo: relatorio.titulo,
+    edicao: relatorio.edicao,
+    categoria: relatorio.categoria,
+    data_publicacao: relatorio.data_publicacao,
+    descricao: relatorio.descricao,
+    tamanho_kb: relatorio.tamanho_kb,
+    status: relatorio.status,
+  }));
+}
+
+async function criarRelatorio({ id_usuario, titulo, edicao, categoria, data_publicacao, descricao, arquivo_url, tamanho_kb }) {
+  const relatorio = await prisma.relatorio.create({
+    data: {
+      id_usuario,
+      titulo,
+      edicao,
+      categoria,
+      data_publicacao,
+      descricao,
+      arquivo_url,
+      tamanho_kb,
+      status: 'rascunho',
+    },
+  });
+  return {
+    id: relatorio.id_relatorio,
+    titulo: relatorio.titulo,
+    edicao: relatorio.edicao,
+    categoria: relatorio.categoria,
+    data_publicacao: relatorio.data_publicacao,
+    descricao: relatorio.descricao,
+    tamanho_kb: relatorio.tamanho_kb,
+    status: relatorio.status,
+  };
+}
+
 // P2025: o Prisma não achou o registro para atualizar.
 async function atualizarOuNulo(atualizar) {
   try {
@@ -351,6 +394,8 @@ module.exports = {
   criarMedicao,
   atualizarMedicao,
   buscarRelatoriosPublicados,
+  buscarRelatoriosAdmin,
+  criarRelatorio,
   atualizarStatusMedicao,
   atualizarStatusRelatorio,
 };
