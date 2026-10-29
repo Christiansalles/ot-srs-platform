@@ -125,28 +125,36 @@ async function buscarIndicadoresAdmin({ setorId, status } = {}) {
       descricao: indicador.descricao,
       setor: { id: indicador.setor.id_setor, nome: indicador.setor.nome },
       medicoes: indicador.medicoes
-        .map((medicao) => ({
-          id: medicao.id_medicao,
-          ano: medicao.periodo.ano,
-          semestre: medicao.periodo.semestre,
-          valor: Number(medicao.valor),
-          status: medicao.status,
-        }))
+        .map(formatarMedicaoAdmin)
         .sort((a, b) => a.ano - b.ano || a.semestre - b.semestre),
     }))
     .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 }
 
 function formatarMedicaoAdmin(medicao) {
-  return { id: medicao.id_medicao, ano: medicao.periodo.ano, semestre: medicao.periodo.semestre,
-    valor: Number(medicao.valor), status: medicao.status };
+  return {
+    id: medicao.id_medicao,
+    ano: medicao.periodo.ano,
+    semestre: medicao.periodo.semestre,
+    valor: Number(medicao.valor),
+    status: medicao.status,
+  };
 }
 
 async function criarIndicador({ id_setor, nome, descricao, unidade }) {
   try {
-    const item = await prisma.indicador.create({ data: { id_setor, nome, descricao, unidade }, include: { setor: true } });
-    return { id: item.id_indicador, nome: item.nome, unidade: item.unidade, descricao: item.descricao,
-      setor: { id: item.setor.id_setor, nome: item.setor.nome }, medicoes: [] };
+    const item = await prisma.indicador.create({
+      data: { id_setor, nome, descricao, unidade },
+      include: { setor: true },
+    });
+    return {
+      id: item.id_indicador,
+      nome: item.nome,
+      unidade: item.unidade,
+      descricao: item.descricao,
+      setor: { id: item.setor.id_setor, nome: item.setor.nome },
+      medicoes: [],
+    };
   } catch (erro) {
     if (erro.code === 'P2003') return null;
     throw erro;
@@ -155,11 +163,22 @@ async function criarIndicador({ id_setor, nome, descricao, unidade }) {
 
 async function atualizarIndicador(id, { id_setor, nome, descricao, unidade }) {
   try {
-    const item = await prisma.indicador.update({ where: { id_indicador: id }, data: { id_setor, nome, descricao, unidade }, include: { setor: true, medicoes: { include: { periodo: true } } } });
-    return { id: item.id_indicador, nome: item.nome, unidade: item.unidade, descricao: item.descricao,
-      setor: { id: item.setor.id_setor, nome: item.setor.nome }, medicoes: item.medicoes.map(formatarMedicaoAdmin) };
+    const item = await prisma.indicador.update({
+      where: { id_indicador: id },
+      data: { id_setor, nome, descricao, unidade },
+      include: { setor: true, medicoes: { include: { periodo: true } } },
+    });
+    return {
+      id: item.id_indicador,
+      nome: item.nome,
+      unidade: item.unidade,
+      descricao: item.descricao,
+      setor: { id: item.setor.id_setor, nome: item.setor.nome },
+      medicoes: item.medicoes.map(formatarMedicaoAdmin),
+    };
   } catch (erro) {
-    if (erro.code === 'P2025' || erro.code === 'P2003') return null;
+    if (erro.code === 'P2025') return null;
+    if (erro.code === 'P2003') return { setorInvalido: true };
     throw erro;
   }
 }
@@ -167,32 +186,69 @@ async function atualizarIndicador(id, { id_setor, nome, descricao, unidade }) {
 async function criarMedicao({ id_indicador, ano, semestre, valor, id_usuario }) {
   try {
     const medicao = await prisma.$transaction(async (tx) => {
-      const periodo = await tx.periodo.upsert({ where: { ano_semestre: { ano, semestre } }, create: { ano, semestre }, update: {} });
-      return tx.medicao.create({ data: { id_indicador, id_periodo: periodo.id_periodo, id_usuario, valor, status: 'rascunho' }, include: { periodo: true } });
+      const periodo = await tx.periodo.upsert({
+        where: { ano_semestre: { ano, semestre } },
+        create: { ano, semestre },
+        update: {},
+      });
+      return tx.medicao.create({
+        data: {
+          id_indicador,
+          id_periodo: periodo.id_periodo,
+          id_usuario,
+          valor,
+          status: 'rascunho',
+        },
+        include: { periodo: true },
+      });
     });
     return formatarMedicaoAdmin(medicao);
   } catch (erro) {
-    if (erro.code === 'P2002') return { conflito: true };
-    if (erro.code === 'P2003') return null;
+    if (erro.code === 'P2002') return { conflito: true, ano, semestre };
+    if (erro.code === 'P2003') return { indicadorInvalido: true };
     throw erro;
   }
 }
 
-async function atualizarMedicao(id, { id_indicador, ano, semestre, valor }) {
+async function atualizarMedicao(id, { ano, semestre, valor }) {
+  let periodoConflito = { ano, semestre };
   try {
-    const periodo = await prisma.periodo.upsert({ where: { ano_semestre: { ano, semestre } }, create: { ano, semestre }, update: {} });
-    const medicao = await prisma.medicao.update({ where: { id_medicao: id }, data: { id_indicador, id_periodo: periodo.id_periodo, valor }, include: { periodo: true } });
-    return formatarMedicaoAdmin(medicao);
+    const resultado = await prisma.$transaction(async (tx) => {
+      const atual = await tx.medicao.findUnique({
+        where: { id_medicao: id },
+        include: { periodo: true },
+      });
+      if (!atual) return { naoEncontrada: true };
+      if (atual.status === 'publicado') return { publicada: true };
+
+      const anoFinal = ano === undefined ? atual.periodo.ano : ano;
+      const semestreFinal = semestre === undefined ? atual.periodo.semestre : semestre;
+      periodoConflito = { ano: anoFinal, semestre: semestreFinal };
+      const periodo = ano === undefined && semestre === undefined
+        ? atual.periodo
+        : await tx.periodo.upsert({
+          where: { ano_semestre: { ano: anoFinal, semestre: semestreFinal } },
+          create: { ano: anoFinal, semestre: semestreFinal },
+          update: {},
+        });
+
+      const atualizada = await tx.medicao.updateMany({
+        where: { id_medicao: id, status: 'rascunho' },
+        data: { id_periodo: periodo.id_periodo, valor },
+      });
+      if (atualizada.count === 0) return { publicada: true };
+      const medicao = await tx.medicao.findUnique({
+        where: { id_medicao: id },
+        include: { periodo: true },
+      });
+      return { medicao };
+    });
+    if (resultado.naoEncontrada || resultado.publicada) return resultado;
+    return formatarMedicaoAdmin(resultado.medicao);
   } catch (erro) {
-    if (erro.code === 'P2025' || erro.code === 'P2003') return null;
-    if (erro.code === 'P2002') return { conflito: true };
+    if (erro.code === 'P2002') return { conflito: true, ...periodoConflito };
     throw erro;
   }
-}
-
-async function buscarStatusMedicao(id) {
-  const medicao = await prisma.medicao.findUnique({ where: { id_medicao: id }, select: { status: true } });
-  return medicao?.status ?? null;
 }
 
 // Só relatórios publicados. `ano` filtra pelo ano de data_publicacao e
@@ -289,7 +345,6 @@ module.exports = {
   atualizarIndicador,
   criarMedicao,
   atualizarMedicao,
-  buscarStatusMedicao,
   buscarRelatoriosPublicados,
   atualizarStatusMedicao,
   atualizarStatusRelatorio,

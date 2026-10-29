@@ -49,7 +49,7 @@ jobs:
         run: npm run db:setup
       - name: Verificar que migrations e seed podem ser repetidos
         run: npm run db:setup
-      - run: npm test -- --runInBand
+      - run: npm test
 
   frontend:
     runs-on: ubuntu-latest
