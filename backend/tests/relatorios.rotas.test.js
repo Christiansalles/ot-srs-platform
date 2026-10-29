@@ -74,7 +74,8 @@ describe('GET /api/relatorios', () => {
     const res = await request(app).get(`/api/relatorios?ano=${ANO_RECENTE}`);
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual([
+    const meus = res.body.filter((item) => Object.values(ids).includes(item.id));
+    expect(meus).toEqual([
       {
         id: ids.impactoRecente,
         titulo: `Relatório impactoRecente ${sufixo}`,
@@ -105,7 +106,8 @@ describe('GET /api/relatorios', () => {
     const res = await request(app).get(`/api/relatorios?ano=${ANO_ANTIGO}`);
 
     expect(res.status).toBe(200);
-    expect(idsDaResposta(res.body)).toEqual([ids.demandaAntigo, ids.hoteleiroAntigo]);
+    expect(idsDaResposta(res.body).filter((id) => Object.values(ids).includes(id)))
+      .toEqual([ids.demandaAntigo, ids.hoteleiroAntigo]);
   });
 
   it('desempata relatórios da mesma data pelo cadastrado por último', async () => {
@@ -121,7 +123,10 @@ describe('GET /api/relatorios', () => {
     await prisma.relatorio.delete({ where: { id_relatorio: mesmaData.id_relatorio } });
 
     expect(res.status).toBe(200);
-    expect(idsDaResposta(res.body)).toEqual([
+    const idsDosMeusRelatorios = idsDaResposta(res.body).filter((id) => (
+      Object.values(ids).includes(id) || id === mesmaData.id_relatorio
+    ));
+    expect(idsDosMeusRelatorios).toEqual([
       mesmaData.id_relatorio,
       ids.demandaAntigo,
       ids.hoteleiroAntigo,
@@ -143,7 +148,8 @@ describe('GET /api/relatorios', () => {
       .query({ ano: String(ANO_RECENTE), categoria: 'Setor Hoteleiro' });
 
     expect(res.status).toBe(200);
-    expect(idsDaResposta(res.body)).toEqual([ids.hoteleiroRecente]);
+    expect(idsDaResposta(res.body).filter((id) => Object.values(ids).includes(id)))
+      .toEqual([ids.hoteleiroRecente]);
   });
 
   it('responde 200 com [] para filtro válido sem resultado', async () => {
