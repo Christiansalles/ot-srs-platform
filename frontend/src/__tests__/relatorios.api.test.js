@@ -118,19 +118,19 @@ describe('mocks de relatórios', () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     const dados = await getRelatorios();
-    expect(dados).toEqual(mockRelatorios);
+    expect(dados).toEqual([mockRelatorios[1], mockRelatorios[0]]);
     dados[0].titulo = 'Título alterado';
-    expect((await getRelatorios())[0].titulo).toBe('Indicadores do setor hoteleiro');
+    expect((await getRelatorios())[0].titulo).toBe('Participação econômica do turismo');
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('filtra pelo ano de publicação, combina categoria e aceita filtros vazios', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'true');
-    expect(await getRelatorios({ ano: 2026 })).toEqual(mockRelatorios);
+    expect(await getRelatorios({ ano: 2026 })).toEqual([mockRelatorios[1], mockRelatorios[0]]);
     expect(await getRelatorios({ ano: 2025 })).toEqual([]);
     expect(await getRelatorios({ ano: '2026', categoria: 'Impacto Econômico' })).toEqual([mockRelatorios[1]]);
     expect(await getRelatorios({ categoria: 'Setor Hoteleiro' })).toEqual([mockRelatorios[0]]);
-    expect(await getRelatorios({ ano: '', categoria: null })).toEqual(mockRelatorios);
+    expect(await getRelatorios({ ano: '', categoria: null })).toEqual([mockRelatorios[1], mockRelatorios[0]]);
     expect(await getRelatorios({ categoria: 'Perfil de Demanda' })).toEqual([]);
     expect(await getRelatorios({ categoria: 'Diagnóstico Estratégico' })).toEqual([]);
   });
