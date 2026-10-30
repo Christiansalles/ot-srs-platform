@@ -40,3 +40,4 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-203](pr-203/README.md) | #203 | #187 | E15 | Página pública de relatórios e estados de carregando, vazio e erro |
 | [pr-207](pr-207/README.md) | #207 | #188 | E15 | Filtros de ano e categoria na página de relatórios, na URL, em 375, 768 e 1280 px |
 | [pr-218](pr-218/README.md) | #218 | #176 | E18 | Capa da Home com foto da cidade, novo login e logos verticais do rodapé, antes e depois |
+| [pr-220](pr-220/README.md) | #220 | #180 | E11 | Painel de gestão com contadores, filtros e selos de status, com a API real, em 375 e 1280 px |
