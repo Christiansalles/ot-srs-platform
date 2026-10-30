@@ -57,6 +57,14 @@
     var(--color-accent) 100%
   );
 
+  /* O mesmo gradiente translúcido, para aplicar sobre fotos */
+  --gradient-brand-overlay: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary) 70%, transparent) 0%,
+    color-mix(in srgb, var(--color-secondary) 55%, transparent) 52%,
+    color-mix(in srgb, var(--color-accent) 65%, transparent) 100%
+  );
+
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: var(--color-text);
   background: var(--color-background);

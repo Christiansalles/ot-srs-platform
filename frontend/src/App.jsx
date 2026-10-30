@@ -6,6 +6,7 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import RelatoriosPage from './pages/RelatoriosPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
+import AdminMedicaoFormPage from './pages/AdminMedicaoFormPage';
 import AdminRelatoriosPage from './pages/AdminRelatoriosPage';
 import RotaProtegida from './components/RotaProtegida';
 import AdminLayout from './components/AdminLayout/AdminLayout';
@@ -53,25 +54,15 @@ function AppLayout() {
         </div>
         <div><strong>Realização e apoio</strong><div className="institutional-logos">
           <img src={prefeituraLogo} alt="Prefeitura Municipal de Santa Rita do Sapucaí" />
-          <img src={smceltLogo} alt="Secretaria Municipal de Cultura, Esporte, Lazer e Turismo (SMCELT)" />
+          <img className="logo-vertical" src={smceltLogo} alt="Secretaria Municipal de Cultura, Esporte, Lazer e Turismo (SMCELT)" />
           <img src={comturLogo} alt="Conselho Municipal de Turismo (COMTUR)" />
         </div></div>
         <div><strong>Contexto regional</strong><div className="institutional-logos">
-          <img src={mantiqueiraLogo} alt="Circuito Turístico Caminhos da Mantiqueira" />
+          <img className="logo-vertical" src={mantiqueiraLogo} alt="Circuito Turístico Caminhos da Mantiqueira" />
           <img src={minasLogo} alt="Minas Gerais" />
         </div><p>Vale da Eletrônica</p></div>
       </footer>
     </div>
-  );
-}
-
-// Provisório até a tela 7 (#181) entrar no layout.
-function AdminEmBreve({ titulo }) {
-  return (
-    <section className="page" aria-labelledby="admin-em-breve">
-      <h1 id="admin-em-breve">{titulo}</h1>
-      <p className="state-message">Em construção.</p>
-    </section>
   );
 }
 
@@ -83,7 +74,8 @@ function App() {
         <Route element={<RotaProtegida />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminPage />} />
-            <Route path="medicoes/nova" element={<AdminEmBreve titulo="Cadastrar medição" />} />
+            <Route path="medicoes/nova" element={<AdminMedicaoFormPage />} />
+            <Route path="medicoes/:id/editar" element={<AdminMedicaoFormPage />} />
             <Route path="relatorios" element={<AdminRelatoriosPage />} />
           </Route>
         </Route>

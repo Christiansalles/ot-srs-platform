@@ -35,7 +35,10 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | Pasta | PR | Issue | Entrega | O que mostra |
 |---|---|---|---|---|
 | [pr-196](pr-196/README.md) | #196 | #190 | E18 | Responsividade das páginas públicas em 375, 768 e 1280 px |
-| [issue-176](issue-176/README.md) | #197 | #176 | E18 | Ajuste final da identidade visual, antes e depois |
+| [pr-197](pr-197/README.md) | #197 | #176 | E18 | Ajuste final da identidade visual, antes e depois |
 | [pr-199](pr-199/README.md) | #199 | #186 | E15 | Serviços e mocks de relatórios (testes, sem tela) |
 | [pr-203](pr-203/README.md) | #203 | #187 | E15 | Página pública de relatórios e estados de carregando, vazio e erro |
 | [pr-207](pr-207/README.md) | #207 | #188 | E15 | Filtros de ano e categoria na página de relatórios, na URL, em 375, 768 e 1280 px |
+| [pr-218](pr-218/README.md) | #218 | #176 | E18 | Capa da Home com foto da cidade, novo login e logos verticais do rodapé, antes e depois |
+| [pr-221](pr-221/README.md) | #221 | #181 | E12 | Cadastro e edição de medições: indicador novo, `409` de duplicada, rascunho e publicada só leitura, com a API real, em 375 e 1280 px |
+| [pr-220](pr-220/README.md) | #220 | #180 | E11 | Painel de gestão com contadores, filtros e selos de status, com a API real, em 375 e 1280 px |
