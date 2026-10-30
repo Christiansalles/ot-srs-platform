@@ -61,4 +61,5 @@ OBRIGATÓRIO em PR que muda tela (frontend). Opcional no backend: resposta da AP
 - [ ] Sem `.env`, senha, token ou credencial real no código, nos prints ou na descrição.
 - [ ] O sistema sobe com `docker compose up --build`, sem passo manual escondido.
 - [ ] Mudou tela: os prints estão em **Evidências**.
+- [ ] Tela do painel: usa o `AdminCabecalho` e as classes de `AdminPagina.css`, e confere com a Tela 6 na mesma largura (ver `frontend/AGENTS.md`).
 - [ ] Sei explicar o que o código faz, inclusive o que foi gerado com IA.
