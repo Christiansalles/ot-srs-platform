@@ -7,6 +7,7 @@ import RelatoriosPage from './pages/RelatoriosPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
 import AdminMedicaoFormPage from './pages/AdminMedicaoFormPage';
+import AdminRelatoriosPage from './pages/AdminRelatoriosPage';
 import RotaProtegida from './components/RotaProtegida';
 import AdminLayout from './components/AdminLayout/AdminLayout';
 import cidadeLogo from './assets/logos/santa-rita.svg';
@@ -65,16 +66,6 @@ function AppLayout() {
   );
 }
 
-// Provisório até a Tela 8 (#182) entrar no layout.
-function AdminEmBreve({ titulo }) {
-  return (
-    <section className="page" aria-labelledby="admin-em-breve">
-      <h1 id="admin-em-breve">{titulo}</h1>
-      <p className="state-message">Em construção.</p>
-    </section>
-  );
-}
-
 function App() {
   return (
     <BrowserRouter>
@@ -85,7 +76,7 @@ function App() {
             <Route index element={<AdminPage />} />
             <Route path="medicoes/nova" element={<AdminMedicaoFormPage />} />
             <Route path="medicoes/:id/editar" element={<AdminMedicaoFormPage />} />
-            <Route path="relatorios" element={<AdminEmBreve titulo="Relatórios" />} />
+            <Route path="relatorios" element={<AdminRelatoriosPage />} />
           </Route>
         </Route>
         <Route element={<AppLayout />}>
