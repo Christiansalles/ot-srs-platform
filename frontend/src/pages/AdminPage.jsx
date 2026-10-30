@@ -206,9 +206,9 @@ function AdminPage() {
                       {indicador.descricao && <small>{indicador.descricao}</small>}
                     </td>
                     <td><span className="admin-dashboard__sector">{indicador.setor.nome}</span></td>
-                    <td>{medicao ? `${medicao.ano}/${medicao.semestre}` : '—'}</td>
+                    <td>{medicao && `${medicao.ano}/${medicao.semestre}`}</td>
                     <td className="admin-dashboard__value">
-                      {medicao ? formatarValor(medicao.valor, indicador.unidade) : '—'}
+                      {medicao && formatarValor(medicao.valor, indicador.unidade)}
                     </td>
                     <td>
                       {medicao

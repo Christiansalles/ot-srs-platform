@@ -71,6 +71,9 @@ describe('AdminPage', () => {
     });
     expect(within(tabela).getByText('Rascunho')).toHaveClass('status-badge--rascunho');
     expect(within(tabela).getByText('Sem medições')).toBeInTheDocument();
+    // Indicador sem medição deixa período e valor em branco, sem traço
+    const semMedicao = within(tabela).getByText('Sem medições').closest('tr');
+    expect(within(semMedicao).getAllByRole('cell').slice(2, 4).map((celula) => celula.textContent)).toEqual(['', '']);
     expect(listarIndicadoresAdmin).toHaveBeenCalledOnce();
     expect(listarIndicadoresAdmin).toHaveBeenCalledWith();
   });
