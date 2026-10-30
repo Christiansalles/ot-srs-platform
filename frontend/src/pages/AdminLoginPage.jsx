@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { getToken, login } from '../services/auth';
+import capaSantaRita from '../assets/capa-santa-rita.jpg';
+import logoObservatorio from '../assets/logos/observatorio-branco.png';
 import './AdminLoginPage.css';
 
 function AdminLoginPage() {
@@ -29,7 +31,12 @@ function AdminLoginPage() {
   if (getToken()) return <Navigate to="/admin" replace />;
 
   return (
-    <main className="admin-login-page">
+    <main className="admin-login-page" style={{ '--login-foto': `url(${capaSantaRita})` }}>
+      <Link className="admin-login-back" to="/">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
+        Voltar ao portal
+      </Link>
+
       <div className="admin-login-shell">
         <section className="admin-login-brand" aria-label="Identidade do Observatório do Turismo">
           <span className="admin-login-secure">
@@ -38,17 +45,9 @@ function AdminLoginPage() {
           </span>
 
           <div className="admin-login-brand-center">
-            <div className="admin-login-emblem" aria-hidden="true">
-              <svg viewBox="0 0 48 48" fill="none">
-                <path d="M24 8v3M16 11l2 2.5M32 11l-2 2.5" />
-                <circle cx="24" cy="18" r="4.5" />
-                <path d="M7 36l12-15 8 9 6-6 8 12H7Z" />
-                <path d="M5 38l13-16 9 10 7-8 9 14H5Z" />
-              </svg>
-            </div>
-            <h1>OT-SRS</h1>
-            <p className="admin-login-brand-name">Observatório do Turismo</p>
-            <p className="admin-login-location">Santa Rita do Sapucaí <span aria-hidden="true">•</span> MG</p>
+            <h1>
+              <img className="admin-login-logo" src={logoObservatorio} alt="Observatório do Turismo de Santa Rita do Sapucaí" />
+            </h1>
           </div>
 
           <div className="admin-login-brand-footer">
