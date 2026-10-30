@@ -43,3 +43,4 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-220](pr-220/README.md) | #220 | #180 | E11 | Painel de gestão com contadores, filtros e selos de status, com a API real, em 375 e 1280 px |
 | [pr-221](pr-221/README.md) | #221 | #181 | E12 | Cadastro e edição de medições: indicador novo, `409` de duplicada, rascunho e publicada só leitura, com a API real, em 375 e 1280 px |
 | [pr-222](pr-222/README.md) | #222 | #182 | E14 | Upload de relatórios no painel: validação de PDF e tamanho, `400` da API, envio como rascunho e lista, com a API real, em 375 e 1280 px |
+| [pr-223](pr-223/README.md) | #223 | | E18 | Telas 6, 7 e 8 com o cabeçalho e o CSS comuns do painel, incluindo estados de erro, em 375 e 1280 px |
