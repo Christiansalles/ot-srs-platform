@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
 import StatusBadge from '../components/StatusBadge/StatusBadge';
 import { CATEGORIAS_RELATORIO } from '../config/relatorios';
 import { enviarRelatorio, listarRelatoriosAdmin } from '../services/admin';
@@ -130,17 +131,18 @@ function AdminRelatoriosPage() {
   }
 
   return (
-    <section className="admin-relatorios" aria-labelledby="admin-relatorios-titulo">
-      <header className="admin-relatorios__cabecalho">
-        <p className="admin-relatorios__eyebrow">Gestão de documentos</p>
-        <h1 id="admin-relatorios-titulo">Publicador de Relatórios</h1>
-        <p>Cadastre relatórios técnicos em PDF e acompanhe o status de publicação.</p>
-      </header>
+    <section className="admin-pagina admin-relatorios" aria-labelledby="admin-relatorios-titulo">
+      <AdminCabecalho
+        id="admin-relatorios-titulo"
+        sobretitulo="Gestão de documentos"
+        titulo="Publicador de Relatórios"
+        descricao="Cadastre relatórios técnicos em PDF e acompanhe o status de publicação."
+      />
 
-      <section className="admin-relatorios__painel" aria-labelledby="cadastro-relatorio-titulo">
+      <section className="admin-cartao admin-relatorios__painel" aria-labelledby="cadastro-relatorio-titulo">
         <div className="admin-relatorios__painel-cabecalho">
-          <h2 id="cadastro-relatorio-titulo">Cadastro de documento oficial</h2>
-          <p>Campos com * são obrigatórios. O documento começa como rascunho.</p>
+          <h2 className="admin-cartao__titulo" id="cadastro-relatorio-titulo">Cadastro de documento oficial</h2>
+          <p className="admin-cartao__descricao">Campos com * são obrigatórios. O documento começa como rascunho.</p>
         </div>
 
         <form onSubmit={enviar} noValidate>
@@ -179,58 +181,58 @@ function AdminRelatoriosPage() {
           )}
 
           <div className="admin-relatorios__campos">
-            <label className="admin-relatorios__campo">
-              <span>Título do relatório *</span>
+            <label className="admin-campo">
+              Título do relatório *
               <input name="titulo" type="text" maxLength={150} value={campos.titulo} onChange={atualizarCampo} disabled={enviando} />
             </label>
-            <label className="admin-relatorios__campo">
-              <span>Edição / Código *</span>
+            <label className="admin-campo">
+              Edição / Código *
               <input name="edicao" type="text" maxLength={20} value={campos.edicao} onChange={atualizarCampo} disabled={enviando} />
             </label>
-            <label className="admin-relatorios__campo">
-              <span>Categoria temática *</span>
+            <label className="admin-campo">
+              Categoria temática *
               <select name="categoria" value={campos.categoria} onChange={atualizarCampo} disabled={enviando}>
                 <option value="">Selecione uma categoria</option>
                 {CATEGORIAS_RELATORIO.map((categoria) => <option key={categoria} value={categoria}>{categoria}</option>)}
               </select>
             </label>
-            <label className="admin-relatorios__campo">
-              <span>Data de publicação *</span>
+            <label className="admin-campo">
+              Data de publicação *
               <input name="data_publicacao" type="date" value={campos.data_publicacao} onChange={atualizarCampo} disabled={enviando} />
             </label>
-            <label className="admin-relatorios__campo admin-relatorios__campo--inteiro">
-              <span>Descrição curta / Resumo executivo *</span>
+            <label className="admin-campo admin-relatorios__campo--inteiro">
+              Descrição curta / Resumo executivo *
               <textarea name="descricao" rows={4} maxLength={500} value={campos.descricao} onChange={atualizarCampo} disabled={enviando} aria-describedby="contador-descricao" />
               <small id="contador-descricao">{campos.descricao.length} / 500 caracteres</small>
             </label>
           </div>
 
-          <p className="admin-relatorios__visibilidade">Status inicial: <strong>Rascunho</strong>. A publicação fica disponível em uma etapa separada para administradores.</p>
-          {erroEnvio && <p className="admin-relatorios__erro" role="alert">{erroEnvio}</p>}
-          {sucesso && <p className="admin-relatorios__sucesso" role="status">{sucesso}</p>}
-          <div className="admin-relatorios__acoes">
-            <button className="admin-relatorios__limpar" type="button" onClick={limparFormulario} disabled={enviando}>Limpar formulário</button>
-            <button className="admin-relatorios__enviar" type="submit" disabled={enviando}>{enviando ? 'Enviando relatório...' : 'Enviar relatório'}</button>
+          <p className="admin-nota admin-relatorios__visibilidade">Status inicial: <strong>Rascunho</strong>. A publicação fica disponível em uma etapa separada para administradores.</p>
+          {erroEnvio && <p className="admin-mensagem admin-mensagem--erro" role="alert">{erroEnvio}</p>}
+          {sucesso && <p className="admin-mensagem admin-mensagem--sucesso" role="status">{sucesso}</p>}
+          <div className="admin-acoes admin-relatorios__acoes">
+            <button className="admin-botao admin-botao--secundario" type="button" onClick={limparFormulario} disabled={enviando}>Limpar formulário</button>
+            <button className="admin-botao admin-botao--primario" type="submit" disabled={enviando}>{enviando ? 'Enviando relatório...' : 'Enviar relatório'}</button>
           </div>
         </form>
       </section>
 
-      <section className="admin-relatorios__painel" aria-labelledby="lista-relatorios-titulo">
+      <section className="admin-cartao admin-relatorios__painel" aria-labelledby="lista-relatorios-titulo">
         <div className="admin-relatorios__painel-cabecalho admin-relatorios__painel-cabecalho--lista">
-          <h2 id="lista-relatorios-titulo">Relatórios enviados</h2>
+          <h2 className="admin-cartao__titulo" id="lista-relatorios-titulo">Relatórios enviados</h2>
           {!carregando && !erroLista && <span>{relatorios.length} {relatorios.length === 1 ? 'relatório' : 'relatórios'}</span>}
         </div>
-        {carregando && <p className="admin-relatorios__estado" role="status">Carregando relatórios...</p>}
+        {carregando && <p className="admin-estado" role="status">Carregando relatórios...</p>}
         {erroLista && (
-          <div className="admin-relatorios__estado" role="alert">
+          <div className="admin-estado admin-estado--erro" role="alert">
             <p>{erroLista}</p>
-            <button type="button" onClick={() => { setErroLista(''); setCarregando(true); setTentativa((atual) => atual + 1); }}>Tentar novamente</button>
+            <button className="admin-botao-contorno" type="button" onClick={() => { setErroLista(''); setCarregando(true); setTentativa((atual) => atual + 1); }}>Tentar novamente</button>
           </div>
         )}
-        {!carregando && !erroLista && relatorios.length === 0 && <p className="admin-relatorios__estado" role="status">Nenhum relatório cadastrado.</p>}
+        {!carregando && !erroLista && relatorios.length === 0 && <p className="admin-estado" role="status">Nenhum relatório cadastrado.</p>}
         {!carregando && !erroLista && relatorios.length > 0 && (
-          <div className="admin-relatorios__table-wrap">
-            <table className="admin-relatorios__table">
+          <div className="admin-tabela-rolagem">
+            <table className="admin-tabela admin-relatorios__table">
               <thead><tr><th scope="col">Relatório</th><th scope="col">Edição</th><th scope="col">Categoria</th><th scope="col">Data</th><th scope="col">Status</th></tr></thead>
               <tbody>
                 {relatorios.map((relatorio) => (

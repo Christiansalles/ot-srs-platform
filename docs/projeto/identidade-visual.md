@@ -23,7 +23,8 @@ No código:
 
 - `frontend/src/theme/colors.js` e `theme.css` definem as cores, incluindo neutros, sucesso e erro, que a Proposta não define;
 - use sempre os tokens do tema; não escreva cor solta em hexadecimal nos componentes;
-- o painel administrativo segue a mesma identidade das páginas públicas (decisão do M6).
+- o painel administrativo segue a mesma identidade das páginas públicas (decisão do M6), com cabeçalho, cartões, campos e botões de uma base comum (`AdminCabecalho` e `AdminPagina.css`; ver [frontend/AGENTS.md](../../frontend/AGENTS.md#painel-administrativo));
+- o teste `frontend/src/__tests__/padraoVisual.test.js` reprova cor solta fora de `theme/` e travessão no código.
 
 ## Logotipos
 

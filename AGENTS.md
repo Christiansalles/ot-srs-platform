@@ -20,6 +20,7 @@ Plataforma web do Observatório do Turismo de Santa Rita do Sapucaí (OT-SRS), p
 | Branches, commits, PRs e "pronto" | [docs/fluxo-de-trabalho.md](docs/fluxo-de-trabalho.md) |
 | Layout de uma tela | [docs/referencias/stitch/](docs/referencias/stitch/README.md), com o HTML do mockup da tela |
 | Cores, gradiente e logos | [docs/projeto/identidade-visual.md](docs/projeto/identidade-visual.md) e `frontend/src/theme/` |
+| Padrão visual das telas do painel | [frontend/AGENTS.md, seção Painel administrativo](frontend/AGENTS.md#painel-administrativo) |
 | Entregas e prazos do milestone | [docs/planejamento/](docs/planejamento/README.md) e o quadro do GitHub |
 
 ## Regras que não mudam
@@ -55,6 +56,7 @@ Antes de dizer que terminou, rode os testes e o lint da parte que mudou. Se não
 
 - **Idioma:** código, comentários, mensagens de erro, commits, PRs e documentação em português, inclusive nomes de funções e variáveis (`buscarIndicadores`, `lerFiltros`, `montarCards`). Termos técnicos consagrados ficam em inglês (`router`, `middleware`, `token`).
 - **Comentários:** poucos, explicando o porquê, não o quê.
+- **Sem travessão (—)** em texto de interface, mensagem de erro ou teste: use vírgula, dois-pontos ou parênteses. No front, o `padraoVisual.test.js` reprova.
 - **Branch:** `tipo/Entrega-issue-descricao`, por exemplo `feat/E15-188-filtros-relatorios`, sempre a partir da `develop`.
 - **Commit:** `tipo(escopo): descrição no imperativo`, por exemplo `fix(frontend): corrige formato da variação no card`.
 - **PR:** para a `develop`, preenchendo o [modelo](.github/pull_request_template.md). PR que muda tela leva prints em `docs/evidencias/pr-N/` (celular e desktop), com as URLs raw fixadas no SHA no corpo do PR.

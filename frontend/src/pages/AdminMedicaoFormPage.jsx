@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
 import { getSetores } from '../services/api';
 import {
   criarIndicador,
@@ -166,23 +167,23 @@ function AdminMedicaoFormPage() {
   }
 
   if (carregando) {
-    return <p className="admin-medicao-state" role="status">Carregando formulário...</p>;
+    return <p className="admin-cartao admin-estado" role="status">Carregando formulário...</p>;
   }
 
   if (erro && indicadores.length === 0 && setores.length === 0) {
     return (
-      <div className="admin-medicao-state admin-medicao-state--error" role="alert">
+      <div className="admin-cartao admin-estado admin-estado--erro" role="alert">
         <p>{erro}</p>
-        <button type="button" onClick={tentarNovamente}>Tentar novamente</button>
+        <button className="admin-botao-contorno" type="button" onClick={tentarNovamente}>Tentar novamente</button>
       </div>
     );
   }
 
   if (estaEditando && !medicaoAtual) {
     return (
-      <div className="admin-medicao-state admin-medicao-state--error" role="alert">
+      <div className="admin-cartao admin-estado admin-estado--erro" role="alert">
         <p>{erro || 'Medição não encontrada.'}</p>
-        <Link to="/admin">Voltar ao painel</Link>
+        <Link className="admin-botao-contorno" to="/admin">Voltar ao painel</Link>
       </div>
     );
   }
@@ -192,38 +193,38 @@ function AdminMedicaoFormPage() {
     : indicadores.find((item) => String(item.id) === indicadorId);
 
   return (
-    <section className="admin-medicao-page" aria-labelledby="medicao-heading">
-      <div className="admin-medicao-heading">
-        <div>
-          <p className="admin-medicao-eyebrow">Gestão de dados</p>
-          <h1 id="medicao-heading">{estaEditando ? 'Editar medição' : 'Cadastrar medição'}</h1>
-          <p>Registre os dados semestrais dos indicadores do Observatório do Turismo.</p>
-        </div>
-        <Link className="admin-medicao-back" to="/admin">Voltar ao painel</Link>
-      </div>
+    <section className="admin-pagina admin-medicao-page" aria-labelledby="medicao-heading">
+      <AdminCabecalho
+        id="medicao-heading"
+        sobretitulo="Gestão de dados"
+        titulo={estaEditando ? 'Editar medição' : 'Cadastrar medição'}
+        descricao="Registre os dados semestrais dos indicadores do Observatório do Turismo."
+      >
+        <Link className="admin-botao-contorno" to="/admin">Voltar ao painel</Link>
+      </AdminCabecalho>
 
-      {erro && <p className="admin-medicao-message admin-medicao-message--error" role="alert">{erro}</p>}
-      {sucesso && <p className="admin-medicao-message admin-medicao-message--success" role="status">{sucesso}</p>}
+      {erro && <p className="admin-mensagem admin-mensagem--erro" role="alert">{erro}</p>}
+      {sucesso && <p className="admin-mensagem admin-mensagem--sucesso" role="status">{sucesso}</p>}
 
       {medicaoPublicada && (
-        <p className="admin-medicao-message admin-medicao-message--notice" role="status">
+        <p className="admin-mensagem admin-mensagem--aviso" role="status">
           Esta medição está publicada e não pode ser editada. Despublique para editar.
         </p>
       )}
 
       <form className="admin-medicao-form" aria-label="Formulário de medição" noValidate onSubmit={handleSubmit}>
-        <section className="admin-medicao-card" aria-labelledby="indicador-section-heading">
+        <section className="admin-cartao admin-medicao-card" aria-labelledby="indicador-section-heading">
           <div className="admin-medicao-card-heading">
             <span aria-hidden="true">1</span>
             <div>
-              <h2 id="indicador-section-heading">Indicador</h2>
-              <p>Selecione um cadastro existente ou informe os dados de um novo.</p>
+              <h2 className="admin-cartao__titulo" id="indicador-section-heading">Indicador</h2>
+              <p className="admin-cartao__descricao">Selecione um cadastro existente ou informe os dados de um novo.</p>
             </div>
           </div>
 
           {!estaEditando ? (
             <>
-              <label className="admin-medicao-field">
+              <label className="admin-campo">
                 Indicador existente ou novo
                 <select
                   aria-label="Indicador"
@@ -248,22 +249,22 @@ function AdminMedicaoFormPage() {
 
               {selecionouNovoIndicador && (
                 <div className="admin-medicao-indicator-fields">
-                  <label className="admin-medicao-field">
+                  <label className="admin-campo">
                     Nome do indicador
                     <input aria-label="Nome do indicador" value={nome} maxLength={80} onChange={(event) => setNome(event.target.value)} />
                   </label>
-                  <label className="admin-medicao-field">
+                  <label className="admin-campo">
                     Descrição <span>(opcional)</span>
                     <textarea aria-label="Descrição" value={descricao} maxLength={200} rows={3} onChange={(event) => setDescricao(event.target.value)} />
                   </label>
-                  <label className="admin-medicao-field">
+                  <label className="admin-campo">
                     Setor
                     <select aria-label="Setor" value={setorId} onChange={(event) => setSetorId(event.target.value)}>
                       <option value="">Selecione um setor</option>
                       {setores.map((setor) => <option key={setor.id} value={setor.id}>{setor.nome}</option>)}
                     </select>
                   </label>
-                  <label className="admin-medicao-field">
+                  <label className="admin-campo">
                     Unidade
                     <input aria-label="Unidade" value={unidade} maxLength={20} onChange={(event) => setUnidade(event.target.value)} placeholder="Ex.: leitos, %, R$" />
                   </label>
@@ -287,17 +288,17 @@ function AdminMedicaoFormPage() {
           )}
         </section>
 
-        <section className="admin-medicao-card" aria-labelledby="periodo-section-heading">
+        <section className="admin-cartao admin-medicao-card" aria-labelledby="periodo-section-heading">
           <div className="admin-medicao-card-heading">
             <span aria-hidden="true">2</span>
             <div>
-              <h2 id="periodo-section-heading">Período e valor</h2>
-              <p>Existe apenas uma medição por indicador em cada semestre.</p>
+              <h2 className="admin-cartao__titulo" id="periodo-section-heading">Período e valor</h2>
+              <p className="admin-cartao__descricao">Existe apenas uma medição por indicador em cada semestre.</p>
             </div>
           </div>
 
           <div className="admin-medicao-period-fields">
-            <label className="admin-medicao-field">
+            <label className="admin-campo">
               Ano
               <input
                 aria-label="Ano"
@@ -310,7 +311,7 @@ function AdminMedicaoFormPage() {
                 onChange={(event) => setAno(event.target.value)}
               />
             </label>
-            <label className="admin-medicao-field">
+            <label className="admin-campo">
               Semestre
               <select
                 aria-label="Semestre"
@@ -323,7 +324,7 @@ function AdminMedicaoFormPage() {
                 <option value="2">2º semestre</option>
               </select>
             </label>
-            <label className="admin-medicao-field">
+            <label className="admin-campo">
               Valor {indicadorSelecionado?.unidade && <span>({indicadorSelecionado.unidade})</span>}
               <input
                 aria-label="Valor"
@@ -338,15 +339,15 @@ function AdminMedicaoFormPage() {
             </label>
           </div>
 
-          <p className="admin-medicao-rule">
+          <p className="admin-nota">
             Antes de salvar, confira o indicador e o período: não é possível cadastrar duas medições do mesmo indicador no mesmo semestre.
           </p>
         </section>
 
-        <div className="admin-medicao-actions">
-          <Link to="/admin">Cancelar</Link>
+        <div className="admin-cartao admin-acoes admin-medicao-actions">
+          <Link className="admin-botao admin-botao--secundario" to="/admin">Cancelar</Link>
           {!medicaoPublicada && (
-            <button type="submit" disabled={salvando}>
+            <button className="admin-botao admin-botao--primario" type="submit" disabled={salvando}>
               {salvando ? 'Salvando...' : estaEditando ? 'Salvar alterações' : 'Salvar como rascunho'}
             </button>
           )}

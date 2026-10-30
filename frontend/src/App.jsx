@@ -23,7 +23,7 @@ function AppLayout() {
     <div className="app-shell">
       <header className="topbar">
         <div className="brand-block">
-          <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí — Cidade Criativa" />
+          <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí, Cidade Criativa" />
           <img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" />
         </div>
 
