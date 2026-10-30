@@ -47,6 +47,22 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: 'Entrar' })).toBeInTheDocument();
   });
 
+  it('abre o publicador de relatórios na rota protegida do painel', async () => {
+    window.sessionStorage.setItem('ot-srs-token', 'token-de-teste');
+    window.sessionStorage.setItem('ot-srs-user', JSON.stringify({ id: 1, nome: 'Administrador', email: 'admin@example.com' }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ id: 1, nome: 'Administrador', email: 'admin@example.com' }),
+    }));
+    window.history.replaceState({}, '', '/admin/relatorios');
+    render(<App />);
+
+    expect(await screen.findByRole('heading', { name: 'Publicador de Relatórios' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Relatórios' })).toHaveAttribute('href', '/admin/relatorios');
+    window.sessionStorage.clear();
+  });
+
   it('renderiza os destaques com o card compartilhado', async () => {
     render(<App />);
     expect(await screen.findByRole('heading', { name: /indicadores do turismo/i })).toBeInTheDocument();

@@ -1,0 +1,301 @@
+.admin-relatorios {
+  display: grid;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  gap: 1.5rem;
+}
+
+.admin-relatorios__cabecalho h1 {
+  margin: .25rem 0 .5rem;
+  color: var(--color-text);
+  font-size: clamp(1.8rem, 3vw, 2.25rem);
+}
+
+.admin-relatorios__cabecalho p:last-child,
+.admin-relatorios__painel-cabecalho p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.admin-relatorios__eyebrow {
+  margin: 0;
+  color: var(--color-secondary-strong);
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.admin-relatorios__painel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-relatorios__painel-cabecalho {
+  padding: 1.5rem 1.5rem 0;
+}
+
+.admin-relatorios__painel-cabecalho h2 {
+  margin: 0 0 .35rem;
+  font-size: 1.15rem;
+}
+
+.admin-relatorios__painel form {
+  padding: 1.5rem;
+}
+
+.admin-relatorios__dropzone {
+  position: relative;
+  display: grid;
+  min-height: 170px;
+  place-items: center;
+  align-content: center;
+  gap: .45rem;
+  padding: 1.25rem;
+  border: 2px dashed var(--color-border-strong);
+  border-radius: 12px;
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  text-align: center;
+  cursor: pointer;
+}
+
+.admin-relatorios__dropzone:hover,
+.admin-relatorios__dropzone:focus-within,
+.admin-relatorios__dropzone--ativo {
+  border-color: var(--color-secondary);
+  background: var(--color-primary-soft);
+}
+
+.admin-relatorios__dropzone strong {
+  color: var(--color-text);
+}
+
+.admin-relatorios__dropzone-icone {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.admin-relatorios__dropzone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.admin-relatorios__arquivo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  margin: .75rem 0 0;
+  padding: .75rem 1rem;
+  border-radius: 8px;
+  background: var(--color-primary-soft);
+  color: var(--color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.admin-relatorios__arquivo strong {
+  color: var(--color-text);
+}
+
+.admin-relatorios__arquivo button {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--color-secondary-strong);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-relatorios__campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.admin-relatorios__campo {
+  display: grid;
+  min-width: 0;
+  gap: .4rem;
+  color: var(--color-text);
+  font-size: .875rem;
+  font-weight: 700;
+}
+
+.admin-relatorios__campo--inteiro {
+  grid-column: 1 / -1;
+}
+
+.admin-relatorios__campo input,
+.admin-relatorios__campo select,
+.admin-relatorios__campo textarea {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: .65rem .75rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 400;
+}
+
+.admin-relatorios__campo textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.admin-relatorios__campo input:focus,
+.admin-relatorios__campo select:focus,
+.admin-relatorios__campo textarea:focus {
+  border-color: var(--color-secondary);
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.admin-relatorios__campo small {
+  justify-self: end;
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.admin-relatorios__visibilidade {
+  margin: 1.5rem 0 0;
+  padding: .8rem 1rem;
+  border-left: 3px solid var(--color-secondary);
+  border-radius: 8px;
+  background: var(--color-primary-soft);
+  color: var(--color-text-secondary);
+  font-size: .875rem;
+}
+
+.admin-relatorios__erro,
+.admin-relatorios__sucesso {
+  margin: 1rem 0 0;
+  padding: .75rem 1rem;
+  border-radius: 8px;
+}
+
+.admin-relatorios__erro {
+  background: var(--color-danger-soft);
+  color: var(--color-danger-strong);
+}
+
+.admin-relatorios__sucesso {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.admin-relatorios__acoes {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1.5rem;
+}
+
+.admin-relatorios__acoes button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.admin-relatorios__painel-cabecalho--lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+}
+
+.admin-relatorios__painel-cabecalho--lista span {
+  color: var(--color-text-muted);
+  font-size: .85rem;
+}
+
+.admin-relatorios__estado {
+  margin: 0;
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.admin-relatorios__estado p {
+  margin: 0 0 .75rem;
+}
+
+.admin-relatorios__estado button {
+  border: 0;
+  background: transparent;
+  color: var(--color-secondary-strong);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-relatorios__table-wrap {
+  position: relative;
+  overflow-x: auto;
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-relatorios__table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-relatorios__table th,
+.admin-relatorios__table td {
+  padding: .9rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: .875rem;
+}
+
+.admin-relatorios__table th {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  font-size: .75rem;
+}
+
+.admin-relatorios__table td strong,
+.admin-relatorios__table td small {
+  display: block;
+}
+
+.admin-relatorios__table td small {
+  margin-top: .25rem;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 640px) {
+  .admin-relatorios__painel-cabecalho,
+  .admin-relatorios__painel form {
+    padding: 1rem;
+  }
+
+  .admin-relatorios__campos {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-relatorios__acoes button {
+    width: 100%;
+  }
+}

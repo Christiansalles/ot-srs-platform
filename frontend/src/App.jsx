@@ -6,6 +6,7 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import RelatoriosPage from './pages/RelatoriosPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
+import AdminRelatoriosPage from './pages/AdminRelatoriosPage';
 import RotaProtegida from './components/RotaProtegida';
 import AdminLayout from './components/AdminLayout/AdminLayout';
 import cidadeLogo from './assets/logos/santa-rita.svg';
@@ -64,7 +65,7 @@ function AppLayout() {
   );
 }
 
-// Provisório até as telas 7 (#181) e 8 (#182) entrarem no layout.
+// Provisório até a tela 7 (#181) entrar no layout.
 function AdminEmBreve({ titulo }) {
   return (
     <section className="page" aria-labelledby="admin-em-breve">
@@ -83,7 +84,7 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminPage />} />
             <Route path="medicoes/nova" element={<AdminEmBreve titulo="Cadastrar medição" />} />
-            <Route path="relatorios" element={<AdminEmBreve titulo="Relatórios" />} />
+            <Route path="relatorios" element={<AdminRelatoriosPage />} />
           </Route>
         </Route>
         <Route element={<AppLayout />}>
