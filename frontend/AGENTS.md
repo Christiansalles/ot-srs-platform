@@ -44,6 +44,7 @@ As telas de `/admin` (Telas 6, 7 e 8) têm de parecer uma só aplicação ao tro
 | Campo de formulário | `<label className="admin-campo">Rótulo <span>(opcional)</span><input /></label>`; o `<span>` é para unidade ou "(opcional)", e o `<small>` é o contador | `AdminPagina.css` |
 | Botões | `admin-acoes` com `admin-botao admin-botao--secundario` (Cancelar, Limpar) e `admin-botao admin-botao--primario` (gradiente); `admin-botao-contorno` para "Tentar novamente", "Limpar filtros" e "Voltar ao painel" | `AdminPagina.css` |
 | Mensagens | `admin-mensagem` com `--erro`, `--sucesso` (verde) ou `--aviso`; `admin-nota` para regra fixa do formulário | `AdminPagina.css` |
+| Confirmação de ação | `<DialogoConfirmacao titulo destaque descricao rotuloConfirmar enviando onConfirmar onCancelar>`, montado só enquanto há o que confirmar; não use `window.confirm` | `components/DialogoConfirmacao/` |
 | Carregando, vazio e erro | `admin-estado` (e `admin-estado--erro`), dentro do cartão ou junto com `admin-cartao` quando ocupa a página | `AdminPagina.css` |
 | Tabela | `admin-tabela-rolagem` com `<table className="admin-tabela minha-tabela">`; a página define só o `min-width` e as colunas próprias | `AdminPagina.css` |
 

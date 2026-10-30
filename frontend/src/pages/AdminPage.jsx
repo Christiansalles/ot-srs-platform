@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
+import DialogoConfirmacao from '../components/DialogoConfirmacao/DialogoConfirmacao';
 import StatusBadge from '../components/StatusBadge/StatusBadge';
 import { getSetores } from '../services/api';
-import { listarIndicadoresAdmin } from '../services/admin';
+import { alterarStatusMedicao, listarIndicadoresAdmin } from '../services/admin';
+import { podePublicar } from '../services/auth';
 import { formatarValor } from '../utils/formatarValor';
 import './AdminPage.css';
 
@@ -26,6 +28,10 @@ function AdminPage() {
   const [setorSelecionado, setSetorSelecionado] = useState('');
   const [statusSelecionado, setStatusSelecionado] = useState('');
   const [busca, setBusca] = useState('');
+  const [confirmacao, setConfirmacao] = useState(null);
+  const [enviando, setEnviando] = useState(false);
+  const [aviso, setAviso] = useState(null);
+  const mostrarPublicacao = podePublicar();
 
   useEffect(() => {
     let ativo = true;
@@ -84,6 +90,31 @@ function AdminPage() {
     setBusca('');
   }
 
+  async function alterarStatus() {
+    const { indicador, medicao, publicar, rotulo } = confirmacao;
+
+    setAviso(null);
+    setEnviando(true);
+    try {
+      const atualizada = await alterarStatusMedicao(medicao.id, publicar ? 'publicado' : 'rascunho');
+      setIndicadores((atuais) => atuais.map((item) => (item.id === indicador.id
+        ? {
+          ...item,
+          medicoes: item.medicoes.map((atual) => (atual.id === medicao.id ? { ...atual, ...atualizada } : atual)),
+        }
+        : item)));
+      setAviso({
+        tipo: 'sucesso',
+        texto: `${rotulo}: ${publicar ? 'publicada no portal' : 'voltou para rascunho'}.`,
+      });
+    } catch (falha) {
+      setAviso({ tipo: 'erro', texto: falha.message || 'Não foi possível alterar o status. Tente novamente.' });
+    } finally {
+      setEnviando(false);
+      setConfirmacao(null);
+    }
+  }
+
   return (
     <section className="admin-pagina admin-dashboard" aria-labelledby="admin-heading">
       <AdminCabecalho
@@ -120,6 +151,12 @@ function AdminPage() {
             <span className="admin-summary-card__icon" aria-hidden="true">✎</span>
           </article>
         </section>
+      )}
+
+      {aviso && (
+        <p className={`admin-mensagem admin-mensagem--${aviso.tipo}`} role={aviso.tipo === 'erro' ? 'alert' : 'status'}>
+          {aviso.texto}
+        </p>
       )}
 
       <section className="admin-cartao admin-dashboard__list" aria-label="Lista de indicadores">
@@ -216,6 +253,20 @@ function AdminPage() {
                         : <span className="admin-dashboard__no-measurement">Sem medições</span>}
                     </td>
                     <td className="admin-dashboard__action-cell">
+                      {mostrarPublicacao && medicao && (
+                        <button
+                          type="button"
+                          aria-label={`${medicao.status === 'rascunho' ? 'Publicar' : 'Despublicar'} ${indicador.nome}, ${medicao.ano}/${medicao.semestre}`}
+                          onClick={() => setConfirmacao({
+                            indicador,
+                            medicao,
+                            publicar: medicao.status === 'rascunho',
+                            rotulo: `${indicador.nome}, ${medicao.ano}/${medicao.semestre}`,
+                          })}
+                        >
+                          {medicao.status === 'rascunho' ? 'Publicar' : 'Despublicar'}
+                        </button>
+                      )}
                       <Link
                         to={medicao
                           ? `/admin/medicoes/${medicao.id}/editar`
@@ -232,6 +283,20 @@ function AdminPage() {
           </div>
         )}
       </section>
+
+      {confirmacao && (
+        <DialogoConfirmacao
+          titulo={confirmacao.publicar ? 'Publicar medição?' : 'Despublicar medição?'}
+          destaque={`${confirmacao.indicador.nome} - ${confirmacao.medicao.ano}/${confirmacao.medicao.semestre}`}
+          descricao={confirmacao.publicar
+            ? 'Após a publicação, a medição ficará visível no portal público.'
+            : 'Após a despublicação, a medição deixará de aparecer no portal público e voltará para rascunho.'}
+          rotuloConfirmar={confirmacao.publicar ? 'Publicar' : 'Despublicar'}
+          enviando={enviando}
+          onConfirmar={alterarStatus}
+          onCancelar={() => setConfirmacao(null)}
+        />
+      )}
     </section>
   );
 }

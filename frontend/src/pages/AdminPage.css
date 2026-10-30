@@ -139,7 +139,7 @@
 }
 
 .admin-dashboard__table {
-  min-width: 760px;
+  min-width: 840px;
 }
 
 .admin-dashboard__sector {
@@ -169,18 +169,29 @@
   white-space: nowrap;
 }
 
-.admin-dashboard__action-cell a {
+.admin-dashboard__action-cell a,
+.admin-dashboard__action-cell button {
   display: inline-flex;
   padding: .35rem .55rem;
+  border: 0;
   border-radius: 7px;
+  background: transparent;
   color: var(--color-secondary-strong);
+  font: inherit;
   font-size: .8rem;
   font-weight: 700;
   text-decoration: none;
+  cursor: pointer;
 }
 
-.admin-dashboard__action-cell a:hover {
+.admin-dashboard__action-cell a:hover,
+.admin-dashboard__action-cell button:hover:not(:disabled) {
   background: var(--color-accent-soft);
+}
+
+.admin-dashboard__action-cell button:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
 }
 
 @media (max-width: 900px) {
