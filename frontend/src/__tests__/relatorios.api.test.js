@@ -2,7 +2,7 @@ import { readFileSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getRelatorios, urlDownloadRelatorio } from '../services/api';
+import { baixarRelatorio, getRelatorios, urlDownloadRelatorio } from '../services/api';
 import { mockRelatorios } from '../mocks/relatorios';
 import { AUTH_UNAUTHORIZED_EVENT } from '../services/auth';
 
@@ -94,6 +94,37 @@ describe('serviços de relatórios', () => {
     vi.stubEnv('VITE_USE_MOCK', 'false');
     vi.stubGlobal('fetch', vi.fn().mockImplementation(resposta));
     await expect(getRelatorios()).rejects.toThrow('Não foi possível consultar os relatórios. Tente novamente.');
+  });
+});
+
+describe('download de relatórios', () => {
+  it('busca o PDF na rota pública mesmo com a listagem em modo mock', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'true');
+    const arquivo = new Blob(['%PDF-1.4'], { type: 'application/pdf' });
+    const json = vi.fn();
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, blob: async () => arquivo, json });
+    vi.stubGlobal('fetch', fetchMock);
+    await expect(baixarRelatorio(2)).resolves.toBe(arquivo);
+    expect(fetchMock).toHaveBeenCalledWith('http://localhost:3000/api/relatorios/2/arquivo', { headers: {} });
+    expect(json).not.toHaveBeenCalled();
+  });
+
+  it('propaga a mensagem de 404 sem devolver um arquivo', async () => {
+    const blob = vi.fn();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false, status: 404, json: async () => ({ erro: 'Relatório não encontrado' }), blob,
+    }));
+    await expect(baixarRelatorio(999)).rejects.toThrow('Relatório não encontrado');
+    expect(blob).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['falha de rede', () => Promise.reject(new TypeError('Failed to fetch'))],
+    ['erro sem JSON', () => Promise.resolve({ ok: false, status: 503, json: async () => { throw new SyntaxError(); } })],
+    ['falha ao ler o arquivo', () => Promise.resolve({ ok: true, blob: async () => { throw new TypeError(); } })],
+  ])('apresenta mensagem em português para %s', async (_, resposta) => {
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(resposta));
+    await expect(baixarRelatorio(1)).rejects.toThrow('Não foi possível baixar o relatório. Tente novamente.');
   });
 });
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import FiltrosPainel from '../components/FiltrosPainel/FiltrosPainel';
 import { CATEGORIAS_RELATORIO } from '../config/relatorios';
-import { getRelatorios } from '../services/api';
+import { baixarRelatorio, getRelatorios, urlDownloadRelatorio } from '../services/api';
 import './RelatoriosPage.css';
 
 function formatarData(data) {
@@ -16,6 +16,12 @@ function formatarTamanho(tamanhoKb) {
   return `${tamanho.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} ${emMb ? 'MB' : 'KB'}`;
 }
 
+function nomeArquivoRelatorio(relatorio) {
+  return [relatorio.edicao, relatorio.titulo].map((texto) => String(texto)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'relatorio').join('-') + '.pdf';
+}
+
 export default function RelatoriosPage() {
   const [params] = useSearchParams();
   const ano = params.get('ano') ?? '';
@@ -24,6 +30,31 @@ export default function RelatoriosPage() {
   const temFiltros = Boolean(ano || categoria);
   const [catalogo, setCatalogo] = useState({ status: 'carregando', relatorios: [], erro: '' });
   const [resultado, setResultado] = useState({ consulta: null });
+  const [download, setDownload] = useState({ id: null, status: '', erro: '' });
+
+  async function iniciarDownload(evento, relatorio) {
+    evento.preventDefault();
+    if (download.status === 'baixando') return;
+    setDownload({ id: relatorio.id, status: 'baixando', erro: '' });
+    try {
+      const arquivo = await baixarRelatorio(relatorio.id);
+      const endereco = URL.createObjectURL(arquivo);
+      const link = document.createElement('a');
+      link.href = endereco;
+      link.download = nomeArquivoRelatorio(relatorio);
+      document.body.appendChild(link);
+      try {
+        link.click();
+      } finally {
+        link.remove();
+        // Libera o endereço depois de o navegador iniciar o download.
+        setTimeout(() => URL.revokeObjectURL(endereco), 0);
+      }
+      setDownload({ id: null, status: '', erro: '' });
+    } catch (erro) {
+      setDownload({ id: relatorio.id, status: 'erro', erro: erro?.message || 'Não foi possível baixar o relatório. Tente novamente.' });
+    }
+  }
 
   useEffect(() => {
     let ativo = true;
@@ -116,7 +147,22 @@ export default function RelatoriosPage() {
                     <div className="relatorio-card__metadados">
                       <span>Publicado em <time dateTime={relatorio.data_publicacao}>{formatarData(relatorio.data_publicacao)}</time></span>
                       <span>PDF · {formatarTamanho(relatorio.tamanho_kb)}</span>
+                      <a className="ot-button-secondary relatorio-card__download"
+                        href={urlDownloadRelatorio(relatorio.id)}
+                        aria-label={`Baixar PDF: ${relatorio.titulo}`}
+                        aria-disabled={download.status === 'baixando'}
+                        aria-busy={download.id === relatorio.id && download.status === 'baixando'}
+                        aria-describedby={download.id === relatorio.id && download.status === 'erro' ? `download-erro-${relatorio.id}` : undefined}
+                        onClick={(evento) => iniciarDownload(evento, relatorio)}>
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                          <path d="M12 3v12m-5-5 5 5 5-5M5 16v4h14v-4" />
+                        </svg>
+                        {download.id === relatorio.id && download.status === 'baixando' ? 'Baixando...' : 'Baixar PDF'}
+                      </a>
                     </div>
+                    {download.id === relatorio.id && download.status === 'erro' && (
+                      <p className="state-message error relatorio-card__erro" id={`download-erro-${relatorio.id}`} role="alert">{download.erro}</p>
+                    )}
                   </div>
                 </article>
               ))}

@@ -5,10 +5,10 @@ import { AUTH_UNAUTHORIZED_EVENT, getToken, logout } from './auth';
 
 // Mock é uma opção explícita; falhas da API devem chegar às telas.
 async function request(path, mockData, filtros = {}, {
-  campos = ['setor', 'ano', 'semestre'], mensagemErro,
+  campos = ['setor', 'ano', 'semestre'], mensagemErro, resposta = 'json', usarMock = true,
 } = {}) {
   const params = montarQuery(filtros, campos);
-  if (import.meta.env.VITE_USE_MOCK === 'true') {
+  if (usarMock && import.meta.env.VITE_USE_MOCK === 'true') {
     return structuredClone(typeof mockData === 'function' ? mockData(params) : mockData);
   }
   const query = params.size ? `?${params}` : '';
@@ -34,7 +34,7 @@ async function request(path, mockData, filtros = {}, {
     throw new Error(`Falha ao consultar ${path} (HTTP ${response.status})`);
   }
   try {
-    return await response.json();
+    return await response[resposta]();
   } catch (erro) {
     if (mensagemErro) throw new Error(mensagemErro);
     throw erro;
@@ -98,4 +98,12 @@ export function getRelatorios(filtros = {}) {
 
 export function urlDownloadRelatorio(id) {
   return `${API_URL}/api/relatorios/${encodeURIComponent(id)}/arquivo`;
+}
+
+export function baixarRelatorio(id) {
+  // O mock contém metadados; o PDF sempre vem da rota pública.
+  return request(`relatorios/${encodeURIComponent(id)}/arquivo`, null, {}, {
+    mensagemErro: 'Não foi possível baixar o relatório. Tente novamente.',
+    resposta: 'blob', usarMock: false,
+  });
 }
