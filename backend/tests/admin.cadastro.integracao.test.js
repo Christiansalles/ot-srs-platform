@@ -11,6 +11,7 @@ let usuario;
 let administrador;
 let setor;
 let indicador;
+let medicao;
 let token;
 let tokenAdministrador;
 const segredoAnterior = process.env.JWT_SECRET;
@@ -44,19 +45,27 @@ afterAll(async () => {
 const autenticada = (requisicao) => requisicao.set('Authorization', `Bearer ${token}`);
 
 describe('cadastro e edição de indicador e medição (E12)', () => {
-  it('permite ao editor cadastrar, evita duplicata e mantém rascunho fora das rotas públicas', async () => {
+  it('permite ao editor cadastrar e editar um indicador', async () => {
     const cadastroIndicador = await autenticada(request(app).post('/api/admin/indicadores'))
       .send({ id_setor: setor.id_setor, nome: `Indicador ${sufixo}`, unidade: 'un' });
     expect(cadastroIndicador.status).toBe(201);
     indicador = await prisma.indicador.findUnique({ where: { id_indicador: cadastroIndicador.body.id } });
 
+    const edicao = await autenticada(request(app).put(`/api/admin/indicadores/${indicador.id_indicador}`))
+      .send({ id_setor: setor.id_setor, nome: `Indicador editado ${sufixo}`, unidade: 'un', descricao: 'Editado pelo editor' });
+    expect(edicao.status).toBe(200);
+    expect(edicao.body).toMatchObject({ nome: `Indicador editado ${sufixo}`, descricao: 'Editado pelo editor' });
+  });
+
+  it('cria o período, cadastra medição em rascunho e responde 409 sem duplicar', async () => {
     const periodoAntes = await request(app).get('/api/periodos');
     expect(periodoAntes.body.map(({ ano: a }) => a)).not.toContain(ano);
 
     const corpo = { id_indicador: indicador.id_indicador, ano, semestre: 1, valor: 12 };
-    const cadastro = await autenticada(request(app).post('/api/admin/medicoes')).send(corpo);
-    expect(cadastro.status).toBe(201);
-    expect(cadastro.body).toMatchObject({ ano, semestre: 1, valor: 12, status: 'rascunho' });
+    const cadastroMedicao = await autenticada(request(app).post('/api/admin/medicoes')).send(corpo);
+    expect(cadastroMedicao.status).toBe(201);
+    expect(cadastroMedicao.body).toMatchObject({ ano, semestre: 1, valor: 12, status: 'rascunho' });
+    medicao = cadastroMedicao.body;
 
     const duplicada = await autenticada(request(app).post('/api/admin/medicoes')).send(corpo);
     expect(duplicada.status).toBe(409);
@@ -67,17 +76,21 @@ describe('cadastro e edição de indicador e medição (E12)', () => {
     expect(publicosAntes.body).toEqual([]);
     const periodosRascunho = await request(app).get('/api/periodos');
     expect(periodosRascunho.body.map(({ ano: a }) => a)).not.toContain(ano);
+  });
 
-    const edicao = await autenticada(request(app).put(`/api/admin/medicoes/${cadastro.body.id}`)).send({ valor: 13 });
+  it('permite editar a medição enquanto ela está em rascunho', async () => {
+    const edicao = await autenticada(request(app).put(`/api/admin/medicoes/${medicao.id}`)).send({ valor: 13 });
     expect(edicao.status).toBe(200);
     expect(edicao.body).toMatchObject({ valor: 13, status: 'rascunho' });
+  });
 
-    const publicada = await request(app).patch(`/api/admin/medicoes/${cadastro.body.id}/status`)
+  it('bloqueia edição publicada e expõe a medição e o período após publicar', async () => {
+    const publicada = await request(app).patch(`/api/admin/medicoes/${medicao.id}/status`)
       .set('Authorization', `Bearer ${tokenAdministrador}`)
       .send({ status: 'publicado' });
     expect(publicada.status).toBe(200);
 
-    const edicaoPublicada = await autenticada(request(app).put(`/api/admin/medicoes/${cadastro.body.id}`))
+    const edicaoPublicada = await autenticada(request(app).put(`/api/admin/medicoes/${medicao.id}`))
       .send({ valor: 14 });
     expect(edicaoPublicada.status).toBe(409);
     expect(edicaoPublicada.body).toEqual({ erro: 'Despublique a medição antes de editar' });
@@ -93,5 +106,6 @@ describe('cadastro e edição de indicador e medição (E12)', () => {
     const resposta = await request(app).post('/api/admin/medicoes')
       .send({ id_indicador: 1, ano, semestre: 2, valor: 1 });
     expect(resposta.status).toBe(401);
+    expect(resposta.body).toEqual({ erro: 'Token inválido ou expirado' });
   });
 });
