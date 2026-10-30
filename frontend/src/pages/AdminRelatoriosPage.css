@@ -1,56 +1,22 @@
-/* Medidas do cabeçalho, cartões, campos e estados iguais às Telas 6 (AdminPage) e 7 (AdminMedicaoFormPage) */
+/* Só o que é da Tela 8; cabeçalho, cartão, campos, mensagens, botões, estados e tabela vêm de AdminPagina.css */
+
 .admin-relatorios {
   display: grid;
-  width: min(1440px, 100%);
-  margin: 0 auto;
   gap: 1.5rem;
 }
 
-.admin-relatorios__cabecalho h1 {
-  margin: 0;
-  color: var(--color-text);
-  font-size: clamp(1.75rem, 3vw, 2rem);
-  font-weight: 800;
-  letter-spacing: -.035em;
-}
-
-.admin-relatorios__cabecalho p:last-child {
-  margin: .35rem 0 0;
-  color: var(--color-text-secondary);
-}
-
-.admin-relatorios__eyebrow {
-  margin: 0 0 .35rem;
-  color: var(--color-secondary-strong);
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .09em;
-  text-transform: uppercase;
+/* O espaço vem do gap da página */
+.admin-relatorios .admin-cabecalho {
+  margin-bottom: 0;
 }
 
 .admin-relatorios__painel {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: 14px;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
 }
 
 .admin-relatorios__painel-cabecalho {
   padding: 1.25rem 1.5rem 0;
-}
-
-.admin-relatorios__painel-cabecalho h2 {
-  margin: 0;
-  color: var(--color-text);
-  font-size: 1.05rem;
-}
-
-.admin-relatorios__painel-cabecalho p {
-  margin: .2rem 0 0;
-  color: var(--color-text-muted);
-  font-size: .82rem;
 }
 
 .admin-relatorios__painel form {
@@ -141,6 +107,11 @@
   background: var(--color-accent-soft);
 }
 
+.admin-relatorios__arquivo button:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
 .admin-relatorios__campos {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -148,142 +119,23 @@
   margin-top: 1.25rem;
 }
 
-.admin-relatorios__campo {
-  display: grid;
-  min-width: 0;
-  align-content: start;
-  gap: .45rem;
-  color: var(--color-text);
-  font-size: .85rem;
-  font-weight: 700;
-}
-
 .admin-relatorios__campo--inteiro {
   grid-column: 1 / -1;
 }
 
-.admin-relatorios__campo input,
-.admin-relatorios__campo select,
-.admin-relatorios__campo textarea {
-  width: 100%;
-  min-height: 44px;
-  box-sizing: border-box;
-  padding: .65rem .75rem;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 9px;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
-  font-size: .9rem;
-  font-weight: 400;
-}
-
-.admin-relatorios__campo textarea {
-  min-height: 92px;
-  resize: vertical;
-}
-
-.admin-relatorios__campo input:focus,
-.admin-relatorios__campo select:focus,
-.admin-relatorios__campo textarea:focus {
-  border-color: var(--color-secondary);
-  outline: none;
-  box-shadow: var(--shadow-focus);
-}
-
-.admin-relatorios__campo input:disabled,
-.admin-relatorios__campo select:disabled,
-.admin-relatorios__campo textarea:disabled {
-  border-color: var(--color-border);
-  background: var(--color-surface-muted);
-  color: var(--color-text-secondary);
-}
-
-.admin-relatorios__campo small {
-  justify-self: end;
-  color: var(--color-text-muted);
-  font-size: .76rem;
-  font-weight: 500;
-}
-
-/* Mesmo aviso lateral da regra de consistência da Tela 7 */
 .admin-relatorios__visibilidade {
-  margin: 1.25rem 0 0;
-  padding: .85rem 1rem;
-  border-left: 3px solid var(--color-secondary);
-  border-radius: 0 8px 8px 0;
-  background: var(--color-primary-soft);
-  color: var(--color-text-secondary);
-  font-size: .82rem;
-  line-height: 1.55;
+  margin-top: 1.25rem;
 }
 
-.admin-relatorios__erro,
-.admin-relatorios__sucesso {
+/* Mensagens dentro do formulário, depois da nota de status */
+.admin-relatorios__painel form .admin-mensagem {
   margin: 1rem 0 0;
-  padding: .9rem 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 9px;
-  font-size: .9rem;
 }
 
-.admin-relatorios__erro {
-  border-color: var(--color-danger-border);
-  background: var(--color-danger-soft);
-  color: var(--color-danger-strong);
-}
-
-.admin-relatorios__sucesso {
-  border-color: color-mix(in srgb, var(--color-success) 30%, var(--color-surface));
-  background: color-mix(in srgb, var(--color-success) 8%, var(--color-surface));
-  color: var(--color-success);
-}
-
-/* Botões no formato da barra de ações da Tela 7 */
 .admin-relatorios__acoes {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: .75rem;
   margin-top: 1.25rem;
   padding-top: 1.25rem;
   border-top: 1px solid var(--color-border);
-}
-
-.admin-relatorios__acoes button {
-  display: inline-flex;
-  min-height: 42px;
-  align-items: center;
-  justify-content: center;
-  padding: .6rem 1rem;
-  border: 0;
-  border-radius: 8px;
-  font: inherit;
-  font-size: .86rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.admin-relatorios__limpar {
-  background: var(--color-surface-muted);
-  color: var(--color-text-secondary);
-}
-
-.admin-relatorios__enviar {
-  background: var(--gradient-brand);
-  color: var(--color-on-brand);
-}
-
-.admin-relatorios__acoes button:disabled {
-  cursor: wait;
-  opacity: .7;
-}
-
-.admin-relatorios__acoes button:focus-visible,
-.admin-relatorios__arquivo button:focus-visible,
-.admin-relatorios__estado button:focus-visible {
-  outline: 2px solid var(--color-secondary);
-  outline-offset: 3px;
 }
 
 .admin-relatorios__painel-cabecalho--lista {
@@ -299,108 +151,13 @@
   font-size: .8rem;
 }
 
-/* Carregando, vazio e erro como os estados da lista da Tela 6 */
-.admin-relatorios__estado {
-  display: flex;
-  min-height: 150px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: .75rem;
-  margin: 0;
-  padding: 1.5rem;
-  border-top: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-  text-align: center;
-}
-
-.admin-relatorios__estado p {
-  margin: 0;
-}
-
-.admin-relatorios__estado[role='alert'] {
-  color: var(--color-danger-strong);
-}
-
-.admin-relatorios__estado button {
-  padding: .55rem .8rem;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 8px;
-  background: var(--color-surface);
-  color: var(--color-primary);
-  font: inherit;
-  font-size: .85rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.admin-relatorios__estado button:hover {
-  background: var(--color-primary-soft);
-}
-
-.admin-relatorios__table-wrap {
-  position: relative;
-  overflow-x: auto;
-  border-top: 1px solid var(--color-border);
-}
-
 .admin-relatorios__table {
-  width: 100%;
   min-width: 720px;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.admin-relatorios__table th,
-.admin-relatorios__table td {
-  padding: .9rem 1rem;
-  border-bottom: 1px solid var(--color-border);
-  font-size: .85rem;
-  vertical-align: middle;
-}
-
-.admin-relatorios__table th {
-  background: var(--color-surface-muted);
-  color: var(--color-text-secondary);
-  font-size: .68rem;
-  font-weight: 700;
-  letter-spacing: .07em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.admin-relatorios__table th:first-child,
-.admin-relatorios__table td:first-child {
-  padding-left: 1.5rem;
 }
 
 /* Edição, data e status não quebram no meio (ex.: OT-ILUS-02/2025) */
 .admin-relatorios__table td:nth-child(n + 2) {
   white-space: nowrap;
-}
-
-.admin-relatorios__table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.admin-relatorios__table tbody tr:hover {
-  background: var(--color-surface-muted);
-}
-
-.admin-relatorios__table td strong,
-.admin-relatorios__table td small {
-  display: block;
-}
-
-.admin-relatorios__table td strong {
-  color: var(--color-text);
-  font-weight: 650;
-}
-
-.admin-relatorios__table td small {
-  margin-top: .2rem;
-  color: var(--color-text-muted);
-  font-size: .75rem;
 }
 
 @media (max-width: 640px) {
@@ -418,15 +175,5 @@
 
   .admin-relatorios__campos {
     grid-template-columns: 1fr;
-  }
-
-  .admin-relatorios__acoes {
-    flex-direction: column-reverse;
-    align-items: stretch;
-  }
-
-  .admin-relatorios__table th:first-child,
-  .admin-relatorios__table td:first-child {
-    padding-left: 1rem;
   }
 }

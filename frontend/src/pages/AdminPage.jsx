@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
 import StatusBadge from '../components/StatusBadge/StatusBadge';
 import { getSetores } from '../services/api';
 import { listarIndicadoresAdmin } from '../services/admin';
@@ -84,18 +85,17 @@ function AdminPage() {
   }
 
   return (
-    <section className="admin-dashboard" aria-labelledby="admin-heading">
-      <div className="admin-dashboard__heading">
-        <div>
-          <p className="admin-dashboard__eyebrow">Gestão de dados</p>
-          <h1 id="admin-heading">Indicadores</h1>
-          <p>Gerencie os indicadores do Observatório do Turismo de Santa Rita do Sapucaí.</p>
-        </div>
-      </div>
+    <section className="admin-pagina admin-dashboard" aria-labelledby="admin-heading">
+      <AdminCabecalho
+        id="admin-heading"
+        sobretitulo="Gestão de dados"
+        titulo="Indicadores"
+        descricao="Gerencie os indicadores do Observatório do Turismo de Santa Rita do Sapucaí."
+      />
 
       {!carregando && !erro && (
         <section className="admin-dashboard__summary" aria-label="Resumo dos indicadores">
-          <article className="admin-summary-card">
+          <article className="admin-cartao admin-summary-card">
             <div>
               <h2>Total de indicadores</h2>
               <p className="admin-summary-card__value">{contadores.indicadores}</p>
@@ -103,7 +103,7 @@ function AdminPage() {
             </div>
             <span className="admin-summary-card__icon" aria-hidden="true">▦</span>
           </article>
-          <article className="admin-summary-card admin-summary-card--published">
+          <article className="admin-cartao admin-summary-card admin-summary-card--published">
             <div>
               <h2>Publicados no portal</h2>
               <p className="admin-summary-card__value">{contadores.publicados}</p>
@@ -111,7 +111,7 @@ function AdminPage() {
             </div>
             <span className="admin-summary-card__icon" aria-hidden="true">◉</span>
           </article>
-          <article className="admin-summary-card admin-summary-card--draft">
+          <article className="admin-cartao admin-summary-card admin-summary-card--draft">
             <div>
               <h2>Rascunhos pendentes</h2>
               <p className="admin-summary-card__value">{contadores.rascunhos}</p>
@@ -122,9 +122,9 @@ function AdminPage() {
         </section>
       )}
 
-      <section className="admin-dashboard__list" aria-label="Lista de indicadores">
+      <section className="admin-cartao admin-dashboard__list" aria-label="Lista de indicadores">
         <div className="admin-dashboard__list-heading">
-          <h2>Indicadores cadastrados</h2>
+          <h2 className="admin-cartao__titulo">Indicadores cadastrados</h2>
           {!carregando && !erro && (
             <span>{linhas.length} {linhas.length === 1 ? 'registro' : 'registros'}</span>
           )}
@@ -169,25 +169,25 @@ function AdminPage() {
           </label>
         </div>
 
-        {carregando && <p className="admin-dashboard__state" role="status">Carregando indicadores...</p>}
+        {carregando && <p className="admin-estado" role="status">Carregando indicadores...</p>}
         {erro && (
-          <div className="admin-dashboard__state admin-dashboard__state--error" role="alert">
+          <div className="admin-estado admin-estado--erro" role="alert">
             <p>{erro}</p>
-            <button type="button" onClick={tentarNovamente}>Tentar novamente</button>
+            <button className="admin-botao-contorno" type="button" onClick={tentarNovamente}>Tentar novamente</button>
           </div>
         )}
         {!carregando && !erro && linhas.length === 0 && (
-          <div className="admin-dashboard__state" role="status">
+          <div className="admin-estado" role="status">
             <p>Nenhum indicador encontrado para os filtros selecionados.</p>
             {(setorSelecionado || statusSelecionado || busca) && (
-              <button type="button" onClick={limparFiltros}>Limpar filtros</button>
+              <button className="admin-botao-contorno" type="button" onClick={limparFiltros}>Limpar filtros</button>
             )}
           </div>
         )}
 
         {!carregando && !erro && linhas.length > 0 && (
-          <div className="admin-dashboard__table-wrap">
-            <table className="admin-dashboard__table">
+          <div className="admin-tabela-rolagem">
+            <table className="admin-tabela admin-dashboard__table">
               <thead>
                 <tr>
                   <th scope="col">Indicador</th>

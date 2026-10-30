@@ -1,0 +1,35 @@
+.admin-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-cabecalho__sobretitulo {
+  margin: 0 0 .35rem;
+  color: var(--color-secondary-strong);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.admin-cabecalho h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.75rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+}
+
+.admin-cabecalho__descricao {
+  margin: .35rem 0 0;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 640px) {
+  .admin-cabecalho {
+    flex-direction: column;
+  }
+}

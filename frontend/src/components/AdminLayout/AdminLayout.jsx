@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { getUsuarioLogado, logout } from '../../services/auth';
 import './AdminLayout.css';
+// Base das páginas do painel (cartão, estados, campos, botões, tabela)
+import './AdminPagina.css';
 
 // Perfis da visão geral do M6 (migração do #150).
 const PERFIS = { administrador: 'Administrador', editor: 'Editor' };

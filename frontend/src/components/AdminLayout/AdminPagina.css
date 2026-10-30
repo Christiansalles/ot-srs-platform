@@ -1,0 +1,302 @@
+/*
+ * Base das páginas do painel (/admin), carregada pelo AdminLayout. Toda página do painel usa
+ * estas classes e o AdminCabecalho; o CSS da página fica só com o que é dela (filtros, cartões
+ * de resumo, área de upload...). O teste padraoVisual.test.js impede redefinir estas classes
+ * fora daqui. Ver "Painel administrativo" em frontend/AGENTS.md.
+ */
+
+.admin-pagina {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+}
+
+/* Cartão: lista, formulário e blocos de conteúdo */
+.admin-cartao {
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-cartao__titulo {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.05rem;
+}
+
+.admin-cartao__descricao {
+  margin: .2rem 0 0;
+  color: var(--color-text-muted);
+  font-size: .82rem;
+}
+
+/* Carregando, vazio e erro. Dentro de um cartão, depois de outro conteúdo, ganha a linha de cima */
+.admin-estado {
+  display: flex;
+  min-height: 150px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  margin: 0;
+  padding: 1.5rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.admin-cartao > .admin-estado:not(:first-child) {
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-estado p {
+  margin: 0;
+}
+
+.admin-estado--erro {
+  color: var(--color-danger-strong);
+}
+
+/* Mensagens de retorno de um envio */
+.admin-mensagem {
+  margin: 0 0 1rem;
+  padding: .9rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: .9rem;
+}
+
+.admin-mensagem--erro {
+  border-color: var(--color-danger-border);
+  background: var(--color-danger-soft);
+  color: var(--color-danger-strong);
+}
+
+.admin-mensagem--sucesso {
+  border-color: color-mix(in srgb, var(--color-success) 30%, var(--color-surface));
+  background: color-mix(in srgb, var(--color-success) 8%, var(--color-surface));
+  color: var(--color-success);
+}
+
+.admin-mensagem--aviso {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-muted);
+}
+
+/* Nota lateral: regras e avisos fixos do formulário */
+.admin-nota {
+  margin: 0;
+  padding: .85rem 1rem;
+  border-left: 3px solid var(--color-secondary);
+  border-radius: 0 8px 8px 0;
+  background: var(--color-primary-soft);
+  color: var(--color-text-secondary);
+  font-size: .82rem;
+  line-height: 1.55;
+}
+
+/* Campo de formulário: rótulo em cima; unidade ou "(opcional)" num <span> na linha do rótulo */
+.admin-campo {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  align-content: flex-start;
+  gap: .45rem .35rem;
+  color: var(--color-text);
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.admin-campo > span {
+  color: var(--color-text-muted);
+  font-size: .76rem;
+  font-weight: 500;
+}
+
+.admin-campo input,
+.admin-campo select,
+.admin-campo textarea {
+  width: 100%;
+  min-height: 44px;
+  flex: 1 0 100%;
+  padding: .65rem .75rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 9px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+.admin-campo textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.admin-campo input:focus,
+.admin-campo select:focus,
+.admin-campo textarea:focus {
+  border-color: var(--color-secondary);
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.admin-campo input:disabled,
+.admin-campo select:disabled,
+.admin-campo textarea:disabled {
+  border-color: var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  opacity: 1;
+}
+
+/* Contador ou ajuda embaixo do campo, à direita */
+.admin-campo small {
+  flex: 1 0 100%;
+  color: var(--color-text-muted);
+  font-size: .76rem;
+  font-weight: 500;
+  text-align: right;
+}
+
+/* Botões de ação de formulário */
+.admin-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .75rem;
+}
+
+.admin-botao {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: .6rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-botao--primario {
+  background: var(--gradient-brand);
+  color: var(--color-on-brand);
+}
+
+.admin-botao--secundario {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+}
+
+.admin-botao:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
+/* Botão branco com borda: "Tentar novamente", "Limpar filtros", "Voltar ao painel" */
+.admin-botao-contorno {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: .55rem .8rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-botao-contorno:hover {
+  background: var(--color-primary-soft);
+}
+
+.admin-botao:focus-visible,
+.admin-botao-contorno:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+/* Tabelas: a rolagem lateral fica no contêiner, nunca na página */
+.admin-tabela-rolagem {
+  position: relative;
+  overflow-x: auto;
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-tabela th,
+.admin-tabela td {
+  padding: .9rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: .85rem;
+  vertical-align: middle;
+}
+
+.admin-tabela th {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.admin-tabela th:first-child,
+.admin-tabela td:first-child {
+  padding-left: 1.5rem;
+}
+
+.admin-tabela tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-tabela tbody tr:hover {
+  background: var(--color-surface-muted);
+}
+
+.admin-tabela td strong,
+.admin-tabela td small {
+  display: block;
+}
+
+.admin-tabela td strong {
+  color: var(--color-text);
+  font-weight: 650;
+}
+
+.admin-tabela td small {
+  max-width: 320px;
+  margin-top: .2rem;
+  color: var(--color-text-muted);
+  font-size: .75rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .admin-acoes {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .admin-tabela th:first-child,
+  .admin-tabela td:first-child {
+    padding-left: 1rem;
+  }
+}
