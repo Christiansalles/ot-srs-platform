@@ -1,0 +1,329 @@
+.admin-medicao-page {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+}
+
+.admin-medicao-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-medicao-heading h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.7rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+}
+
+.admin-medicao-heading p:last-child {
+  margin: .4rem 0 0;
+  color: var(--color-text-secondary);
+}
+
+.admin-medicao-eyebrow {
+  margin: 0 0 .35rem;
+  color: var(--color-secondary-strong);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.admin-medicao-back {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: .55rem .8rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-size: .85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin-medicao-back:hover {
+  background: var(--color-primary-soft);
+}
+
+.admin-medicao-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-medicao-card {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-medicao-card-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-medicao-card-heading > span {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: .85rem;
+  font-weight: 800;
+}
+
+.admin-medicao-card-heading h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.05rem;
+}
+
+.admin-medicao-card-heading p {
+  margin: .2rem 0 0;
+  color: var(--color-text-muted);
+  font-size: .82rem;
+}
+
+.admin-medicao-field {
+  display: grid;
+  align-content: start;
+  gap: .45rem;
+  color: var(--color-text);
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.admin-medicao-field > span {
+  color: var(--color-text-muted);
+  font-size: .76rem;
+  font-weight: 500;
+}
+
+.admin-medicao-field input,
+.admin-medicao-field select,
+.admin-medicao-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: .65rem .75rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+.admin-medicao-field textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.admin-medicao-field input:focus,
+.admin-medicao-field select:focus,
+.admin-medicao-field textarea:focus {
+  border-color: var(--color-secondary);
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.admin-medicao-field input:disabled,
+.admin-medicao-field select:disabled,
+.admin-medicao-field textarea:disabled {
+  border-color: var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  opacity: 1;
+}
+
+.admin-medicao-indicator-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-medicao-indicator-fields .admin-medicao-field:nth-child(2) {
+  grid-row: span 2;
+}
+
+.admin-medicao-empty {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: .85rem;
+}
+
+.admin-medicao-selected-indicator {
+  display: grid;
+  gap: .2rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  font-size: .85rem;
+}
+
+.admin-medicao-selected-indicator strong {
+  color: var(--color-text);
+}
+
+.admin-medicao-selected-indicator small {
+  color: var(--color-text-muted);
+}
+
+.admin-medicao-period-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-medicao-rule {
+  margin: 0;
+  padding: .85rem 1rem;
+  border-left: 3px solid var(--color-secondary);
+  border-radius: 0 8px 8px 0;
+  background: var(--color-primary-soft);
+  color: var(--color-text-secondary);
+  font-size: .82rem;
+  line-height: 1.55;
+}
+
+.admin-medicao-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.admin-medicao-actions a,
+.admin-medicao-actions button,
+.admin-medicao-state button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: .6rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-medicao-actions a {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+}
+
+.admin-medicao-actions button,
+.admin-medicao-state button {
+  background: var(--gradient-brand);
+  color: var(--color-on-brand);
+}
+
+.admin-medicao-actions button:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
+.admin-medicao-actions a:focus-visible,
+.admin-medicao-actions button:focus-visible,
+.admin-medicao-state button:focus-visible,
+.admin-medicao-back:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+.admin-medicao-message,
+.admin-medicao-state {
+  margin: 0 0 1rem;
+  padding: .9rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: .9rem;
+}
+
+.admin-medicao-message--error,
+.admin-medicao-state--error {
+  border-color: var(--color-danger-border);
+  background: var(--color-danger-soft);
+  color: var(--color-danger-strong);
+}
+
+.admin-medicao-message--success {
+  border-color: color-mix(in srgb, var(--color-success) 30%, white);
+  background: color-mix(in srgb, var(--color-success) 8%, white);
+  color: var(--color-success);
+}
+
+.admin-medicao-message--notice {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-muted);
+}
+
+.admin-medicao-state {
+  display: flex;
+  min-height: 150px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  text-align: center;
+}
+
+.admin-medicao-state p {
+  margin: 0;
+}
+
+.admin-medicao-state a {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .admin-medicao-heading {
+    flex-direction: column;
+  }
+
+  .admin-medicao-card {
+    padding: 1rem;
+  }
+
+  .admin-medicao-indicator-fields,
+  .admin-medicao-period-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-medicao-indicator-fields .admin-medicao-field:nth-child(2) {
+    grid-row: auto;
+  }
+
+  .admin-medicao-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    padding: .85rem;
+  }
+}
