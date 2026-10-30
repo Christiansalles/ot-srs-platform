@@ -5,7 +5,9 @@ import RelatoriosPage from '../pages/RelatoriosPage';
 import { getRelatorios } from '../services/api';
 import { mockRelatorios } from '../mocks/relatorios';
 
-vi.mock('../services/api', () => ({ getRelatorios: vi.fn() }));
+vi.mock('../services/api', async (importarOriginal) => ({
+  ...await importarOriginal(), getRelatorios: vi.fn(), baixarRelatorio: vi.fn(),
+}));
 
 beforeEach(() => {
   vi.resetAllMocks();
