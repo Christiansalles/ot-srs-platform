@@ -50,9 +50,12 @@ describe('POST /api/admin/relatorios', () => {
     const res = await enviar().attach('arquivo', pdf, { filename: 'relatorio.pdf', contentType: 'application/pdf' });
     expect(res.status).toBe(201);
     expect(res.body.status).toBe('rascunho');
-    expect(fs.readdirSync(uploadsDir)).toHaveLength(1);
-    const publico = await request(app).get('/api/relatorios').query({ ano: '2098' });
-    expect(publico.body).toEqual([]);
+    expect(res.body).not.toHaveProperty('arquivo_url');
+    const [salvo] = fs.readdirSync(uploadsDir);
+    expect(salvo).not.toBe('relatorio.pdf');
+    expect(fs.readFileSync(path.join(uploadsDir, salvo))).toEqual(fs.readFileSync(pdf));
+    const publico = await request(app).get('/api/relatorios');
+    expect(publico.body.map(({ id }) => id)).not.toContain(res.body.id);
   });
 
   it('rejeita arquivo PNG renomeado como PDF e remove o temporário', async () => {
@@ -64,17 +67,28 @@ describe('POST /api/admin/relatorios', () => {
   it('responde 413 para arquivo acima de 10 MiB', async () => {
     const res = await enviar().attach('arquivo', Buffer.alloc(11 * 1024 * 1024, 65), { filename: 'grande.pdf', contentType: 'application/pdf' });
     expect(res.status).toBe(413);
+    expect(res.body).toEqual({ erro: expect.any(String) });
+    expect(fs.readdirSync(uploadsDir)).toHaveLength(0);
   });
 
-  it('rejeita título ausente e exige token', async () => {
+  it('rejeita título ausente', async () => {
     const semTitulo = request(app).post('/api/admin/relatorios').set('Authorization', `Bearer ${token}`)
       .field('edicao', '2098/1').field('categoria', 'Perfil de Demanda')
       .field('data_publicacao', '2098-06-01').field('descricao', 'Teste')
       .attach('arquivo', pdf, { filename: 'relatorio.pdf', contentType: 'application/pdf' });
     expect((await semTitulo).status).toBe(400);
+  });
+
+  it('exige token', async () => {
     // A autenticação responde antes do parser multipart; não envie um corpo que
     // o servidor não vai consumir, pois o cliente pode receber ECONNRESET.
     const semToken = await request(app).post('/api/admin/relatorios');
     expect(semToken.status).toBe(401);
+  });
+
+  it('rejeita bytes de PDF com tipo MIME diferente de PDF', async () => {
+    const res = await enviar().attach('arquivo', fs.readFileSync(pdf), { filename: 'relatorio.png', contentType: 'image/png' });
+    expect(res.status).toBe(400);
+    expect(fs.readdirSync(uploadsDir)).toHaveLength(0);
   });
 });
