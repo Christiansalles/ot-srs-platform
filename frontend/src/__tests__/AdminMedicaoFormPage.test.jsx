@@ -85,7 +85,7 @@ describe('AdminMedicaoFormPage', () => {
 
     expect(await screen.findByRole('heading', { name: 'Cadastrar medição' })).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: 'Indicador' })).toHaveDisplayValue('Selecione um indicador');
-    expect(screen.getByRole('option', { name: 'Número de leitos — Hospedagem' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Número de leitos (Hospedagem)' })).toBeInTheDocument();
     expect(screen.queryByRole('combobox', { name: 'Setor' })).not.toBeInTheDocument();
     expect(screen.getByRole('spinbutton', { name: 'Ano' })).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: 'Semestre' })).toBeInTheDocument();

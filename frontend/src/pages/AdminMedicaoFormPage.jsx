@@ -233,7 +233,7 @@ function AdminMedicaoFormPage() {
                   <option value="">Selecione um indicador</option>
                   {indicadores.map((indicador) => (
                     <option key={indicador.id} value={indicador.id}>
-                      {indicador.nome} — {indicador.setor.nome}
+                      {indicador.nome} ({indicador.setor.nome})
                     </option>
                   ))}
                   <option value={NOVO_INDICADOR}>Cadastrar novo indicador</option>

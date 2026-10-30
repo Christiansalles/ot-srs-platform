@@ -62,7 +62,7 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'Cadastrar medição' })).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: 'Menu administrativo' })).toBeInTheDocument();
     expect(await screen.findByRole('combobox', { name: 'Indicador' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: 'Número de leitos — Hospedagem' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Número de leitos (Hospedagem)' })).toBeInTheDocument();
   });
 
   it('renderiza os destaques com o card compartilhado', async () => {
