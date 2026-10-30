@@ -32,6 +32,22 @@ describe('tela de login administrativa', () => {
     expect(screen.queryByRole('heading', { name: 'Acesso Administrativo' })).not.toBeInTheDocument();
   });
 
+  it('oferece um link para voltar ao portal público', () => {
+    renderLogin();
+
+    expect(screen.getByRole('link', { name: 'Voltar ao portal' })).toHaveAttribute('href', '/');
+  });
+
+  it('usa a logo do Observatório como título e a foto da cidade como fundo', () => {
+    const { container } = renderLogin();
+    const titulo = screen.getByRole('heading', { level: 1, name: 'Observatório do Turismo de Santa Rita do Sapucaí' });
+
+    expect(titulo.querySelector('img')).toHaveAttribute('src', expect.stringContaining('observatorio-branco'));
+    expect(screen.queryByText('OT-SRS')).not.toBeInTheDocument();
+    expect(container.querySelector('.admin-login-page').style.getPropertyValue('--login-foto'))
+      .toMatch(/^url\(.*capa-santa-rita.*\)$/);
+  });
+
   it('mostra e esconde a senha e não oferece recuperação de senha', () => {
     renderLogin();
     const senha = screen.getByLabelText('Senha');

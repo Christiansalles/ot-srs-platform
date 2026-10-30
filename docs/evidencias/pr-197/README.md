@@ -1,4 +1,4 @@
-# Evidências da #176: ajuste final da identidade visual
+# Evidências do PR #197: ajuste final da identidade visual (#176)
 
 Comparação de cada tela com a Proposta (páginas 6 e 7: identidade visual e
 logotipos institucionais). Capturas a 1280 px com o front em modo mock
