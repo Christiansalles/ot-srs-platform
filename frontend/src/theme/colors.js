@@ -44,6 +44,7 @@ export const colors = {
 export const gradients = {
   brand: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 52%, ${colors.accent} 100%)`,
   brandHorizontal: `linear-gradient(90deg, ${colors.primary} 0%, ${colors.secondary} 52%, ${colors.accent} 100%)`,
+  brandOverlay: `linear-gradient(135deg, ${colors.primary}B3 0%, ${colors.secondary}8C 52%, ${colors.accent}A6 100%)`,
 };
 
 export const chartPalette = Object.values(colors.chart);

@@ -53,11 +53,11 @@ function AppLayout() {
         </div>
         <div><strong>Realização e apoio</strong><div className="institutional-logos">
           <img src={prefeituraLogo} alt="Prefeitura Municipal de Santa Rita do Sapucaí" />
-          <img src={smceltLogo} alt="Secretaria Municipal de Cultura, Esporte, Lazer e Turismo (SMCELT)" />
+          <img className="logo-vertical" src={smceltLogo} alt="Secretaria Municipal de Cultura, Esporte, Lazer e Turismo (SMCELT)" />
           <img src={comturLogo} alt="Conselho Municipal de Turismo (COMTUR)" />
         </div></div>
         <div><strong>Contexto regional</strong><div className="institutional-logos">
-          <img src={mantiqueiraLogo} alt="Circuito Turístico Caminhos da Mantiqueira" />
+          <img className="logo-vertical" src={mantiqueiraLogo} alt="Circuito Turístico Caminhos da Mantiqueira" />
           <img src={minasLogo} alt="Minas Gerais" />
         </div><p>Vale da Eletrônica</p></div>
       </footer>

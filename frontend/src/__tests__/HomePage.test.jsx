@@ -54,3 +54,11 @@ it('mostra o estado sem indicadores quando a resposta não contém destaques da 
   expect(await screen.findByText('Sem indicadores disponíveis no momento.')).toBeInTheDocument();
   expect(screen.queryByRole('article')).not.toBeInTheDocument();
 });
+
+it('mostra a foto da cidade como fundo da capa', async () => {
+  getDestaques.mockResolvedValue([]);
+  const { container } = abrir();
+  expect(container.querySelector('.hero-banner').style.getPropertyValue('--hero-foto'))
+    .toMatch(/^url\(.*capa-santa-rita.*\)$/);
+  await screen.findByText('Sem indicadores disponíveis no momento.');
+});
