@@ -39,6 +39,12 @@ function validarCampos(campos) {
   return '';
 }
 
+// Abaixo de 1 MiB em KB, como a lista; evita "0 MiB" para arquivo pequeno
+function formatarTamanho(bytes) {
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  return `${(bytes / 1024 / 1024).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} MiB`;
+}
+
 function formatarData(data) {
   const [ano, mes, dia] = data.split('-');
   return `${dia}/${mes}/${ano}`;
@@ -165,7 +171,7 @@ function AdminRelatoriosPage() {
           </label>
           {arquivo && (
             <p className="admin-relatorios__arquivo" role="status">
-              <strong>{arquivo.name}</strong> · {(arquivo.size / 1024 / 1024).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} MiB
+              <strong>{arquivo.name}</strong> · {formatarTamanho(arquivo.size)}
               <button type="button" onClick={() => { setArquivo(null); arquivoRef.current.value = ''; }} disabled={enviando}>
                 Remover arquivo
               </button>
@@ -203,8 +209,8 @@ function AdminRelatoriosPage() {
           {erroEnvio && <p className="admin-relatorios__erro" role="alert">{erroEnvio}</p>}
           {sucesso && <p className="admin-relatorios__sucesso" role="status">{sucesso}</p>}
           <div className="admin-relatorios__acoes">
-            <button className="ot-button-secondary" type="button" onClick={limparFormulario} disabled={enviando}>Limpar formulário</button>
-            <button className="ot-button-primary" type="submit" disabled={enviando}>{enviando ? 'Enviando relatório...' : 'Enviar relatório'}</button>
+            <button className="admin-relatorios__limpar" type="button" onClick={limparFormulario} disabled={enviando}>Limpar formulário</button>
+            <button className="admin-relatorios__enviar" type="submit" disabled={enviando}>{enviando ? 'Enviando relatório...' : 'Enviar relatório'}</button>
           </div>
         </form>
       </section>

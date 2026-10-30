@@ -86,6 +86,8 @@ describe('AdminRelatoriosPage', () => {
     fireEvent.drop(screen.getByText('Arraste o PDF aqui ou clique para selecionar *').closest('label'), {
       dataTransfer: { files: [arquivo] },
     });
+    // Arquivo pequeno aparece em KB, não como "0 MiB"
+    expect(screen.getByText('boletim.pdf').closest('p')).toHaveTextContent('boletim.pdf · 1 KB');
     fireEvent.click(screen.getByRole('button', { name: 'Enviar relatório' }));
 
     await waitFor(() => expect(enviarRelatorio).toHaveBeenCalledOnce());
