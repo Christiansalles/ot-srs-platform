@@ -75,6 +75,16 @@ describe('AdminPage', () => {
     expect(listarIndicadoresAdmin).toHaveBeenCalledWith();
   });
 
+  it('abre a edição da medição existente e o cadastro quando o indicador não tem medição', async () => {
+    renderPage();
+
+    const tabela = await screen.findByRole('table');
+    expect(within(tabela).getByRole('link', { name: 'Editar Número de leitos, 2025/1' }))
+      .toHaveAttribute('href', '/admin/medicoes/1/editar');
+    expect(within(tabela).getByRole('link', { name: 'Editar Diária média' }))
+      .toHaveAttribute('href', '/admin/medicoes/nova?indicador=3');
+  });
+
   it('filtra a listagem pelo status selecionado sem alterar os contadores gerais', async () => {
     renderPage();
     const tabelaInicial = await screen.findByRole('table');

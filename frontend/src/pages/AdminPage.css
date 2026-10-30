@@ -185,6 +185,7 @@
 }
 
 .admin-dashboard__table-wrap {
+  position: relative;
   overflow-x: auto;
   border-top: 1px solid var(--color-border);
 }

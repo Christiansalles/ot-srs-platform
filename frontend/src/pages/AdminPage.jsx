@@ -217,7 +217,9 @@ function AdminPage() {
                     </td>
                     <td className="admin-dashboard__action-cell">
                       <Link
-                        to={`/admin/medicoes/nova?indicador=${indicador.id}${medicao ? `&medicao=${medicao.id}` : ''}`}
+                        to={medicao
+                          ? `/admin/medicoes/${medicao.id}/editar`
+                          : `/admin/medicoes/nova?indicador=${indicador.id}`}
                         aria-label={`Editar ${indicador.nome}${medicao ? `, ${medicao.ano}/${medicao.semestre}` : ''}`}
                       >
                         Editar
