@@ -151,8 +151,13 @@
   font-size: .8rem;
 }
 
+/* Mensagem de publicar e despublicar, entre o título da lista e a tabela */
+.admin-relatorios__painel > .admin-mensagem {
+  margin: 0 1.5rem 1.25rem;
+}
+
 .admin-relatorios__table {
-  min-width: 720px;
+  min-width: 840px;
 }
 
 /* Edição, data e status não quebram no meio (ex.: OT-ILUS-02/2025) */
@@ -171,6 +176,10 @@
 
   .admin-relatorios__painel-cabecalho--lista {
     padding-bottom: 1rem;
+  }
+
+  .admin-relatorios__painel > .admin-mensagem {
+    margin: 0 1rem 1rem;
   }
 
   .admin-relatorios__campos {

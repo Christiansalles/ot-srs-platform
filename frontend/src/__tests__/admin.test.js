@@ -39,6 +39,23 @@ describe('serviço administrativo', () => {
     });
   });
 
+  it.each([
+    ['medições', alterarStatusMedicao, 'medicoes'],
+    ['relatórios', alterarStatusRelatorio, 'relatorios'],
+  ])('envia o PATCH de status de %s com o token', async (_nome, alterarStatus, rota) => {
+    vi.stubEnv('VITE_USE_MOCK', 'false');
+    window.sessionStorage.setItem('ot-srs-token', 'jwt-do-painel');
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(resposta(200, { id: 7, status: 'publicado' })));
+
+    await expect(alterarStatus(7, 'publicado')).resolves.toEqual({ id: 7, status: 'publicado' });
+
+    expect(fetch).toHaveBeenCalledWith(`http://localhost:3000/api/admin/${rota}/7/status`, {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer jwt-do-painel', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'publicado' }),
+    });
+  });
+
   it('limpa a sessão e dispara AUTH_UNAUTHORIZED_EVENT ao receber 401', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'false');
     window.sessionStorage.setItem('ot-srs-token', 'jwt-expirado');

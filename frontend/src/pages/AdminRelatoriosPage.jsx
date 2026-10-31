@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
+import DialogoConfirmacao from '../components/DialogoConfirmacao/DialogoConfirmacao';
 import StatusBadge from '../components/StatusBadge/StatusBadge';
 import { CATEGORIAS_RELATORIO } from '../config/relatorios';
-import { enviarRelatorio, listarRelatoriosAdmin } from '../services/admin';
+import { useAlteracaoStatus } from '../hooks/useAlteracaoStatus';
+import { alterarStatusRelatorio, enviarRelatorio, listarRelatoriosAdmin } from '../services/admin';
+import { podePublicar } from '../services/auth';
 import './AdminRelatoriosPage.css';
 
 const LIMITE_PDF = 10 * 1024 * 1024;
@@ -63,6 +66,14 @@ function AdminRelatoriosPage() {
   const [erroEnvio, setErroEnvio] = useState('');
   const [sucesso, setSucesso] = useState('');
   const arquivoRef = useRef(null);
+  const mostrarPublicacao = podePublicar();
+  const {
+    confirmacao, enviando: alterandoStatus, aviso, avisoRef, abrir, cancelar, confirmar, limparAviso,
+  } = useAlteracaoStatus(async ({ relatorio, publicar }) => {
+    const atualizado = await alterarStatusRelatorio(relatorio.id, publicar ? 'publicado' : 'rascunho');
+    setRelatorios((atuais) => atuais.map((item) => (item.id === relatorio.id ? { ...item, ...atualizado } : item)));
+    return `${relatorio.titulo}: ${publicar ? 'publicado no portal' : 'voltou para rascunho'}.`;
+  });
 
   useEffect(() => {
     let ativo = true;
@@ -106,6 +117,7 @@ function AdminRelatoriosPage() {
   async function enviar(event) {
     event.preventDefault();
     setSucesso('');
+    limparAviso();
     const erro = validarCampos(campos) || validarArquivo(arquivo);
     if (erro) {
       setErroEnvio(erro);
@@ -222,6 +234,11 @@ function AdminRelatoriosPage() {
           <h2 className="admin-cartao__titulo" id="lista-relatorios-titulo">Relatórios enviados</h2>
           {!carregando && !erroLista && <span>{relatorios.length} {relatorios.length === 1 ? 'relatório' : 'relatórios'}</span>}
         </div>
+        {aviso && (
+          <p ref={avisoRef} tabIndex={-1} className={`admin-mensagem admin-mensagem--${aviso.tipo}`} role={aviso.tipo === 'erro' ? 'alert' : 'status'}>
+            {aviso.texto}
+          </p>
+        )}
         {carregando && <p className="admin-estado" role="status">Carregando relatórios...</p>}
         {erroLista && (
           <div className="admin-estado admin-estado--erro" role="alert">
@@ -233,7 +250,7 @@ function AdminRelatoriosPage() {
         {!carregando && !erroLista && relatorios.length > 0 && (
           <div className="admin-tabela-rolagem">
             <table className="admin-tabela admin-relatorios__table">
-              <thead><tr><th scope="col">Relatório</th><th scope="col">Edição</th><th scope="col">Categoria</th><th scope="col">Data</th><th scope="col">Status</th></tr></thead>
+              <thead><tr><th scope="col">Relatório</th><th scope="col">Edição</th><th scope="col">Categoria</th><th scope="col">Data</th><th scope="col">Status</th>{mostrarPublicacao && <th scope="col"><span className="sr-only">Ações</span></th>}</tr></thead>
               <tbody>
                 {relatorios.map((relatorio) => (
                   <tr key={relatorio.id}>
@@ -242,6 +259,20 @@ function AdminRelatoriosPage() {
                     <td>{relatorio.categoria}</td>
                     <td>{formatarData(relatorio.data_publicacao)}</td>
                     <td><StatusBadge status={relatorio.status} /></td>
+                    {mostrarPublicacao && (
+                      <td className="admin-tabela__acoes">
+                        <button
+                          type="button"
+                          aria-label={`${relatorio.status === 'rascunho' ? 'Publicar' : 'Despublicar'} ${relatorio.titulo}`}
+                          onClick={() => {
+                            setSucesso('');
+                            abrir({ relatorio, publicar: relatorio.status === 'rascunho' });
+                          }}
+                        >
+                          {relatorio.status === 'rascunho' ? 'Publicar' : 'Despublicar'}
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -249,6 +280,20 @@ function AdminRelatoriosPage() {
           </div>
         )}
       </section>
+
+      {confirmacao && (
+        <DialogoConfirmacao
+          titulo={confirmacao.publicar ? 'Publicar relatório?' : 'Despublicar relatório?'}
+          destaque={`${confirmacao.relatorio.titulo} - ${confirmacao.relatorio.edicao}`}
+          descricao={confirmacao.publicar
+            ? 'Após a publicação, o relatório ficará visível no portal público e disponível para download.'
+            : 'Após a despublicação, o relatório deixará de aparecer no portal público e voltará para rascunho.'}
+          rotuloConfirmar={confirmacao.publicar ? 'Publicar' : 'Despublicar'}
+          enviando={alterandoStatus}
+          onConfirmar={confirmar}
+          onCancelar={cancelar}
+        />
+      )}
     </section>
   );
 }

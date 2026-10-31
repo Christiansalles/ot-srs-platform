@@ -3,15 +3,21 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockRelatoriosAdmin } from '../mocks/admin';
 import AdminRelatoriosPage from '../pages/AdminRelatoriosPage';
-import { enviarRelatorio, listarRelatoriosAdmin } from '../services/admin';
+import { alterarStatusRelatorio, enviarRelatorio, listarRelatoriosAdmin } from '../services/admin';
 
 vi.mock('../services/admin', () => ({
+  alterarStatusRelatorio: vi.fn(),
   enviarRelatorio: vi.fn(),
   listarRelatoriosAdmin: vi.fn(),
 }));
 
 function renderPage() {
   return render(<MemoryRouter><AdminRelatoriosPage /></MemoryRouter>);
+}
+
+function entrarComo(perfil) {
+  window.sessionStorage.setItem('ot-srs-token', 'token');
+  window.sessionStorage.setItem('ot-srs-user', JSON.stringify({ id: 1, nome: 'Equipe', perfil }));
 }
 
 function preencherCampos() {
@@ -31,6 +37,7 @@ const arquivoPdf = () => new File(['%PDF-1.4'], 'boletim.pdf', { type: 'applicat
 beforeEach(() => {
   vi.resetAllMocks();
   listarRelatoriosAdmin.mockResolvedValue(structuredClone(mockRelatoriosAdmin));
+  window.sessionStorage.clear();
 });
 
 afterEach(() => vi.restoreAllMocks());
@@ -173,5 +180,152 @@ describe('AdminRelatoriosPage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
     expect(await screen.findByText('Nenhum relatório cadastrado.')).toBeInTheDocument();
     expect(listarRelatoriosAdmin).toHaveBeenCalledTimes(2);
+  });
+
+  describe('publicação', () => {
+    const [publicado] = mockRelatoriosAdmin;
+    const rascunho = { ...mockRelatoriosAdmin[1], status: 'rascunho' };
+
+    function comRascunho() {
+      listarRelatoriosAdmin.mockResolvedValue(structuredClone([publicado, rascunho]));
+    }
+
+    async function abrirConfirmacao(nome) {
+      fireEvent.click(await screen.findByRole('button', { name: nome }));
+      return screen.getByRole('dialog');
+    }
+
+    it('mostra Publicar no rascunho e Despublicar no publicado para o administrador', async () => {
+      entrarComo('administrador');
+      comRascunho();
+      renderPage();
+
+      const tabela = await screen.findByRole('table');
+      expect(within(tabela).getByRole('button', { name: `Despublicar ${publicado.titulo}` })).toBeInTheDocument();
+      expect(within(tabela).getByRole('button', { name: `Publicar ${rascunho.titulo}` })).toBeInTheDocument();
+      expect(within(tabela).getAllByRole('button')).toHaveLength(2);
+    });
+
+    it('esconde os botões e a coluna de ações do editor', async () => {
+      entrarComo('editor');
+      comRascunho();
+      renderPage();
+
+      const tabela = await screen.findByRole('table');
+      expect(within(tabela).queryByRole('button')).not.toBeInTheDocument();
+      expect(within(tabela).getAllByRole('columnheader')).toHaveLength(5);
+    });
+
+    it('explica a ação no diálogo e não chama a API quando é cancelada', async () => {
+      entrarComo('administrador');
+      comRascunho();
+      renderPage();
+
+      const dialogo = await abrirConfirmacao(`Publicar ${rascunho.titulo}`);
+
+      expect(dialogo).toHaveAccessibleName('Publicar relatório?');
+      expect(within(dialogo).getByText(`${rascunho.titulo} - ${rascunho.edicao}`)).toBeInTheDocument();
+      expect(dialogo).toHaveAccessibleDescription(/Após a publicação, o relatório ficará visível no portal público/);
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Cancelar' }));
+
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(alterarStatusRelatorio).not.toHaveBeenCalled();
+    });
+
+    it('publica depois de confirmar e atualiza a linha sem recarregar', async () => {
+      entrarComo('administrador');
+      comRascunho();
+      alterarStatusRelatorio.mockResolvedValueOnce({ ...rascunho, status: 'publicado' });
+      renderPage();
+
+      const dialogo = await abrirConfirmacao(`Publicar ${rascunho.titulo}`);
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+
+      expect(await screen.findByRole('button', { name: `Despublicar ${rascunho.titulo}` })).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(alterarStatusRelatorio).toHaveBeenCalledExactlyOnceWith(rascunho.id, 'publicado');
+      expect(listarRelatoriosAdmin).toHaveBeenCalledOnce();
+      expect(within(screen.getByRole('table')).queryByText('Rascunho')).not.toBeInTheDocument();
+      expect(screen.getByText(`${rascunho.titulo}: publicado no portal.`)).toBeInTheDocument();
+    });
+
+    it('despublica depois de confirmar', async () => {
+      entrarComo('administrador');
+      comRascunho();
+      alterarStatusRelatorio.mockResolvedValueOnce({ ...publicado, status: 'rascunho' });
+      renderPage();
+
+      const dialogo = await abrirConfirmacao(`Despublicar ${publicado.titulo}`);
+      expect(dialogo).toHaveAccessibleName('Despublicar relatório?');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Despublicar' }));
+
+      expect(await screen.findByRole('button', { name: `Publicar ${publicado.titulo}` })).toBeInTheDocument();
+      expect(alterarStatusRelatorio).toHaveBeenCalledExactlyOnceWith(publicado.id, 'rascunho');
+      expect(screen.getByText(`${publicado.titulo}: voltou para rascunho.`)).toBeInTheDocument();
+    });
+
+    it('mantém o diálogo aberto e bloqueado enquanto a API responde', async () => {
+      entrarComo('administrador');
+      comRascunho();
+      let concluir;
+      alterarStatusRelatorio.mockReturnValueOnce(new Promise((resolve) => { concluir = resolve; }));
+      renderPage();
+
+      const dialogo = await abrirConfirmacao(`Publicar ${rascunho.titulo}`);
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+
+      expect(within(dialogo).getByRole('button', { name: 'Enviando...' })).toBeDisabled();
+      expect(within(dialogo).getByRole('button', { name: 'Cancelar' })).toBeDisabled();
+      concluir({ ...rascunho, status: 'publicado' });
+      expect(await screen.findByRole('button', { name: `Despublicar ${rascunho.titulo}` })).toBeInTheDocument();
+    });
+
+    it.each([
+      [403, 'Seu perfil não pode publicar conteúdo'],
+      [404, 'Recurso não encontrado'],
+    ])('mostra a mensagem do erro %i e mantém a linha como estava', async (status, mensagem) => {
+      entrarComo('administrador');
+      comRascunho();
+      alterarStatusRelatorio.mockRejectedValueOnce(Object.assign(new Error(mensagem), { status }));
+      renderPage();
+
+      const dialogo = await abrirConfirmacao(`Publicar ${rascunho.titulo}`);
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+
+      expect(await screen.findByRole('alert')).toHaveTextContent(mensagem);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: `Publicar ${rascunho.titulo}` })).toBeEnabled();
+    });
+
+    it('tira a mensagem da publicação ao enviar outro relatório', async () => {
+      entrarComo('administrador');
+      comRascunho();
+      alterarStatusRelatorio.mockResolvedValueOnce({ ...rascunho, status: 'publicado' });
+      renderPage();
+
+      const dialogo = await abrirConfirmacao(`Publicar ${rascunho.titulo}`);
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+      expect(await screen.findByText(`${rascunho.titulo}: publicado no portal.`)).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Enviar relatório' }));
+
+      expect(screen.queryByText(`${rascunho.titulo}: publicado no portal.`)).not.toBeInTheDocument();
+    });
+
+    it('tira o aviso do envio ao publicar, porque ele diria que o relatório não está no portal', async () => {
+      entrarComo('administrador');
+      comRascunho();
+      enviarRelatorio.mockResolvedValue({ ...rascunho, id: 3, titulo: 'Novo boletim' });
+      renderPage();
+      await screen.findByRole('table');
+      preencherCampos();
+      selecionarArquivo(arquivoPdf());
+      fireEvent.click(screen.getByRole('button', { name: 'Enviar relatório' }));
+      expect(await screen.findByText(/Relatório enviado como rascunho/)).toBeInTheDocument();
+
+      await abrirConfirmacao('Publicar Novo boletim');
+
+      expect(screen.queryByText(/Relatório enviado como rascunho/)).not.toBeInTheDocument();
+    });
   });
 });

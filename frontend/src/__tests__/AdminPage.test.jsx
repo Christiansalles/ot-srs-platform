@@ -187,6 +187,77 @@ describe('AdminPage', () => {
       return screen.getByRole('dialog');
     }
 
+    it('leva o foco à mensagem quando a linha publicada sai da lista filtrada', async () => {
+      entrarComo('administrador');
+      alterarStatusMedicao.mockResolvedValueOnce({ id: 2, ano: 2025, semestre: 2, valor: 350, status: 'publicado' });
+      renderPage();
+
+      fireEvent.change(await screen.findByRole('combobox', { name: 'Filtrar por status' }), { target: { value: 'rascunho' } });
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+
+      expect(await screen.findByText('Número de leitos, 2025/2: publicada no portal.')).toHaveFocus();
+      expect(screen.queryByRole('button', { name: /Número de leitos, 2025\/2/ })).not.toBeInTheDocument();
+    });
+
+    it('mantém o foco no botão quando a linha continua na lista', async () => {
+      entrarComo('administrador');
+      alterarStatusMedicao.mockResolvedValueOnce({ id: 2, ano: 2025, semestre: 2, valor: 350, status: 'publicado' });
+      renderPage();
+
+      const botao = await screen.findByRole('button', { name: 'Publicar Número de leitos, 2025/2' });
+      botao.focus();
+      fireEvent.click(botao);
+      fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Publicar' }));
+
+      expect(await screen.findByRole('status')).not.toHaveFocus();
+      expect(botao).toHaveFocus();
+    });
+
+    it.each([
+      ['Filtrar por status', 'publicado'],
+      ['Filtrar por setor', '1'],
+    ])('tira a mensagem ao usar %s', async (nome, value) => {
+      entrarComo('administrador');
+      alterarStatusMedicao.mockResolvedValueOnce({ id: 2, ano: 2025, semestre: 2, valor: 350, status: 'publicado' });
+      renderPage();
+
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+      expect(await screen.findByText('Número de leitos, 2025/2: publicada no portal.')).toBeInTheDocument();
+
+      fireEvent.change(screen.getByRole('combobox', { name: nome }), { target: { value } });
+
+      expect(screen.queryByText('Número de leitos, 2025/2: publicada no portal.')).not.toBeInTheDocument();
+    });
+
+    it('tira a mensagem ao limpar os filtros', async () => {
+      entrarComo('administrador');
+      alterarStatusMedicao.mockResolvedValueOnce({ id: 2, ano: 2025, semestre: 2, valor: 350, status: 'publicado' });
+      renderPage();
+
+      fireEvent.change(await screen.findByRole('combobox', { name: 'Filtrar por status' }), { target: { value: 'rascunho' } });
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+      fireEvent.click(await screen.findByRole('button', { name: 'Limpar filtros' }));
+
+      expect(screen.queryByText('Número de leitos, 2025/2: publicada no portal.')).not.toBeInTheDocument();
+    });
+
+    it('tira a mensagem ao buscar', async () => {
+      entrarComo('administrador');
+      alterarStatusMedicao.mockRejectedValueOnce(new Error('Medição não encontrada'));
+      renderPage();
+
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+      await screen.findByRole('alert');
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'leitos' } });
+
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    });
+
     it('explica a ação no diálogo e não chama a API quando é cancelada', async () => {
       entrarComo('administrador');
       renderPage();

@@ -67,6 +67,11 @@
   font-size: .9rem;
 }
 
+/* Pode receber foco por script (tabindex="-1"), mas não é um controle */
+.admin-mensagem:focus {
+  outline: none;
+}
+
 .admin-mensagem--erro {
   border-color: var(--color-danger-border);
   background: var(--color-danger-soft);
@@ -287,6 +292,38 @@
   color: var(--color-text-muted);
   font-size: .75rem;
   line-height: 1.4;
+}
+
+/* Coluna de ações da linha: Publicar, Despublicar, Editar */
+.admin-tabela__acoes {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.admin-tabela__acoes a,
+.admin-tabela__acoes button {
+  display: inline-flex;
+  padding: .35rem .55rem;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--color-secondary-strong);
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-tabela__acoes a:hover,
+.admin-tabela__acoes button:hover {
+  background: var(--color-accent-soft);
+}
+
+.admin-tabela__acoes a:focus-visible,
+.admin-tabela__acoes button:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
 }
 
 @media (max-width: 640px) {
