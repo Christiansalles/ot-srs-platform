@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 // Fluxo de publicar e despublicar do painel: guarda o item a confirmar, envia e mostra o resultado.
 // `alterar` recebe o que foi passado a `abrir`, chama a API e devolve o texto de sucesso.
@@ -8,8 +8,9 @@ export function useAlteracaoStatus(alterar) {
   const [aviso, setAviso] = useState(null);
   const avisoRef = useRef(null);
 
-  // Com filtro de status, a linha sai da lista e o botão que abriu o diálogo deixa de existir
-  useEffect(() => {
+  // Com filtro de status, a linha sai da lista e o botão que abriu o diálogo deixa de existir.
+  // Layout effect: o foco muda no mesmo commit que mostra a mensagem, depois de o diálogo devolver o foco.
+  useLayoutEffect(() => {
     if (aviso && document.activeElement === document.body) avisoRef.current?.focus();
   }, [aviso]);
 
