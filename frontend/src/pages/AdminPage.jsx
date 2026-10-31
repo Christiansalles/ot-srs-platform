@@ -6,6 +6,7 @@ import StatusBadge from '../components/StatusBadge/StatusBadge';
 import { getSetores } from '../services/api';
 import { alterarStatusMedicao, listarIndicadoresAdmin } from '../services/admin';
 import { podePublicar } from '../services/auth';
+import { useAlteracaoStatus } from '../hooks/useAlteracaoStatus';
 import { formatarValor } from '../utils/formatarValor';
 import './AdminPage.css';
 
@@ -28,10 +29,19 @@ function AdminPage() {
   const [setorSelecionado, setSetorSelecionado] = useState('');
   const [statusSelecionado, setStatusSelecionado] = useState('');
   const [busca, setBusca] = useState('');
-  const [confirmacao, setConfirmacao] = useState(null);
-  const [enviando, setEnviando] = useState(false);
-  const [aviso, setAviso] = useState(null);
   const mostrarPublicacao = podePublicar();
+  const {
+    confirmacao, enviando, aviso, avisoRef, abrir, cancelar, confirmar, limparAviso,
+  } = useAlteracaoStatus(async ({ indicador, medicao, publicar, rotulo }) => {
+    const atualizada = await alterarStatusMedicao(medicao.id, publicar ? 'publicado' : 'rascunho');
+    setIndicadores((atuais) => atuais.map((item) => (item.id === indicador.id
+      ? {
+        ...item,
+        medicoes: item.medicoes.map((atual) => (atual.id === medicao.id ? { ...atual, ...atualizada } : atual)),
+      }
+      : item)));
+    return `${rotulo}: ${publicar ? 'publicada no portal' : 'voltou para rascunho'}.`;
+  });
 
   useEffect(() => {
     let ativo = true;
@@ -88,31 +98,15 @@ function AdminPage() {
     setSetorSelecionado('');
     setStatusSelecionado('');
     setBusca('');
+    limparAviso();
   }
 
-  async function alterarStatus() {
-    const { indicador, medicao, publicar, rotulo } = confirmacao;
-
-    setAviso(null);
-    setEnviando(true);
-    try {
-      const atualizada = await alterarStatusMedicao(medicao.id, publicar ? 'publicado' : 'rascunho');
-      setIndicadores((atuais) => atuais.map((item) => (item.id === indicador.id
-        ? {
-          ...item,
-          medicoes: item.medicoes.map((atual) => (atual.id === medicao.id ? { ...atual, ...atualizada } : atual)),
-        }
-        : item)));
-      setAviso({
-        tipo: 'sucesso',
-        texto: `${rotulo}: ${publicar ? 'publicada no portal' : 'voltou para rascunho'}.`,
-      });
-    } catch (falha) {
-      setAviso({ tipo: 'erro', texto: falha.message || 'Não foi possível alterar o status. Tente novamente.' });
-    } finally {
-      setEnviando(false);
-      setConfirmacao(null);
-    }
+  // A mensagem fala da ação anterior, não da lista que aparece com o novo filtro
+  function aoFiltrar(definir) {
+    return (event) => {
+      definir(event.target.value);
+      limparAviso();
+    };
   }
 
   return (
@@ -154,7 +148,7 @@ function AdminPage() {
       )}
 
       {aviso && (
-        <p className={`admin-mensagem admin-mensagem--${aviso.tipo}`} role={aviso.tipo === 'erro' ? 'alert' : 'status'}>
+        <p ref={avisoRef} tabIndex={-1} className={`admin-mensagem admin-mensagem--${aviso.tipo}`} role={aviso.tipo === 'erro' ? 'alert' : 'status'}>
           {aviso.texto}
         </p>
       )}
@@ -175,7 +169,7 @@ function AdminPage() {
               type="search"
               placeholder="Buscar por indicador, setor ou valor..."
               value={busca}
-              onChange={(event) => setBusca(event.target.value)}
+              onChange={aoFiltrar(setBusca)}
               disabled={carregando || Boolean(erro)}
             />
           </label>
@@ -184,7 +178,7 @@ function AdminPage() {
             <select
               aria-label="Filtrar por setor"
               value={setorSelecionado}
-              onChange={(event) => setSetorSelecionado(event.target.value)}
+              onChange={aoFiltrar(setSetorSelecionado)}
               disabled={carregando || Boolean(erro)}
             >
               <option value="">Todos os setores</option>
@@ -196,7 +190,7 @@ function AdminPage() {
             <select
               aria-label="Filtrar por status"
               value={statusSelecionado}
-              onChange={(event) => setStatusSelecionado(event.target.value)}
+              onChange={aoFiltrar(setStatusSelecionado)}
               disabled={carregando || Boolean(erro)}
             >
               <option value="">Todos os status</option>
@@ -252,12 +246,12 @@ function AdminPage() {
                         ? <StatusBadge status={medicao.status} />
                         : <span className="admin-dashboard__no-measurement">Sem medições</span>}
                     </td>
-                    <td className="admin-dashboard__action-cell">
+                    <td className="admin-tabela__acoes">
                       {mostrarPublicacao && medicao && (
                         <button
                           type="button"
                           aria-label={`${medicao.status === 'rascunho' ? 'Publicar' : 'Despublicar'} ${indicador.nome}, ${medicao.ano}/${medicao.semestre}`}
-                          onClick={() => setConfirmacao({
+                          onClick={() => abrir({
                             indicador,
                             medicao,
                             publicar: medicao.status === 'rascunho',
@@ -293,8 +287,8 @@ function AdminPage() {
             : 'Após a despublicação, a medição deixará de aparecer no portal público e voltará para rascunho.'}
           rotuloConfirmar={confirmacao.publicar ? 'Publicar' : 'Despublicar'}
           enviando={enviando}
-          onConfirmar={alterarStatus}
-          onCancelar={() => setConfirmacao(null)}
+          onConfirmar={confirmar}
+          onCancelar={cancelar}
         />
       )}
     </section>

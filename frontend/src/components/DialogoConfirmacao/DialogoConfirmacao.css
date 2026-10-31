@@ -33,4 +33,5 @@
   margin-bottom: .25rem;
   color: var(--color-text);
   font-weight: 650;
+  overflow-wrap: anywhere;
 }
