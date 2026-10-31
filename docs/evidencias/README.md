@@ -46,3 +46,4 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-223](pr-223/README.md) | #223 | | E18 | Telas 6, 7 e 8 com o cabeçalho e o CSS comuns do painel, incluindo estados de erro, em 375 e 1280 px |
 | [pr-225](pr-225/README.md) | #225 | #189 | E16 | Download dos PDFs públicos, pedido em andamento e erro no card, em 375 e 1280 px |
 | [pr-226](pr-226/README.md) | #226 | #174 | E13 | Publicar e despublicar medições na Tela 6: antes e depois, diálogo de confirmação, sucesso e perfil editor, com mock, em 375 e 1280 px |
+| [pr-227](pr-227/README.md) | #227 | #175 | E13 | Publicar e despublicar relatórios na Tela 8: antes e depois, confirmação, sucesso e perfil editor, mais o foco e a mensagem da Tela 6, com mock, em 375 e 1280 px |
