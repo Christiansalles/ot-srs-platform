@@ -12,7 +12,11 @@
     "db:setup": "prisma migrate deploy && prisma db seed",
     "start": "npm run db:setup && node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "jest"
+    "test": "jest --runInBand"
+  },
+  "jest": {
+    "setupFiles": ["<rootDir>/tests/setup-env.js"],
+    "maxWorkers": 1
   },
   "engines": {
     "node": ">=20"
@@ -23,6 +27,7 @@
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.5.0",
     "prisma": "^6.19.3"
   },
   "devDependencies": {

@@ -2,8 +2,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import RotaProtegida from '../components/RotaProtegida';
+import AdminLayout from '../components/AdminLayout/AdminLayout';
 import AdminLoginPage from '../pages/AdminLoginPage';
 import AdminPage from '../pages/AdminPage';
+import { getSetores } from '../services/api';
+import { listarIndicadoresAdmin } from '../services/admin';
+
+vi.mock('../services/api', () => ({ getSetores: vi.fn() }));
+vi.mock('../services/admin', () => ({ listarIndicadoresAdmin: vi.fn() }));
 
 function renderRotas() {
   return render(
@@ -11,7 +17,9 @@ function renderRotas() {
       <Routes>
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route element={<RotaProtegida />}>
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminPage />} />
+          </Route>
         </Route>
       </Routes>
     </MemoryRouter>,
@@ -21,6 +29,8 @@ function renderRotas() {
 describe('RotaProtegida', () => {
   beforeEach(() => {
     window.sessionStorage.clear();
+    getSetores.mockResolvedValue([]);
+    listarIndicadoresAdmin.mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -35,7 +45,7 @@ describe('RotaProtegida', () => {
     expect(screen.getByRole('heading', { name: 'Acesso Administrativo' })).toBeInTheDocument();
   });
 
-  it('confere o token com /me e mostra o nome devolvido pela API', async () => {
+  it('confere o token com /me, mostra o usuário autenticado e carrega o painel', async () => {
     window.sessionStorage.setItem('ot-srs-token', 'token-valido');
     window.sessionStorage.setItem('ot-srs-user', JSON.stringify({ id: 2, nome: 'Nome desatualizado' }));
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
@@ -47,7 +57,8 @@ describe('RotaProtegida', () => {
     renderRotas();
 
     expect(screen.getByRole('status')).toHaveTextContent('Verificando sessão');
-    expect(await screen.findByRole('heading', { name: 'Olá, Admin autenticado' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Indicadores' })).toBeInTheDocument();
+    expect(screen.getByText('Admin autenticado')).toBeInTheDocument();
     expect(fetch).toHaveBeenCalledWith('http://localhost:3000/api/auth/me', {
       headers: { Authorization: 'Bearer token-valido' },
     });

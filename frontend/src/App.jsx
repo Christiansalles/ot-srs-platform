@@ -6,17 +6,24 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import RelatoriosPage from './pages/RelatoriosPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
+import AdminMedicaoFormPage from './pages/AdminMedicaoFormPage';
+import AdminRelatoriosPage from './pages/AdminRelatoriosPage';
 import RotaProtegida from './components/RotaProtegida';
+import AdminLayout from './components/AdminLayout/AdminLayout';
 import cidadeLogo from './assets/logos/santa-rita.svg';
 import observatorioLogo from './assets/logos/observatorio.png';
 import prefeituraLogo from './assets/logos/prefeitura.png';
+import smceltLogo from './assets/logos/smcelt.png';
+import comturLogo from './assets/logos/comtur.png';
+import mantiqueiraLogo from './assets/logos/mantiqueira.png';
+import minasLogo from './assets/logos/minas.png';
 
 function AppLayout() {
   return (
     <div className="app-shell">
       <header className="topbar">
         <div className="brand-block">
-          <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí — Cidade Criativa" />
+          <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí, Cidade Criativa" />
           <img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" />
         </div>
 
@@ -47,8 +54,13 @@ function AppLayout() {
         </div>
         <div><strong>Realização e apoio</strong><div className="institutional-logos">
           <img src={prefeituraLogo} alt="Prefeitura Municipal de Santa Rita do Sapucaí" />
-        </div><p>SMCELT · Conselho Municipal de Turismo (COMTUR)</p></div>
-        <div><strong>Contexto regional</strong><p>Circuito Turístico Caminhos da Mantiqueira<br />Minas Gerais · Vale da Eletrônica</p></div>
+          <img className="logo-vertical" src={smceltLogo} alt="Secretaria Municipal de Cultura, Esporte, Lazer e Turismo (SMCELT)" />
+          <img src={comturLogo} alt="Conselho Municipal de Turismo (COMTUR)" />
+        </div></div>
+        <div><strong>Contexto regional</strong><div className="institutional-logos">
+          <img className="logo-vertical" src={mantiqueiraLogo} alt="Circuito Turístico Caminhos da Mantiqueira" />
+          <img src={minasLogo} alt="Minas Gerais" />
+        </div><p>Vale da Eletrônica</p></div>
       </footer>
     </div>
   );
@@ -60,7 +72,12 @@ function App() {
       <Routes>
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route element={<RotaProtegida />}>
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminPage />} />
+            <Route path="medicoes/nova" element={<AdminMedicaoFormPage />} />
+            <Route path="medicoes/:id/editar" element={<AdminMedicaoFormPage />} />
+            <Route path="relatorios" element={<AdminRelatoriosPage />} />
+          </Route>
         </Route>
         <Route element={<AppLayout />}>
           <Route path="/" element={<HomePage />} />

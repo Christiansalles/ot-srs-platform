@@ -34,6 +34,8 @@ jobs:
       # Valores fictícios exclusivos para testes no CI.
       ADMIN_EMAIL: admin-ci@observatorio.local
       ADMIN_SENHA: senha-ci-ficticia-nao-usar-em-producao
+      EDITOR_EMAIL: editor-ci@observatorio.local
+      EDITOR_SENHA: senha-editor-ci-ficticia-nao-usar-em-producao
       JWT_SECRET: jwt-secret-ci-ficticio-nao-usar-em-producao
     steps:
       - uses: actions/checkout@v5
@@ -47,7 +49,7 @@ jobs:
         run: npm run db:setup
       - name: Verificar que migrations e seed podem ser repetidos
         run: npm run db:setup
-      - run: npm test -- --runInBand
+      - run: npm test
 
   frontend:
     runs-on: ubuntu-latest

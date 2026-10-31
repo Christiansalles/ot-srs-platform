@@ -5,19 +5,31 @@
 
 export const colors = {
   primary: '#0A4AAD',
+  primarySoft: '#E6EEFB',
   secondary: '#6C5CE0',
+  secondaryStrong: '#5746CA',
   accent: '#C750D6',
+  accentSoft: '#FBE8FD',
+  accentStrong: '#8A059D',
 
   background: '#F8FAFC',
   surface: '#FFFFFF',
   surfaceMuted: '#F1F5F9',
+  surfaceTranslucent: 'rgba(255, 255, 255, 0.92)',
+  overlay: 'rgba(15, 23, 42, 0.4)',
+  onBrand: '#FFFFFF',
 
   text: '#0F172A',
   textMuted: '#64748B',
   border: '#E2E8F0',
+  borderStrong: '#CBD5E1',
 
   success: '#0D9488',
+  successBright: '#34D399',
   danger: '#DC2626',
+  dangerSoft: '#FEF2F2',
+  dangerBorder: '#FECACA',
+  dangerStrong: '#B91C1C',
 
   chart: {
     cyan: '#5FE6E0',
@@ -32,6 +44,7 @@ export const colors = {
 export const gradients = {
   brand: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 52%, ${colors.accent} 100%)`,
   brandHorizontal: `linear-gradient(90deg, ${colors.primary} 0%, ${colors.secondary} 52%, ${colors.accent} 100%)`,
+  brandOverlay: `linear-gradient(135deg, ${colors.primary}B3 0%, ${colors.secondary}8C 52%, ${colors.accent}A6 100%)`,
 };
 
 export const chartPalette = Object.values(colors.chart);

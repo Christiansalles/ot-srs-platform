@@ -1,0 +1,188 @@
+/* Só o que é da Tela 8; cabeçalho, cartão, campos, mensagens, botões, estados e tabela vêm de AdminPagina.css */
+
+.admin-relatorios {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* O espaço vem do gap da página */
+.admin-relatorios .admin-cabecalho {
+  margin-bottom: 0;
+}
+
+.admin-relatorios__painel {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.admin-relatorios__painel-cabecalho {
+  padding: 1.25rem 1.5rem 0;
+}
+
+.admin-relatorios__painel form {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.admin-relatorios__dropzone {
+  position: relative;
+  display: grid;
+  min-height: 170px;
+  place-items: center;
+  align-content: center;
+  gap: .45rem;
+  padding: 1.25rem;
+  border: 2px dashed var(--color-border-strong);
+  border-radius: 14px;
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  font-size: .85rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.admin-relatorios__dropzone:hover,
+.admin-relatorios__dropzone:focus-within,
+.admin-relatorios__dropzone--ativo {
+  border-color: var(--color-secondary);
+  background: var(--color-primary-soft);
+}
+
+.admin-relatorios__dropzone strong {
+  color: var(--color-text);
+  font-size: .9rem;
+}
+
+.admin-relatorios__dropzone-icone {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.admin-relatorios__dropzone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.admin-relatorios__arquivo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  margin: .75rem 0 0;
+  padding: .85rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  font-size: .85rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-relatorios__arquivo strong {
+  color: var(--color-text);
+}
+
+.admin-relatorios__arquivo button {
+  margin-left: auto;
+  padding: .35rem .55rem;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--color-secondary-strong);
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-relatorios__arquivo button:hover {
+  background: var(--color-accent-soft);
+}
+
+.admin-relatorios__arquivo button:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+.admin-relatorios__campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.admin-relatorios__campo--inteiro {
+  grid-column: 1 / -1;
+}
+
+.admin-relatorios__visibilidade {
+  margin-top: 1.25rem;
+}
+
+/* Mensagens dentro do formulário, depois da nota de status */
+.admin-relatorios__painel form .admin-mensagem {
+  margin: 1rem 0 0;
+}
+
+.admin-relatorios__acoes {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-relatorios__painel-cabecalho--lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+}
+
+.admin-relatorios__painel-cabecalho--lista span {
+  color: var(--color-text-muted);
+  font-size: .8rem;
+}
+
+/* Mensagem de publicar e despublicar, entre o título da lista e a tabela */
+.admin-relatorios__painel > .admin-mensagem {
+  margin: 0 1.5rem 1.25rem;
+}
+
+.admin-relatorios__table {
+  min-width: 840px;
+}
+
+/* Edição, data e status não quebram no meio (ex.: OT-ILUS-02/2025) */
+.admin-relatorios__table td:nth-child(n + 2) {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .admin-relatorios__painel-cabecalho {
+    padding: 1rem 1rem 0;
+  }
+
+  .admin-relatorios__painel form {
+    padding: 1rem;
+  }
+
+  .admin-relatorios__painel-cabecalho--lista {
+    padding-bottom: 1rem;
+  }
+
+  .admin-relatorios__painel > .admin-mensagem {
+    margin: 0 1rem 1rem;
+  }
+
+  .admin-relatorios__campos {
+    grid-template-columns: 1fr;
+  }
+}

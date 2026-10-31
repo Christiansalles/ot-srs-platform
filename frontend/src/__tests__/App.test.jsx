@@ -23,6 +23,19 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
   });
 
+  it('mostra no rodapé as logos de realização, apoio e contexto regional da Proposta', async () => {
+    render(<App />);
+    const rodape = screen.getByRole('contentinfo');
+    [
+      'Prefeitura Municipal de Santa Rita do Sapucaí',
+      'Secretaria Municipal de Cultura, Esporte, Lazer e Turismo (SMCELT)',
+      'Conselho Municipal de Turismo (COMTUR)',
+      'Circuito Turístico Caminhos da Mantiqueira',
+      'Minas Gerais',
+    ].forEach((nome) => expect(within(rodape).getByRole('img', { name: nome })).toBeInTheDocument());
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
   it('abre a tela de login pelo acesso administrativo do cabeçalho', async () => {
     window.sessionStorage.clear();
     render(<App />);
@@ -32,6 +45,40 @@ describe('App', () => {
     expect(screen.getByLabelText('E-mail')).toBeInTheDocument();
     expect(screen.getByLabelText('Senha')).toHaveAttribute('type', 'password');
     expect(screen.getByRole('button', { name: 'Entrar' })).toBeInTheDocument();
+  });
+
+  it('abre o formulário de cadastro de medição dentro do painel protegido', async () => {
+    window.sessionStorage.setItem('ot-srs-token', 'token-de-teste');
+    window.sessionStorage.setItem('ot-srs-user', JSON.stringify({ id: 1, nome: 'Admin' }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ id: 1, nome: 'Admin autenticado', email: 'admin@example.com' }),
+    }));
+    window.history.replaceState({}, '', '/admin/medicoes/nova');
+
+    render(<App />);
+
+    expect(await screen.findByRole('heading', { name: 'Cadastrar medição' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Menu administrativo' })).toBeInTheDocument();
+    expect(await screen.findByRole('combobox', { name: 'Indicador' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Número de leitos (Hospedagem)' })).toBeInTheDocument();
+  });
+
+  it('abre o publicador de relatórios na rota protegida do painel', async () => {
+    window.sessionStorage.setItem('ot-srs-token', 'token-de-teste');
+    window.sessionStorage.setItem('ot-srs-user', JSON.stringify({ id: 1, nome: 'Administrador', email: 'admin@example.com' }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ id: 1, nome: 'Administrador', email: 'admin@example.com' }),
+    }));
+    window.history.replaceState({}, '', '/admin/relatorios');
+    render(<App />);
+
+    expect(await screen.findByRole('heading', { name: 'Publicador de Relatórios' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Relatórios' })).toHaveAttribute('href', '/admin/relatorios');
+    window.sessionStorage.clear();
   });
 
   it('renderiza os destaques com o card compartilhado', async () => {

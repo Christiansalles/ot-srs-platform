@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-container": "#8a059d", "tertiary-fixed": "#ffd6fc", "outline": "#737784", "on-tertiary-fixed": "#36003e", "on-primary": "#ffffff", "surface-container": "#e5eeff", "tertiary-fixed-dim": "#fbaaff", "inverse-on-surface": "#eaf1ff", "outline-variant": "#c3c6d5", "secondary-fixed": "#e4dfff", "secondary-fixed-dim": "#c7bfff", "on-tertiary-fixed-variant": "#7c008d", "on-secondary-fixed-variant": "#412cb4", "surface-container-high": "#dce9ff", "on-secondary-fixed": "#170065", "secondary": "#5746ca", "surface": "#f8f9ff", "background": "#f8f9ff", "primary-fixed-dim": "#b1c5ff", "secondary-container": "#7061e5", "on-surface-variant": "#434653", "on-background": "#0b1c30", "error-container": "#ffdad6", "on-primary-fixed-variant": "#00419e", "on-tertiary-container": "#faa3ff", "primary": "#003482", "on-tertiary": "#ffffff", "primary-fixed": "#dae2ff", "surface-container-low": "#eff4ff", "on-secondary-container": "#fffbff", "surface-tint": "#2559bc", "on-secondary": "#ffffff", "primary-container": "#0a4aad", "on-error-container": "#93000a", "surface-bright": "#f8f9ff", "inverse-primary": "#b1c5ff", "surface-variant": "#d3e4fe", "surface-container-highest": "#d3e4fe", "on-error": "#ffffff", "tertiary": "#660074", "error": "#ba1a1a", "surface-dim": "#cbdbf5", "on-primary-fixed": "#001946", "inverse-surface": "#213145", "on-surface": "#0b1c30", "surface-container-lowest": "#ffffff", "on-primary-container": "#abc1ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-sm": "0.5rem", "space-md": "1rem", "space-2xl": "3rem", "space-lg": "1.5rem", "gutter-mobile": "1rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin-mobile": "1rem", "margin": "2rem" }, "fontFamily": { "title-md": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "display-lg-mobile": [ "Plus Jakarta Sans" ], "label-lg": [ "Plus Jakarta Sans" ], "headline-lg-mobile": [ "Plus Jakarta Sans" ], "label-md": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "title-lg": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "label-sm": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-lg": [ "Plus Jakarta Sans" ] }, "fontSize": { "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "display-lg-mobile": [ "28px", { "lineHeight": "36px", "fontWeight": "800" } ], "label-lg": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "fontWeight": "700" } ], "label-md": [ "12px", { "lineHeight": "16px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "fontWeight": "700" } ], "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "display-lg": [ "40px", { "lineHeight": "48px", "fontWeight": "800" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="p-space-lg flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-container via-secondary to-tertiary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">terrain</span></div><div><div class="flex items-center gap-space-xs"><span class="font-title-md text-title-md text-primary font-bold">OT-SRS</span><span class="font-label-sm text-label-sm text-secondary font-bold">GESTOR</span></div><span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Backoffice Municipal</span></div></div><div class="px-space-md py-space-xs"><div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm mb-space-xs font-bold">Módulos de Gestão</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-administrativa" href="#"><span class="material-symbols-outlined text-[20px]">space_dashboard</span><span>Painel Geral</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-coleta-dados" href="#"><span class="material-symbols-outlined text-[20px]">input</span><span>Entrada de Dados</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-hospedagem" href="#"><span class="material-symbols-outlined text-[20px]">hotel</span><span>Ocupação Hoteleira</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-pesquisas" href="#"><span class="material-symbols-outlined text-[20px]">quiz</span><span>Pesquisas de Demanda</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-relatorios" href="#"><span class="material-symbols-outlined text-[20px]">summarize</span><span>Publicador de Relatórios</span></a></nav></div><div class="px-space-md py-space-xs mt-space-md"><div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm mb-space-xs font-bold">Governança &amp; Sistema</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-usuarios" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span>Usuários &amp; COMTUR</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-configuracoes" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Configurações</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="inicio" href="#"><span class="material-symbols-outlined text-[20px]">visibility</span><span>Ver Portal Público</span></a></nav></div><div class="mt-auto p-space-md bg-surface-container-low mx-space-sm mb-space-sm rounded-xl"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-label-md">SR</div><div class="flex-1 min-w-0"><div class="font-label-md text-label-md text-on-surface truncate font-bold">SMCELT Admin</div><div class="font-body-sm text-body-sm text-on-surface-variant truncate">Prefeitura de SRS</div></div><a class="text-on-surface-variant hover:text-error transition-colors" data-path="login" href="#"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-md"><span class="font-title-md text-title-md text-primary font-bold hidden sm:inline">Painel de Gestão Municipal</span><div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-xs rounded-full"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span><input class="bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none w-48 lg:w-64" placeholder="Buscar registros, pesquisas..." type="search"/></div></div><div class="flex items-center gap-space-md"><button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors relative" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error"></span></button><button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="w-full px-margin py-space-xl"><div class="flex flex-col w-full">
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebarLinks = document.querySelectorAll('aside nav a');
+      sidebarLinks.forEach(link => {
+        if (link.getAttribute('data-path') === 'gestao-pesquisas') {
+          link.classList.remove('text-on-surface-variant', 'hover:bg-surface-container', 'hover:text-on-surface');
+          link.classList.add('bg-primary-container', 'text-on-primary', 'font-bold', 'shadow-sm');
+          const icon = link.querySelector('.material-symbols-outlined');
+          if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+        }
+      });
+    });
+  </script>
+<div class="flex flex-col gap-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<span>Painel Geral</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-bold">Pesquisas de Demanda</span>
+</div>
+<span class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Amostragem Ampla • Ciclo 2025
+          </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          Pesquisas de Demanda Turística
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+          Gerencie e tabule as pesquisas de perfil do turista, motivação de viagem, gasto médio e avaliação dos atrativos de Santa Rita do Sapucaí.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 self-start lg:self-auto">
+<button class="group flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-all" type="button">
+<span class="material-symbols-outlined text-[20px] text-primary">download</span>
+<span>Exportar Tabulação (CSV)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-gradient-to-r from-primary-container via-secondary to-tertiary-container text-on-primary font-label-lg text-label-lg shadow-md hover:brightness-110 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Nova Campanha de Pesquisa</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<div class="flex flex-col p-space-lg rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Entrevistas Coletadas</span>
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">assignment</span>
+</div>
+</div>
+<div class="mt-space-md flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface font-extrabold">1.240</span>
+<span class="inline-flex items-center gap-0.5 font-label-sm text-label-sm text-secondary font-bold">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+            Válidas
+          </span>
+</div>
+<p class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">
+          Amostras validadas em campo no ano
+        </p>
+</div>
+<div class="flex flex-col p-space-lg rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Gasto Médio Diário</span>
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[22px]">wallet</span>
+</div>
+</div>
+<div class="mt-space-md flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface font-extrabold">R$ 350,00</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-primary font-bold">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+            +8,5%
+          </span>
+</div>
+<p class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">
+          Per capita / dia vs. ciclo 2024
+        </p>
+</div>
+<div class="flex flex-col p-space-lg rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Permanência Média</span>
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[22px]">calendar_month</span>
+</div>
+</div>
+<div class="mt-space-md flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface font-extrabold">2,8 dias</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold">Período útil</span>
+</div>
+<p class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">
+          Predomínio concentrado sexta a domingo
+        </p>
+</div>
+<div class="flex flex-col p-space-lg rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant font-bold uppercase tracking-wider">Satisfação Geral (NPS)</span>
+<div class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<div class="mt-space-md flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-headline-lg text-on-surface font-extrabold">84 pts</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
+            Excelente
+          </span>
+</div>
+<p class="mt-space-xs font-body-sm text-body-sm text-on-surface-variant">
+          Zona de Excelência (Índice Institucional)
+        </p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">
+<div class="flex flex-col p-space-lg rounded-xl bg-surface-container-lowest shadow-sm justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">pin_drop</span>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Distribuição de Origem dos Visitantes</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                Microrregiões e pólos emissores consolidados na amostragem 2025
+              </p>
+</div>
+<span class="px-space-sm py-0.5 rounded-md bg-surface-container text-primary font-label-sm text-label-sm font-bold">
+              Base: 1.240
+            </span>
+</div>
+<div class="mt-space-lg flex flex-col gap-space-md">
+<div>
+<div class="flex items-center justify-between font-label-md text-label-md mb-space-xs">
+<span class="text-on-surface font-bold">São Paulo (Capital &amp; RMSP)</span>
+<span class="text-primary font-bold">42%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-primary transition-all duration-700" style="width: 42%;"></div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between font-label-md text-label-md mb-space-xs">
+<span class="text-on-surface font-bold">Belo Horizonte &amp; Sul de Minas</span>
+<span class="text-secondary font-bold">28%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-secondary transition-all duration-700" style="width: 28%;"></div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between font-label-md text-label-md mb-space-xs">
+<span class="text-on-surface font-bold">Campinas &amp; Vale do Paraíba (SP)</span>
+<span class="text-tertiary font-bold">18%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-tertiary-container transition-all duration-700" style="width: 18%;"></div>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between font-label-md text-label-md mb-space-xs">
+<span class="text-on-surface font-bold">Outros Estados &amp; Internacional</span>
+<span class="text-on-surface-variant font-bold">12%</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-outline-variant transition-all duration-700" style="width: 12%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-md flex items-center justify-between bg-surface-container-low p-space-md rounded-lg">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">distance</span>
+<span>Raio predominante: <strong>180km a 300km</strong></span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Acesso: BR-459 / Fernão Dias</span>
+</div>
+</div>
+<div class="flex flex-col p-space-lg rounded-xl bg-surface-container-lowest shadow-sm justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-secondary">interests</span>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Principais Motivações de Visita</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                Vetor de atratividade principal declarado no momento da aplicação
+              </p>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cluster Criativo</span>
+</div>
+</div>
+<div class="mt-space-lg grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+</div>
+<span class="font-title-lg text-title-lg font-bold text-primary">38%</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold block">Tecnologia &amp; Hackathons</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">HackTown, maratonas e startups</span>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<span class="font-title-lg text-title-lg font-bold text-secondary">26%</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold block">Cultura &amp; Gastronomia</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Festivais de inverno e tradições</span>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]">coffee</span>
+</div>
+<span class="font-title-lg text-title-lg font-bold text-tertiary">22%</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold block">Ecoturismo &amp; Café Especial</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Rotas rurais e fazendas da Mantiqueira</span>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]">school</span>
+</div>
+<span class="font-title-lg text-title-lg font-bold text-primary-container">14%</span>
+</div>
+<div class="mt-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold block">Negócios / Inatel / FAI</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Congressos acadêmicos e telecom</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm px-space-xs">
+<span>*Respostas de múltipla escolha ponderadas pelo vetor primário.</span>
+<a class="text-primary font-label-md text-label-md font-bold hover:underline" href="#">Ver correlações</a>
+</div>
+</div>
+</div>
+<div class="flex flex-col p-space-lg rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md">
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Campanhas e Levantamentos de Campo Registrados</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Histórico de coletas operadas diretamente pelos pesquisadores do Observatório e secretarias parceiras.</p>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-xs rounded-lg min-w-[240px]">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">search</span>
+<input class="bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none w-full" placeholder="Filtrar por nome ou atrativo..." type="text"/>
+</div>
+<select class="bg-surface-container font-body-sm text-body-sm text-on-surface px-space-md py-space-xs rounded-lg focus:outline-none cursor-pointer">
+<option>Todos os Períodos (2025)</option>
+<option>1º Trimestre 2025</option>
+<option>Carnaval 2025</option>
+<option>Temporada 2024</option>
+</select>
+<select class="bg-surface-container font-body-sm text-body-sm text-on-surface px-space-md py-space-xs rounded-lg focus:outline-none cursor-pointer">
+<option>Amostragem: Todas</option>
+<option>Presencial / In Loco</option>
+<option>QR Code / TOTEM</option>
+<option>Mista (Híbrida)</option>
+</select>
+</div>
+</div>
+<div class="mt-space-lg overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
+<th class="py-space-sm px-space-md rounded-l-lg">Título da Pesquisa</th>
+<th class="py-space-sm px-space-md">Período de Aplicação</th>
+<th class="py-space-sm px-space-md">Amostras Válidas</th>
+<th class="py-space-sm px-space-md">Canal de Coleta</th>
+<th class="py-space-sm px-space-md">Status</th>
+<th class="py-space-sm px-space-md text-right rounded-r-lg">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<tr class="hover:bg-surface-container-low/70 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[18px]">psychology</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg text-on-surface font-bold block">Perfil do Visitante - HackTown 2025</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Polo Criativo / Centro Histórico / Inatel</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-on-surface">
+                04/09 a 07/09/2025
+              </td>
+<td class="py-space-md px-space-md">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">620</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Meta: 500 (124%)</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary">qr_code_2</span>
+                  QR Code + Presencial
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-primary font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  Concluída
+                </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="inline-flex items-center gap-space-xs">
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-primary transition-colors" title="Visualizar Resultados" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-secondary transition-colors" title="Tabular Respostas" type="button">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Exportar Relatório" type="button">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/70 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-secondary font-bold">
+<span class="material-symbols-outlined text-[18px]">ac_unit</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg text-on-surface font-bold block">Demanda de Inverno &amp; Festivais Gastronômicos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Praça Santa Rita &amp; Circuito de Bares</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-on-surface">
+                15/06 a 30/07/2025
+              </td>
+<td class="py-space-md px-space-md">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">310</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Meta: 400 (77%)</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">person_search</span>
+                  Presencial / Entrevista
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-secondary-fixed font-label-sm text-label-sm text-on-secondary-fixed font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  Em andamento
+                </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="inline-flex items-center gap-space-xs">
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-primary transition-colors" title="Visualizar Resultados" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-secondary transition-colors" title="Tabular Respostas" type="button">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Exportar Relatório" type="button">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/70 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-tertiary font-bold">
+<span class="material-symbols-outlined text-[18px]">celebration</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg text-on-surface font-bold block">Pesquisa Receptiva Carnaval das Marchinhas</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sambódromo Municipal e Centro</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-on-surface">
+                28/02 a 04/03/2025
+              </td>
+<td class="py-space-md px-space-md">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">210</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Meta: 200 (105%)</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">person_search</span>
+                  Presencial Volante
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-primary font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  Concluída
+                </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="inline-flex items-center gap-space-xs">
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-primary transition-colors" title="Visualizar Resultados" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-secondary transition-colors" title="Tabular Respostas" type="button">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Exportar Relatório" type="button">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/70 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary-container font-bold">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg text-on-surface font-bold block">Censo de Congressistas e Alunos Inatel</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Campus Inatel / Hotéis Conveniados</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md font-body-sm text-body-sm text-on-surface">
+                12/05 a 16/05/2025
+              </td>
+<td class="py-space-md px-space-md">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">100</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Meta: 150 (66%)</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-tertiary">devices</span>
+                  Formulário Digital / QR
+                </span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                  Em tabulação
+                </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="inline-flex items-center gap-space-xs">
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-primary transition-colors" title="Visualizar Resultados" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-secondary transition-colors" title="Tabular Respostas" type="button">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+</button>
+<button class="p-space-xs rounded-lg hover:bg-surface-container text-on-surface-variant transition-colors" title="Exportar Relatório" type="button">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-space-md pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+          Exibindo <strong>4</strong> de <strong>4</strong> levantamentos programados para 2025
+        </span>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container text-on-surface-variant opacity-50 font-label-md text-label-md cursor-not-allowed" disabled="" type="button">Anterior</button>
+<span class="px-space-sm py-space-xs font-label-md text-label-md font-bold text-primary">1</span>
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container text-on-surface-variant opacity-50 font-label-md text-label-md cursor-not-allowed" disabled="" type="button">Próxima</button>
+</div>
+</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-high flex flex-col md:flex-row md:items-center md:justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest flex items-center justify-center text-primary shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[28px]">format_image_left</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface font-bold">Governança Metodológica COMTUR &amp; DTI</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Todas as métricas seguem os padrões do Ministério do Turismo (MTur) e são submetidas a duplo cego de validação amostral com nível de confiança de 95% e margem de erro máxima de 3,5%.
+          </p>
+</div>
+</div>
+<div class="shrink-0">
+<button class="px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md font-bold shadow-sm hover:bg-surface transition-all flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Metodologia Amostral</span>
+</button>
+</div>
+</div>
+</div>
+</div></div></main></div></body></html>

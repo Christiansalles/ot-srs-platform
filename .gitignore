@@ -1,5 +1,6 @@
 # Dependências
 node_modules/
+uploads/
 
 # Build e cobertura
 dist/
@@ -20,3 +21,7 @@ npm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Claude Code (arquivos locais de cada pessoa)
+.claude/worktrees/
+.claude/settings.local.json

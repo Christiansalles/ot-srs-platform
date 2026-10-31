@@ -70,6 +70,7 @@ async function validarCredenciais(email, senha) {
       id: usuario.id_usuario,
       nome: usuario.nome,
       email: usuario.email,
+      perfil: usuario.perfil,
     },
   };
 }
@@ -87,6 +88,7 @@ async function buscarUsuarioAutenticado(token) {
     id: usuario.id_usuario,
     nome: usuario.nome,
     email: usuario.email,
+    perfil: usuario.perfil,
   };
 }
 

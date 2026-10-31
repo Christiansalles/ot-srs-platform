@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CardIndicador from '../components/CardIndicador/CardIndicador';
 import { getDestaques } from '../services/api';
+import capaSantaRita from '../assets/capa-santa-rita.jpg';
 
 // Os quatro destaques da Home seguem a ordem dos cards principais do dashboard.
 const DESTAQUES_DA_HOME = [
@@ -42,7 +43,7 @@ export default function HomePage() {
 
   return (
     <div className="page home-page">
-      <section className="hero-banner">
+      <section className="hero-banner" style={{ '--hero-foto': `url(${capaSantaRita})` }}>
         <div>
           <p className="eyebrow">Portal de inteligência territorial · SRS-MG</p>
           <h1>Indicadores do Turismo</h1>

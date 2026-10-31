@@ -1,0 +1,103 @@
+/* Só o que é da Tela 7; cabeçalho, cartão, campos, mensagens e botões vêm de AdminPagina.css */
+
+/* O formulário é mais estreito que o painel, alinhado à esquerda com o título */
+.admin-medicao-page > * {
+  max-width: 1040px;
+}
+
+.admin-medicao-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-medicao-card {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.4rem;
+}
+
+.admin-medicao-card-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-medicao-card-heading > span {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: .85rem;
+  font-weight: 800;
+}
+
+.admin-medicao-indicator-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-medicao-indicator-fields .admin-campo:nth-child(2) {
+  grid-row: span 2;
+}
+
+.admin-medicao-empty {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: .85rem;
+}
+
+.admin-medicao-selected-indicator {
+  display: grid;
+  gap: .2rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  font-size: .85rem;
+}
+
+.admin-medicao-selected-indicator strong {
+  color: var(--color-text);
+}
+
+.admin-medicao-selected-indicator small {
+  color: var(--color-text-muted);
+}
+
+.admin-medicao-period-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* Barra de ações num cartão próprio, embaixo do formulário */
+.admin-medicao-actions {
+  padding: 1rem 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .admin-medicao-card {
+    padding: 1rem;
+  }
+
+  .admin-medicao-indicator-fields,
+  .admin-medicao-period-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-medicao-indicator-fields .admin-campo:nth-child(2) {
+    grid-row: auto;
+  }
+
+  .admin-medicao-actions {
+    padding: .85rem;
+  }
+}

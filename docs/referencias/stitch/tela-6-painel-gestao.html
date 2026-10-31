@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-container": "#8a059d", "tertiary-fixed": "#ffd6fc", "outline": "#737784", "on-tertiary-fixed": "#36003e", "on-primary": "#ffffff", "surface-container": "#e5eeff", "tertiary-fixed-dim": "#fbaaff", "inverse-on-surface": "#eaf1ff", "outline-variant": "#c3c6d5", "secondary-fixed": "#e4dfff", "secondary-fixed-dim": "#c7bfff", "on-tertiary-fixed-variant": "#7c008d", "on-secondary-fixed-variant": "#412cb4", "surface-container-high": "#dce9ff", "on-secondary-fixed": "#170065", "secondary": "#5746ca", "surface": "#f8f9ff", "background": "#f8f9ff", "primary-fixed-dim": "#b1c5ff", "secondary-container": "#7061e5", "on-surface-variant": "#434653", "on-background": "#0b1c30", "error-container": "#ffdad6", "on-primary-fixed-variant": "#00419e", "on-tertiary-container": "#faa3ff", "primary": "#003482", "on-tertiary": "#ffffff", "primary-fixed": "#dae2ff", "surface-container-low": "#eff4ff", "on-secondary-container": "#fffbff", "surface-tint": "#2559bc", "on-secondary": "#ffffff", "primary-container": "#0a4aad", "on-error-container": "#93000a", "surface-bright": "#f8f9ff", "inverse-primary": "#b1c5ff", "surface-variant": "#d3e4fe", "surface-container-highest": "#d3e4fe", "on-error": "#ffffff", "tertiary": "#660074", "error": "#ba1a1a", "surface-dim": "#cbdbf5", "on-primary-fixed": "#001946", "inverse-surface": "#213145", "on-surface": "#0b1c30", "surface-container-lowest": "#ffffff", "on-primary-container": "#abc1ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-sm": "0.5rem", "space-md": "1rem", "space-2xl": "3rem", "space-lg": "1.5rem", "gutter-mobile": "1rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin-mobile": "1rem", "margin": "2rem" }, "fontFamily": { "title-md": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "display-lg-mobile": [ "Plus Jakarta Sans" ], "label-lg": [ "Plus Jakarta Sans" ], "headline-lg-mobile": [ "Plus Jakarta Sans" ], "label-md": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "title-lg": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "label-sm": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-lg": [ "Plus Jakarta Sans" ] }, "fontSize": { "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "display-lg-mobile": [ "28px", { "lineHeight": "36px", "fontWeight": "800" } ], "label-lg": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "fontWeight": "700" } ], "label-md": [ "12px", { "lineHeight": "16px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "fontWeight": "700" } ], "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "display-lg": [ "40px", { "lineHeight": "48px", "fontWeight": "800" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="p-space-lg flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-container via-secondary to-tertiary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">terrain</span></div><div><div class="flex items-center gap-space-xs"><span class="font-title-md text-title-md text-primary font-bold">OT-SRS</span><span class="font-label-sm text-label-sm text-secondary font-bold">GESTOR</span></div><span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Backoffice Municipal</span></div></div><div class="px-space-md py-space-xs"><div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm mb-space-xs font-bold">Módulos de Gestão</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-administrativa" href="#"><span class="material-symbols-outlined text-[20px]">space_dashboard</span><span>Painel Geral</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-coleta-dados" href="#"><span class="material-symbols-outlined text-[20px]">input</span><span>Entrada de Dados</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-hospedagem" href="#"><span class="material-symbols-outlined text-[20px]">hotel</span><span>Ocupação Hoteleira</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-pesquisas" href="#"><span class="material-symbols-outlined text-[20px]">quiz</span><span>Pesquisas de Demanda</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-relatorios" href="#"><span class="material-symbols-outlined text-[20px]">summarize</span><span>Publicador de Relatórios</span></a></nav></div><div class="px-space-md py-space-xs mt-space-md"><div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm mb-space-xs font-bold">Governança &amp; Sistema</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-usuarios" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span>Usuários &amp; COMTUR</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-configuracoes" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Configurações</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="inicio" href="#"><span class="material-symbols-outlined text-[20px]">visibility</span><span>Ver Portal Público</span></a></nav></div><div class="mt-auto p-space-md bg-surface-container-low mx-space-sm mb-space-sm rounded-xl"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-label-md">SR</div><div class="flex-1 min-w-0"><div class="font-label-md text-label-md text-on-surface truncate font-bold">SMCELT Admin</div><div class="font-body-sm text-body-sm text-on-surface-variant truncate">Prefeitura de SRS</div></div><a class="text-on-surface-variant hover:text-error transition-colors" data-path="login" href="#"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-md"><span class="font-title-md text-title-md text-primary font-bold hidden sm:inline">Painel de Gestão Municipal</span><div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-xs rounded-full"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span><input class="bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none w-48 lg:w-64" placeholder="Buscar registros, pesquisas..." type="search"/></div></div><div class="flex items-center gap-space-md"><button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors relative" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error"></span></button><button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="w-full px-margin py-space-xl"><div class="flex flex-col w-full">
+<!-- Top Stat Cards (Micro Overview for SMCELT Managers) -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter mb-space-xl">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Total de Indicadores</p>
+<p class="font-headline-md text-headline-md text-on-surface mt-space-xs font-extrabold">24</p>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary font-semibold mt-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> 21 ativos
+        </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">analytics</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Publicados no Portal</p>
+<p class="font-headline-md text-headline-md text-primary font-extrabold">19</p>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant font-semibold mt-1">
+<span class="material-symbols-outlined text-[14px]">public</span> Visíveis aos cidadãos
+        </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">visibility</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Rascunhos Pendentes</p>
+<p class="font-headline-md text-headline-md text-tertiary font-extrabold">05</p>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-tertiary font-semibold mt-1">
+<span class="material-symbols-outlined text-[14px]">pending</span> Aguardando revisão
+        </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[24px]">edit_note</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Última Atualização</p>
+<p class="font-title-md text-title-md text-on-surface mt-space-xs font-bold">Hoje, 09:42</p>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant font-semibold mt-1">
+<span class="material-symbols-outlined text-[14px]">person</span> Por SMCELT Admin
+        </span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">update</span>
+</div>
+</div>
+</div>
+<!-- Header Section: Title & Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-lg">
+<div>
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Indicadores</h1>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold">
+          SRS 2025/2
+        </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+        Gerencie os indicadores do observatório de turismo municipal de Santa Rita do Sapucaí.
+      </p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container flex items-center gap-space-xs transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+<span>Exportar CSV</span>
+</button>
+<!-- Primary Action CTA with signature gradient -->
+<button class="px-space-lg py-space-sm rounded-lg bg-gradient-to-r from-primary via-secondary to-tertiary text-on-primary font-label-lg text-label-lg shadow-md hover:brightness-110 flex items-center gap-space-xs transition-all" id="btn-open-modal" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Novo indicador</span>
+</button>
+</div>
+</div>
+<!-- Filter and Search Bar -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm mb-space-md flex flex-col md:flex-row gap-space-md items-stretch md:items-center justify-between">
+<div class="flex items-center gap-space-sm flex-1">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary transition-all" id="table-search" placeholder="Buscar por indicador, setor ou valor..." type="text"/>
+</div>
+<div class="hidden sm:flex items-center gap-space-xs">
+<select class="px-space-md py-2 bg-surface-container-low text-on-surface rounded-lg font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-secondary">
+<option value="">Todos os Setores</option>
+<option value="Hospedagem">Hospedagem</option>
+<option value="Turismo">Turismo</option>
+<option value="Gastronomia">Gastronomia</option>
+</select>
+<select class="px-space-md py-2 bg-surface-container-low text-on-surface rounded-lg font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-secondary">
+<option value="">Todos os Status</option>
+<option value="Publicado">Publicado</option>
+<option value="Rascunho">Rascunho</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-space-sm justify-end text-on-surface-variant font-label-sm text-label-sm">
+<span>Exibindo <strong>5</strong> de <strong>24</strong> registros</span>
+</div>
+</div>
+<!-- Administrative Indicators Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[700px]">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant">
+<th class="py-space-md px-space-lg font-label-sm text-label-sm uppercase tracking-wider font-bold">Nome</th>
+<th class="py-space-md px-space-md font-label-sm text-label-sm uppercase tracking-wider font-bold">Setor</th>
+<th class="py-space-md px-space-md font-label-sm text-label-sm uppercase tracking-wider font-bold">Período</th>
+<th class="py-space-md px-space-md font-label-sm text-label-sm uppercase tracking-wider font-bold">Valor</th>
+<th class="py-space-md px-space-md font-label-sm text-label-sm uppercase tracking-wider font-bold">Status</th>
+<th class="py-space-md px-space-lg font-label-sm text-label-sm uppercase tracking-wider font-bold text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-md text-body-md" id="indicators-tbody">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">bed</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface font-semibold block">Número de leitos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Capacidade instalada hoteleira</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container-high text-primary font-bold">
+                Hospedagem
+              </span>
+</td>
+<td class="py-space-md px-space-md font-medium text-on-surface-variant">2025/2</td>
+<td class="py-space-md px-space-md font-bold text-on-surface text-title-md">350</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-md py-1 rounded-full font-label-sm text-label-sm bg-surface-container-highest text-primary font-bold">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Publicado
+              </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="p-space-xs text-on-surface-variant hover:text-secondary hover:bg-secondary-fixed/50 rounded-lg transition-colors" title="Editar Indicador" type="button">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-space-xs text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Excluir Registro" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface-container-lowest/50 hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">hotel</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface font-semibold block">Taxa de ocupação</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Média de ocupação mensal</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container-high text-primary font-bold">
+                Hospedagem
+              </span>
+</td>
+<td class="py-space-md px-space-md font-medium text-on-surface-variant">2025/2</td>
+<td class="py-space-md px-space-md font-bold text-on-surface text-title-md">68%</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-md py-1 rounded-full font-label-sm text-label-sm bg-surface-container-highest text-primary font-bold">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Publicado
+              </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="p-space-xs text-on-surface-variant hover:text-secondary hover:bg-secondary-fixed/50 rounded-lg transition-colors" title="Editar Indicador" type="button">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-space-xs text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Excluir Registro" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary group-hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">store</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface font-semibold block">Número de empresas</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Cadastradas no CADASTUR SRS</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed-variant font-bold">
+                Turismo
+              </span>
+</td>
+<td class="py-space-md px-space-md font-medium text-on-surface-variant">2025/2</td>
+<td class="py-space-md px-space-md font-bold text-on-surface text-title-md">120</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-md py-1 rounded-full font-label-sm text-label-sm bg-surface-container-highest text-primary font-bold">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Publicado
+              </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="p-space-xs text-on-surface-variant hover:text-secondary hover:bg-secondary-fixed/50 rounded-lg transition-colors" title="Editar Indicador" type="button">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-space-xs text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Excluir Registro" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="bg-surface-container-lowest/50 hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed group-hover:bg-tertiary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-[18px]">work</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface font-semibold block">Empregos no setor</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Postos diretos e indiretos</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed-variant font-bold">
+                Turismo
+              </span>
+</td>
+<td class="py-space-md px-space-md font-medium text-on-surface-variant">2025/2</td>
+<td class="py-space-md px-space-md font-bold text-on-surface text-title-md">840</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-md py-1 rounded-full font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed font-bold">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                Rascunho
+              </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="p-space-xs text-on-surface-variant hover:text-secondary hover:bg-secondary-fixed/50 rounded-lg transition-colors" title="Editar Indicador" type="button">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-space-xs text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Excluir Registro" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low/70 transition-colors group">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">groups</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface font-semibold block">Fluxo de visitantes</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Estimativa de eventos e congressos</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded-full font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed-variant font-bold">
+                Turismo
+              </span>
+</td>
+<td class="py-space-md px-space-md font-medium text-on-surface-variant">2025/2</td>
+<td class="py-space-md px-space-md font-bold text-on-surface text-title-md">5.200</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-md py-1 rounded-full font-label-sm text-label-sm bg-surface-container-highest text-primary font-bold">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Publicado
+              </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="p-space-xs text-on-surface-variant hover:text-secondary hover:bg-secondary-fixed/50 rounded-lg transition-colors" title="Editar Indicador" type="button">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-space-xs text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Excluir Registro" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Administrative Pagination Footer -->
+<div class="p-space-md bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+        Mostrando <span class="font-bold text-on-surface">1</span> a <span class="font-bold text-on-surface">5</span> de <span class="font-bold text-on-surface">24</span> resultados
+      </div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md transition-colors disabled:opacity-50" disabled="" type="button">
+          Anterior
+        </button>
+<button class="w-8 h-8 rounded-lg bg-secondary text-on-secondary font-label-md text-label-md font-bold shadow-sm flex items-center justify-center" type="button">
+          1
+        </button>
+<button class="w-8 h-8 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md font-bold flex items-center justify-center transition-colors" type="button">
+          2
+        </button>
+<button class="w-8 h-8 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md font-bold flex items-center justify-center transition-colors" type="button">
+          3
+        </button>
+<span class="px-1 text-on-surface-variant">...</span>
+<button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md transition-colors" type="button">
+          Próxima
+        </button>
+</div>
+</div>
+</div>
+<!-- Informative Quick Guide for Public Servants -->
+<div class="mt-space-xl p-space-lg rounded-xl bg-gradient-to-r from-surface-container-low via-surface-container to-surface-container-high flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-primary font-bold">Ciclo de Validação COMTUR</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Indicadores com status <strong>Rascunho</strong> só serão exibidos ao público e integrados aos relatórios semestrais após a chancela oficial da Secretaria Municipal de Cultura, Esporte, Lazer e Turismo.
+        </p>
+</div>
+</div>
+<button class="whitespace-nowrap px-space-md py-space-sm bg-surface-container-lowest text-primary rounded-lg font-label-md text-label-md font-bold hover:bg-surface-container-highest transition-colors shadow-sm" type="button">
+      Manual de Operação
+    </button>
+</div>
+<!-- Slide-Over / Modal: Novo Indicador (Hidden by default, triggered via JS) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm hidden" id="modal-novo-indicador">
+<div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-xl overflow-hidden m-space-md animate-in fade-in zoom-in duration-200">
+<div class="p-space-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">add_chart</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface font-bold">Novo Indicador</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cadastre uma nova métrica no observatório</p>
+</div>
+</div>
+<button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors" id="btn-close-modal" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<form class="p-space-lg flex flex-col gap-space-md" id="form-novo-indicador">
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-bold mb-1">Nome da Métrica</label>
+<input class="w-full px-space-md py-2 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" placeholder="Ex.: Gasto médio diário do turista" required="" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-bold mb-1">Setor</label>
+<select class="w-full px-space-md py-2 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary">
+<option value="Hospedagem">Hospedagem</option>
+<option value="Turismo">Turismo</option>
+<option value="Gastronomia">Gastronomia</option>
+<option value="Comércio">Comércio</option>
+<option value="Eventos">Eventos e Negócios</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-bold mb-1">Período de Referência</label>
+<input class="w-full px-space-md py-2 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" placeholder="Ex.: 2025/2" type="text" value="2025/2"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-bold mb-1">Valor Coletado</label>
+<input class="w-full px-space-md py-2 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" placeholder="Ex.: R$ 350 ou 1.200" required="" type="text"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-bold mb-1">Status Inicial</label>
+<select class="w-full px-space-md py-2 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary">
+<option value="Rascunho">Rascunho (Interno)</option>
+<option value="Publicado">Publicado Imediatamente</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface font-bold mb-1">Fonte / Nota Técnica</label>
+<textarea class="w-full px-space-md py-2 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary resize-none" placeholder="Ex.: Pesquisa amostral aplicada no HackTown 2025..." rows="2"></textarea>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-sm">
+<button class="px-space-md py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors" id="btn-cancel-modal" type="button">
+            Cancelar
+          </button>
+<button class="px-space-lg py-2 rounded-lg bg-gradient-to-r from-primary to-secondary text-on-primary font-label-md text-label-md font-bold shadow hover:brightness-110 transition-all" type="submit">
+            Salvar Registro
+          </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const modal = document.getElementById('modal-novo-indicador');
+    const openBtn = document.getElementById('btn-open-modal');
+    const closeBtn = document.getElementById('btn-close-modal');
+    const cancelBtn = document.getElementById('btn-cancel-modal');
+    const form = document.getElementById('form-novo-indicador');
+    const searchInput = document.getElementById('table-search');
+    const tbody = document.getElementById('indicators-tbody');
+
+    function openModal() {
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      if (modal) modal.classList.add('hidden');
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    }
+
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        closeModal();
+      });
+    }
+
+    // Live search filter simulation
+    if (searchInput && tbody) {
+      searchInput.addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(term) ? '' : 'none';
+        });
+      });
+    }
+  })();
+</script></div></main></div></body></html>

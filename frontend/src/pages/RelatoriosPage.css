@@ -1,0 +1,136 @@
+.relatorios-aviso {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--color-secondary);
+  border-radius: 8px;
+  background: var(--color-primary-soft);
+  color: var(--color-text-secondary);
+  font-size: .875rem;
+  line-height: 1.7;
+}
+
+.relatorios-cabecalho,
+.relatorio-card__rotulos,
+.relatorio-card__metadados {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+}
+
+.relatorios-cabecalho {
+  margin-bottom: 1rem;
+}
+
+.relatorios-cabecalho h2 {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 1.125rem;
+}
+
+.relatorios-contagem,
+.relatorio-card__edicao {
+  padding: .25rem .625rem;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.relatorios-lista {
+  display: grid;
+  gap: 1rem;
+}
+
+.relatorio-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.relatorio-card__icone {
+  display: grid;
+  place-items: center;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.relatorio-card__icone svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.relatorio-card__conteudo {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.relatorio-card__categoria,
+.relatorio-card__metadados {
+  color: var(--color-text-muted);
+  font-size: .75rem;
+}
+
+.relatorio-card h3 {
+  margin: .75rem 0 .5rem;
+  color: var(--color-text);
+  font-size: 1.125rem;
+  line-height: 1.4;
+}
+
+.relatorio-card__descricao {
+  max-width: 85ch;
+  margin: 0 0 1rem;
+  color: var(--color-text-secondary);
+  font-size: .875rem;
+  line-height: 1.7;
+}
+
+.relatorio-card__download {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .875rem;
+  text-decoration: none;
+}
+
+.relatorio-card__download svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.relatorio-card__download[aria-disabled="true"] {
+  opacity: .6;
+  cursor: wait;
+}
+
+.relatorio-card__erro {
+  margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .relatorio-card {
+    flex-direction: column;
+    padding: 1rem;
+  }
+}

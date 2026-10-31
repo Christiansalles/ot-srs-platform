@@ -1,0 +1,37 @@
+.dialogo-confirmacao {
+  width: min(440px, calc(100vw - 2rem));
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-elevated);
+}
+
+.dialogo-confirmacao::backdrop {
+  background: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+.dialogo-confirmacao__conteudo {
+  padding: 1.5rem;
+}
+
+.dialogo-confirmacao h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.15rem;
+}
+
+.dialogo-confirmacao p {
+  margin: .6rem 0 1.5rem;
+  color: var(--color-text-secondary);
+  font-size: .9rem;
+  line-height: 1.55;
+}
+
+.dialogo-confirmacao strong {
+  display: block;
+  margin-bottom: .25rem;
+  color: var(--color-text);
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}

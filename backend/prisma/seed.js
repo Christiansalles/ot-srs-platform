@@ -4,9 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const { gerarHash } = require('../src/services/senha');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env'), quiet: true });
+const { uploadsDir } = require('../src/config/uploads');
 
 const prisma = new PrismaClient();
 const dadosPath = path.join(__dirname, 'dados');
+const relatoriosPath = path.join(dadosPath, 'relatorios');
 
 function setoresDoArquivo(dados, arquivo) {
   if (dados.setor) {
@@ -25,6 +27,39 @@ function setoresDoArquivo(dados, arquivo) {
   throw new Error(
     `Formato inválido em ${arquivo}: esperado "setor" ou "setores" com seus indicadores.`
   );
+}
+
+function lerUsuarioDesenvolvimento(prefixo, nome, perfil) {
+  const email = process.env[`${prefixo}_EMAIL`]?.trim().toLowerCase();
+  const senha = process.env[`${prefixo}_SENHA`];
+  if (!email || !senha?.trim()) {
+    throw new Error(`${prefixo}_EMAIL e ${prefixo}_SENHA precisam estar configuradas para executar o seed.`);
+  }
+  if (email === 'carga-inicial@observatorio.local') {
+    throw new Error(`${prefixo}_EMAIL não pode usar o e-mail reservado para Carga inicial.`);
+  }
+
+  return { nome, email, senha, perfil };
+}
+
+async function carregarUsuarioDesenvolvimento({ nome, email, senha, perfil }) {
+  const senhaHash = await gerarHash(senha);
+  await prisma.usuario.upsert({
+    where: { email },
+    update: {
+      nome,
+      senha_hash: senhaHash,
+      ativo: true,
+      perfil,
+    },
+    create: {
+      nome,
+      email,
+      senha_hash: senhaHash,
+      ativo: true,
+      perfil,
+    },
+  });
 }
 
 async function carregarSetor(setorDados, usuario) {
@@ -101,31 +136,58 @@ async function carregarSetor(setorDados, usuario) {
   }
 }
 
-async function main() {
-  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-  const adminSenha = process.env.ADMIN_SENHA;
-  if (!adminEmail || !adminSenha?.trim()) {
-    throw new Error('ADMIN_EMAIL e ADMIN_SENHA precisam estar configuradas para executar o seed.');
+async function carregarRelatorios(usuario) {
+  const arquivoDados = path.join(relatoriosPath, 'relatorios.json');
+  const relatorios = JSON.parse(fs.readFileSync(arquivoDados, 'utf8'));
+  fs.mkdirSync(uploadsDir, { recursive: true });
+
+  for (const dados of relatorios) {
+    const nomeArquivo = path.basename(dados.arquivo);
+    if (nomeArquivo !== dados.arquivo) {
+      throw new Error(`Nome de arquivo inválido no cadastro do relatório: ${dados.arquivo}`);
+    }
+
+    const origem = path.join(relatoriosPath, nomeArquivo);
+    const destino = path.join(uploadsDir, nomeArquivo);
+    if (!fs.existsSync(origem) || !fs.statSync(origem).isFile()) {
+      throw new Error(`PDF não encontrado para o relatório ${dados.edicao}: ${origem}`);
+    }
+
+    fs.copyFileSync(origem, destino);
+    const tamanhoKb = Math.ceil(fs.statSync(destino).size / 1024);
+    const relatorio = {
+      id_usuario: usuario.id_usuario,
+      titulo: dados.titulo,
+      edicao: dados.edicao,
+      categoria: dados.categoria,
+      data_publicacao: new Date(`${dados.data_publicacao}T00:00:00.000Z`),
+      descricao: dados.descricao,
+      arquivo_url: nomeArquivo,
+      tamanho_kb: tamanhoKb,
+      status: 'publicado',
+    };
+    const existente = await prisma.relatorio.findFirst({ where: { edicao: dados.edicao } });
+    if (existente) {
+      await prisma.relatorio.update({
+        where: { id_relatorio: existente.id_relatorio },
+        data: relatorio,
+      });
+    } else {
+      await prisma.relatorio.create({ data: relatorio });
+    }
+    console.log(`Carga do relatório ${dados.edicao} executada com sucesso.`);
   }
-  if (adminEmail === 'carga-inicial@observatorio.local') {
-    throw new Error('ADMIN_EMAIL não pode usar o e-mail reservado para Carga inicial.');
+}
+
+async function main() {
+  const admin = lerUsuarioDesenvolvimento('ADMIN', 'Administrador', 'administrador');
+  const editor = lerUsuarioDesenvolvimento('EDITOR', 'Editor', 'editor');
+  if (admin.email === editor.email) {
+    throw new Error('ADMIN_EMAIL e EDITOR_EMAIL precisam ser e-mails diferentes.');
   }
 
-  const adminSenhaHash = await gerarHash(adminSenha);
-  await prisma.usuario.upsert({
-    where: { email: adminEmail },
-    update: {
-      nome: 'Administrador',
-      senha_hash: adminSenhaHash,
-      ativo: true,
-    },
-    create: {
-      nome: 'Administrador',
-      email: adminEmail,
-      senha_hash: adminSenhaHash,
-      ativo: true,
-    },
-  });
+  await carregarUsuarioDesenvolvimento(admin);
+  await carregarUsuarioDesenvolvimento(editor);
 
   const usuario = await prisma.usuario.upsert({
     where: { email: 'carga-inicial@observatorio.local' },
@@ -155,6 +217,8 @@ async function main() {
       console.log(`Carga do setor ${setorDados.setor.nome} executada com sucesso.`);
     }
   }
+
+  await carregarRelatorios(usuario);
 }
 
 main()

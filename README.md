@@ -1,6 +1,19 @@
 # ot-srs-platform
 
-Plataforma do Observatório do Turismo para consultar e visualizar os indicadores dos relatórios de turismo. O Milestone 4 começa pelo setor de Hospedagem: banco, API e tela.
+[![CI](https://img.shields.io/github/actions/workflow/status/Christiansalles/ot-srs-platform/ci.yml?branch=main&label=CI&logo=githubactions&logoColor=white)](https://github.com/Christiansalles/ot-srs-platform/actions/workflows/ci.yml)
+[![Docker](https://img.shields.io/github/actions/workflow/status/Christiansalles/ot-srs-platform/docker.yml?branch=main&label=Docker&logo=docker&logoColor=white)](https://github.com/Christiansalles/ot-srs-platform/actions/workflows/docker.yml)
+[![Docker Compose](https://img.shields.io/github/actions/workflow/status/Christiansalles/ot-srs-platform/compose.yml?branch=main&label=Docker%20Compose&logo=docker&logoColor=white)](https://github.com/Christiansalles/ot-srs-platform/actions/workflows/compose.yml)
+![C317](https://img.shields.io/badge/C317-Inatel%20%C2%B7%20Grupo%208-0B3D91)
+
+![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A520-5FA04E?logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Jest](https://img.shields.io/badge/testes-Jest%20%2B%20Vitest-C21325?logo=jest&logoColor=white)
+
+Plataforma do Observatório do Turismo de Santa Rita do Sapucaí para consultar e visualizar os indicadores dos relatórios de turismo. Tem um portal público (indicadores, dashboard, filtros e relatórios em PDF) e um painel administrativo, onde a equipe da SMCELT cadastra, publica e despublica medições e relatórios.
 
 Projeto da disciplina C317 (Inatel), Grupo 8.
 
@@ -14,7 +27,7 @@ ot-srs-platform/
 │   └── tests/           testes Jest + Supertest
 ├── frontend/            React + Vite
 │   └── src/             components/, pages/, services/, mocks/, theme/, __tests__/
-├── docs/                contrato da API, fluxo de trabalho e relatórios dos milestones
+├── docs/                contrato da API, fluxo, escopo, decisões, mockups e evidências (índice em docs/README.md)
 └── .github/workflows/   CI
 ```
 
@@ -55,19 +68,42 @@ migrations e executa o seed antes de iniciar a API.
 ### Painel administrativo
 
 Com os serviços iniciados pelo Docker Compose, abra <http://localhost:8080/admin/login>
-e entre com a conta de desenvolvimento criada pelo seed:
+e entre com uma das contas de desenvolvimento criadas pelo seed:
 
-| Campo | Valor local |
-| --- | --- |
-| E-mail | `admin@observatorio.local` |
-| Senha | `senha-admin-local-nao-usar-em-producao` |
+| Perfil | E-mail | Senha local |
+| --- | --- | --- |
+| `administrador` (cadastra, publica e despublica) | `admin@observatorio.local` | `senha-admin-local-nao-usar-em-producao` |
+| `editor` (cadastra só como rascunho) | `editor@observatorio.local` | `senha-editor-local-nao-usar-em-producao` |
 
 Esses valores são fictícios e servem apenas para desenvolvimento local. O Compose
 usa esses mesmos valores como padrão. Para substituí-los, defina `ADMIN_EMAIL`,
-`ADMIN_SENHA` e `JWT_SECRET` no ambiente ou em um arquivo `.env` na raiz do projeto.
+`ADMIN_SENHA`, `EDITOR_EMAIL`, `EDITOR_SENHA` e `JWT_SECRET` no ambiente ou em um
+arquivo `.env` na raiz do projeto.
 Para executar o backend fora do Docker, configure as mesmas variáveis em
 `backend/.env`, usando `backend/.env.example` como referência. Nunca use os valores
 de exemplo em ambientes compartilhados ou de produção.
+
+O painel tem três telas:
+
+| Endereço | Tela |
+| --- | --- |
+| `/admin` | Painel de gestão (Tela 6): lista as medições com o status de cada uma |
+| `/admin/medicoes/nova` e `/admin/medicoes/:id/editar` | Cadastro e edição de medição (Tela 7) |
+| `/admin/relatorios` | Relatórios (Tela 8): upload de PDF e lista dos relatórios com o status |
+
+Todo conteúdo tem um de dois status: `rascunho` ou `publicado`. O portal público
+mostra só o que está `publicado`; rascunho não aparece em listagem, contagem,
+destaque nem download. O que cada perfil pode fazer:
+
+| Ação | `administrador` | `editor` |
+| --- | --- | --- |
+| Entrar no painel e ver medições e relatórios, inclusive rascunhos | Sim | Sim |
+| Cadastrar e editar indicadores e medições (sempre como rascunho) | Sim | Sim |
+| Enviar um PDF de relatório (sempre como rascunho) | Sim | Sim |
+| Publicar e despublicar medições e relatórios | Sim | Não: os botões não aparecem e a API responde `403` |
+
+Uma medição publicada não pode ser editada: despublique antes de editar (a API
+responde `409`).
 
 No Adminer, informe `db` como servidor, `ot` como usuário, `ot` como senha e
 `ot_srs` como banco. Para parar os serviços, pressione Ctrl+C ou execute
@@ -76,6 +112,25 @@ No Adminer, informe `db` como servidor, `ot` como usuário, `ot` como senha e
 O Compose usa um segredo local ilustrativo para assinar tokens de autenticação.
 Em qualquer ambiente compartilhado ou de produção, defina `JWT_SECRET`
 com um valor aleatório e privado antes de iniciar os serviços.
+
+### Relatórios em PDF
+
+Os PDFs ficam no diretório definido por `UPLOADS_DIR`. No Docker Compose, é
+`/app/uploads` dentro do container do backend, persistido no volume `uploads`.
+Fora do Docker, o padrão é `backend/uploads/`, que o Git ignora.
+
+O seed copia para esse diretório os dois PDFs ilustrativos de
+`backend/prisma/dados/relatorios/` (cadastro em `relatorios.json`) e os deixa como
+`publicado`. Como o seed roda a cada início do backend, esses dois voltam a ficar
+publicados mesmo que tenham sido despublicados no painel. Os PDFs enviados pelo
+painel continuam no volume entre reinícios.
+
+O upload aceita só PDF (tipo `application/pdf` e conteúdo começando com `%PDF`),
+até 10 MiB. O servidor salva o arquivo com um nome gerado por ele, nunca com o
+nome que veio do navegador. A pasta não é servida diretamente: o portal público
+baixa o PDF por `GET /api/relatorios/:id/arquivo`, que só entrega relatórios
+publicados. Para apagar os PDFs enviados junto com o banco, use
+`docker compose down -v`.
 
 ### Rodar os testes
 
@@ -204,9 +259,12 @@ conjunta dos serviços é feita pelo Docker Compose, documentado acima.
 | --- | --- | --- | --- |
 | `DATABASE_URL` | `backend/.env` | Conexão PostgreSQL usada pela integração do banco | `postgresql://ot:ot@localhost:5432/ot_srs` |
 | `PORT` | `backend/.env` | Porta HTTP da API; padrão `3000` | `3000` |
+| `UPLOADS_DIR` | `backend/.env` (no Compose, fixa em `/app/uploads`) | Diretório dos PDFs dos relatórios, relativo a `backend/` ou absoluto; padrão `uploads` | `./uploads` |
 | `CORS_ORIGIN` | `backend/.env` ou ambiente/`.env` do Compose | Origem permitida para chamadas do navegador; vazio libera todas | `http://localhost:5173` |
 | `ADMIN_EMAIL` | `backend/.env` ou ambiente/`.env` do Compose | E-mail do administrador de desenvolvimento criado pelo seed | `admin@observatorio.local` |
 | `ADMIN_SENHA` | `backend/.env` ou ambiente/`.env` do Compose | Senha local do administrador de desenvolvimento | `senha-admin-local-nao-usar-em-producao` |
+| `EDITOR_EMAIL` | `backend/.env` ou ambiente/`.env` do Compose | E-mail do editor de desenvolvimento criado pelo seed; precisa ser diferente de `ADMIN_EMAIL` | `editor@observatorio.local` |
+| `EDITOR_SENHA` | `backend/.env` ou ambiente/`.env` do Compose | Senha local do editor de desenvolvimento | `senha-editor-local-nao-usar-em-producao` |
 | `JWT_SECRET` | `backend/.env` ou ambiente/`.env` do Compose | Segredo que assina os tokens de autenticação; use um valor forte fora do desenvolvimento | `jwt-secret-local-nao-usar-em-producao` |
 | `VITE_API_URL` | `frontend/.env` | Endereço público da API, sem `/api` no final | `http://localhost:3000` |
 
@@ -236,9 +294,9 @@ ou em um `.env` na raiz. As portas também podem ser alteradas com `POSTGRES_POR
 API que o navegador usará; se mudar esse endereço, reconstrua o frontend. `CORS_ORIGIN`
 define a origem permitida pela API; se ficar vazia, a API libera qualquer origem.
 
-Os dados do PostgreSQL ficam no volume persistente `postgres_data`. Para parar os
-serviços, use `docker compose down`. Para apagar também os dados persistidos, use
-`docker compose down -v`. Na inicialização, o backend aplica migrations e executa o
+Os dados do PostgreSQL ficam no volume persistente `postgres_data`, e os PDFs dos
+relatórios no volume `uploads`. Para parar os serviços, use `docker compose down`.
+Para apagar também os dados persistidos (banco e PDFs), use `docker compose down -v`. Na inicialização, o backend aplica migrations e executa o
 seed antes de começar a atender requisições. O workflow
 `.github/workflows/compose.yml` também verifica no CI se o banco, a API, o frontend
 e o Adminer ficam acessíveis.
@@ -251,7 +309,7 @@ Leia [docs/fluxo-de-trabalho.md](docs/fluxo-de-trabalho.md) antes de abrir a pri
 
 A URL VITE_API_URL contém somente a base (por exemplo, http://localhost:3000); os serviços adicionam /api às rotas. VITE_USE_MOCK=false usa a API e exibe erros de consulta na tela. Para desenvolver ou conferir os dados ilustrativos sem backend, configure VITE_USE_MOCK=true no frontend/.env e reinicie o Vite. O mock não é ativado automaticamente em caso de erro.
 
-As referências visuais e capturas de tela do frontend estão em [docs/pr-48](docs/pr-48/README.md).
+As referências visuais e capturas de tela do frontend estão em [docs/evidencias/pr-48](docs/evidencias/pr-48/README.md).
 
 ### Filtros dos serviços (#109)
 

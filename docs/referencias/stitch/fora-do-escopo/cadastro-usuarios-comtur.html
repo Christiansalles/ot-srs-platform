@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-container": "#8a059d", "tertiary-fixed": "#ffd6fc", "outline": "#737784", "on-tertiary-fixed": "#36003e", "on-primary": "#ffffff", "surface-container": "#e5eeff", "tertiary-fixed-dim": "#fbaaff", "inverse-on-surface": "#eaf1ff", "outline-variant": "#c3c6d5", "secondary-fixed": "#e4dfff", "secondary-fixed-dim": "#c7bfff", "on-tertiary-fixed-variant": "#7c008d", "on-secondary-fixed-variant": "#412cb4", "surface-container-high": "#dce9ff", "on-secondary-fixed": "#170065", "secondary": "#5746ca", "surface": "#f8f9ff", "background": "#f8f9ff", "primary-fixed-dim": "#b1c5ff", "secondary-container": "#7061e5", "on-surface-variant": "#434653", "on-background": "#0b1c30", "error-container": "#ffdad6", "on-primary-fixed-variant": "#00419e", "on-tertiary-container": "#faa3ff", "primary": "#003482", "on-tertiary": "#ffffff", "primary-fixed": "#dae2ff", "surface-container-low": "#eff4ff", "on-secondary-container": "#fffbff", "surface-tint": "#2559bc", "on-secondary": "#ffffff", "primary-container": "#0a4aad", "on-error-container": "#93000a", "surface-bright": "#f8f9ff", "inverse-primary": "#b1c5ff", "surface-variant": "#d3e4fe", "surface-container-highest": "#d3e4fe", "on-error": "#ffffff", "tertiary": "#660074", "error": "#ba1a1a", "surface-dim": "#cbdbf5", "on-primary-fixed": "#001946", "inverse-surface": "#213145", "on-surface": "#0b1c30", "surface-container-lowest": "#ffffff", "on-primary-container": "#abc1ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-sm": "0.5rem", "space-md": "1rem", "space-2xl": "3rem", "space-lg": "1.5rem", "gutter-mobile": "1rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin-mobile": "1rem", "margin": "2rem" }, "fontFamily": { "title-md": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "display-lg-mobile": [ "Plus Jakarta Sans" ], "label-lg": [ "Plus Jakarta Sans" ], "headline-lg-mobile": [ "Plus Jakarta Sans" ], "label-md": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "title-lg": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "label-sm": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "display-lg": [ "Plus Jakarta Sans" ] }, "fontSize": { "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "display-lg-mobile": [ "28px", { "lineHeight": "36px", "fontWeight": "800" } ], "label-lg": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "fontWeight": "700" } ], "label-md": [ "12px", { "lineHeight": "16px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "fontWeight": "700" } ], "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "display-lg": [ "40px", { "lineHeight": "48px", "fontWeight": "800" } ] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="p-space-lg flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-container via-secondary to-tertiary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">terrain</span></div><div><div class="flex items-center gap-space-xs"><span class="font-title-md text-title-md text-primary font-bold">OT-SRS</span><span class="font-label-sm text-label-sm text-secondary font-bold">GESTOR</span></div><span class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Backoffice Municipal</span></div></div><div class="px-space-md py-space-xs"><div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm mb-space-xs font-bold">Módulos de Gestão</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-administrativa" href="#"><span class="material-symbols-outlined text-[20px]">space_dashboard</span><span>Painel Geral</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-coleta-dados" href="#"><span class="material-symbols-outlined text-[20px]">input</span><span>Entrada de Dados</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-hospedagem" href="#"><span class="material-symbols-outlined text-[20px]">hotel</span><span>Ocupação Hoteleira</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-pesquisas" href="#"><span class="material-symbols-outlined text-[20px]">quiz</span><span>Pesquisas de Demanda</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-relatorios" href="#"><span class="material-symbols-outlined text-[20px]">summarize</span><span>Publicador de Relatórios</span></a></nav></div><div class="px-space-md py-space-xs mt-space-md"><div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm mb-space-xs font-bold">Governança &amp; Sistema</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-usuarios" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span>Usuários &amp; COMTUR</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="gestao-configuracoes" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Configurações</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="inicio" href="#"><span class="material-symbols-outlined text-[20px]">visibility</span><span>Ver Portal Público</span></a></nav></div><div class="mt-auto p-space-md bg-surface-container-low mx-space-sm mb-space-sm rounded-xl"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-label-md">SR</div><div class="flex-1 min-w-0"><div class="font-label-md text-label-md text-on-surface truncate font-bold">SMCELT Admin</div><div class="font-body-sm text-body-sm text-on-surface-variant truncate">Prefeitura de SRS</div></div><a class="text-on-surface-variant hover:text-error transition-colors" data-path="login" href="#"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-md"><span class="font-title-md text-title-md text-primary font-bold hidden sm:inline">Painel de Gestão Municipal</span><div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-xs rounded-full"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span><input class="bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none w-48 lg:w-64" placeholder="Buscar registros, pesquisas..." type="search"/></div></div><div class="flex items-center gap-space-md"><button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors relative" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error"></span></button><button class="p-space-xs text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 bg-surface min-h-screen"><div class="w-full px-margin py-space-xl"><div class="flex flex-col w-full">
+<script>
+    (function syncAppShellNav() {
+      const links = document.querySelectorAll('aside nav a');
+      links.forEach(link => {
+        const path = link.getAttribute('data-path');
+        if (path === 'gestao-usuarios') {
+          link.classList.add('bg-primary-container', 'text-on-primary', 'font-bold');
+          link.classList.remove('text-on-surface-variant', 'hover:bg-surface-container');
+        } else {
+          link.classList.remove('bg-primary-container', 'text-on-primary', 'font-bold');
+        }
+      });
+    })();
+  </script>
+<!-- Breadcrumbs & Quick Return Bar -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md mb-space-lg">
+<div class="flex items-center gap-space-sm flex-wrap text-on-surface-variant font-body-sm text-body-sm">
+<a class="hover:text-primary transition-colors flex items-center gap-1" data-path="gestao-administrativa" href="#">
+<span class="material-symbols-outlined text-[16px]">space_dashboard</span>
+<span>Painel Geral</span>
+</a>
+<span class="text-outline-variant">/</span>
+<span>Governança &amp; Sistema</span>
+<span class="text-outline-variant">/</span>
+<a class="hover:text-primary transition-colors font-medium" data-path="gestao-usuarios" href="#">Usuários &amp; COMTUR</a>
+<span class="text-outline-variant">/</span>
+<span class="text-primary font-bold">Novo Usuário</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="px-space-md py-space-xs rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+        Gestão 2025/2026 • Portaria nº 342
+      </span>
+<a class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" data-path="gestao-usuarios" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Voltar para Usuários
+      </a>
+</div>
+</div>
+<!-- Header Block: Title & Context -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
+<div class="space-y-1">
+<div class="flex items-center gap-space-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">
+          Cadastrar Usuário / Membro do COMTUR
+        </h1>
+<span class="px-space-sm py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold">
+          SMCELT-SRS
+        </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+        Cadastre gestores municipais da SMCELT, conselheiros homologados do COMTUR ou pesquisadores de campo credenciados no Observatório do Turismo.
+      </p>
+</div>
+</div>
+<!-- Institutional Access Alert -->
+<div class="p-space-md rounded-xl bg-surface-container-low shadow-sm flex items-start gap-space-md mb-space-xl">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">policy</span>
+</div>
+<div class="space-y-0.5 flex-1">
+<span class="font-label-lg text-label-lg text-primary font-bold">
+        Controle de Acesso por Perfil Institucional
+      </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Usuários com perfil <strong class="text-secondary font-semibold">COMTUR</strong> possuem permissão estatutária de emissão de pareceres e homologação oficial de indicadores; equipes técnicas da <strong class="text-primary font-semibold">SMCELT</strong> detêm poderes de publicação e edição master no Observatório.
+      </p>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[20px] self-center hidden sm:block">lock</span>
+</div>
+<!-- Main Form Container -->
+<form class="flex flex-col gap-space-xl" id="form-cad-usuario" onsubmit="return false;">
+<!-- Section 1: Dados Pessoais & Identificação -->
+<div class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm space-y-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-primary flex items-center justify-center font-bold font-label-md text-label-md">
+            1
+          </div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">
+              Dados Pessoais &amp; Identificação
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Informações do titular para identificação no sistema de governança
+            </p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">
+          Campos obrigatórios (*)
+        </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg">
+<!-- Nome Completo -->
+<div class="md:col-span-6 flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1" for="nome-completo">
+<span>Nome Completo</span>
+<span class="text-error font-bold">*</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px] pointer-events-none">person</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md shadow-sm outline-none focus:ring-2 focus:ring-secondary/40 focus:bg-surface-container-low transition-all" id="nome-completo" placeholder="Ex: Dra. Mariana Vasconcellos Ribeiro" required="" type="text"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Nome conforme cadastro civil oficial ou ata COMTUR.</span>
+</div>
+<!-- E-mail Institucional -->
+<div class="md:col-span-6 flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1" for="email-oficial">
+<span>E-mail Institucional / Oficial</span>
+<span class="text-error font-bold">*</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px] pointer-events-none">mail</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md shadow-sm outline-none focus:ring-2 focus:ring-secondary/40 focus:bg-surface-container-low transition-all" id="email-oficial" placeholder="mariana.ribeiro@santaritadosapucai.mg.gov.br" required="" type="email"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Será utilizado para envio do link seguro de ativação e tokens 2FA.</span>
+</div>
+<!-- CPF / Documento -->
+<div class="md:col-span-6 flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1" for="cpf-doc">
+<span>CPF / Documento</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px] pointer-events-none">badge</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md shadow-sm outline-none focus:ring-2 focus:ring-secondary/40 focus:bg-surface-container-low transition-all" id="cpf-doc" maxlength="14" placeholder="000.000.000-00" type="text"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Necessário para chancelamento em atas e relatórios públicos.</span>
+</div>
+<!-- Telefone / WhatsApp -->
+<div class="md:col-span-6 flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1" for="telefone-contato">
+<span>Telefone / WhatsApp de Contato</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px] pointer-events-none">call</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md shadow-sm outline-none focus:ring-2 focus:ring-secondary/40 focus:bg-surface-container-low transition-all" id="telefone-contato" placeholder="(35) 99999-0000" type="tel"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Para comunicações urgentes e convocações extraordinárias.</span>
+</div>
+</div>
+</div>
+<!-- Section 2: Vínculo Institucional & Representação -->
+<div class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm space-y-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-primary flex items-center justify-center font-bold font-label-md text-label-md">
+            2
+          </div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">
+              Vínculo Institucional &amp; Representação
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Classificação da entidade no ecossistema turístico e acadêmico de Santa Rita
+            </p>
+</div>
+</div>
+<span class="px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_balance</span> COMTUR Ativo
+        </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg">
+<!-- Entidade / Órgão Representado -->
+<div class="md:col-span-12 lg:col-span-5 flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1" for="entidade-orgao">
+<span>Entidade / Órgão Representado</span>
+<span class="text-error font-bold">*</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px] pointer-events-none">domain</span>
+<select class="w-full pl-10 pr-10 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md shadow-sm outline-none focus:ring-2 focus:ring-secondary/40 focus:bg-surface-container-low transition-all appearance-none cursor-pointer" id="entidade-orgao" required="">
+<option disabled="" selected="" value="">Selecione a representação institucional...</option>
+<option value="smcelt">Poder Executivo - SMCELT (Secretaria Municipal)</option>
+<option value="sindtur">Trade Hoteleiro - SindTur Mantiqueira</option>
+<option value="abrasel">Setor Gastronômico &amp; Eventos - Abrasel Regional</option>
+<option value="inatel-fai">Academia &amp; Inovação - Inatel / FAI / ETE</option>
+<option value="sociedade-civil">Sociedade Civil / Guias de Turismo &amp; Artesãos</option>
+<option value="financas">Secretaria Municipal de Finanças / Tributos</option>
+<option value="ace">Associação Comercial &amp; Empresarial (ACE-SRS)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 text-on-surface-variant pointer-events-none text-[20px]">expand_more</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Conforme composição paritária estabelecida pelo COMTUR.</span>
+</div>
+<!-- Cargo / Função Oficial -->
+<div class="md:col-span-6 lg:col-span-4 flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1" for="cargo-funcao">
+<span>Cargo / Função Oficial</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px] pointer-events-none">work</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md shadow-sm outline-none focus:ring-2 focus:ring-secondary/40 focus:bg-surface-container-low transition-all" id="cargo-funcao" placeholder="Ex: Titular do Conselho / Pesquisador Sênior" type="text"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ex: Secretário, Presidente de Conselho, Pesquisador Chefe.</span>
+</div>
+<!-- Portaria de Designação -->
+<div class="md:col-span-6 lg:col-span-3 flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1" for="ato-portaria">
+<span>Número do Ato / Portaria</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px] pointer-events-none">description</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md shadow-sm outline-none focus:ring-2 focus:ring-secondary/40 focus:bg-surface-container-low transition-all" id="ato-portaria" placeholder="Portaria nº 342/2025" type="text"/>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ato publicado no Diário Oficial de SRS.</span>
+</div>
+</div>
+</div>
+<!-- Section 3: Nível de Acesso & Permissões no Sistema -->
+<div class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm space-y-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-primary flex items-center justify-center font-bold font-label-md text-label-md">
+            3
+          </div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">
+              Nível de Acesso &amp; Permissões no Sistema
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Selecione o perfil que definirá as atribuições técnicas e operacionais no painel
+            </p>
+</div>
+</div>
+</div>
+<!-- 3 Card Level Selector -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-md" id="role-selector">
+<!-- Card 1: Administrador Pleno (SMCELT) -->
+<label class="group relative flex flex-col p-space-lg rounded-xl bg-surface-container-low cursor-pointer transition-all duration-200 hover:shadow-md role-card has-[:checked]:bg-surface-container has-[:checked]:shadow-md">
+<input checked="" class="sr-only peer" name="access_level" type="radio" value="admin"/>
+<div class="flex items-start justify-between mb-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[26px]">admin_panel_settings</span>
+</div>
+<div class="w-6 h-6 rounded-full bg-surface-container-lowest flex items-center justify-center peer-checked:bg-primary transition-colors">
+<span class="w-2.5 h-2.5 rounded-full bg-primary peer-checked:bg-on-primary"></span>
+</div>
+</div>
+<div class="space-y-1 flex-1">
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">
+              Nível Master
+            </span>
+<h3 class="font-title-md text-title-md text-on-surface font-bold">
+              Administrador Pleno (SMCELT)
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-1">
+              Acesso total irrestrito: criação, parametrização, publicação de relatórios oficiais, governança de dados e gestão de membros.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-sm border-t border-surface-container-high/60 flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Gestão de Dados</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Publicação Master</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Configurações</span>
+</div>
+</label>
+<!-- Card 2: Conselheiro Homologador (COMTUR) -->
+<label class="group relative flex flex-col p-space-lg rounded-xl bg-surface-container-low cursor-pointer transition-all duration-200 hover:shadow-md role-card has-[:checked]:bg-surface-container has-[:checked]:shadow-md">
+<input class="sr-only peer" name="access_level" type="radio" value="comtur"/>
+<div class="flex items-start justify-between mb-space-md">
+<div class="w-12 h-12 rounded-xl bg-secondary text-on-secondary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[26px]">how_to_reg</span>
+</div>
+<div class="w-6 h-6 rounded-full bg-surface-container-lowest flex items-center justify-center peer-checked:bg-secondary transition-colors">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary peer-checked:bg-on-secondary"></span>
+</div>
+</div>
+<div class="space-y-1 flex-1">
+<span class="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider">
+              Deliberação &amp; Auditoria
+            </span>
+<h3 class="font-title-md text-title-md text-on-surface font-bold">
+              Conselheiro Homologador (COMTUR)
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-1">
+              Acesso a validação de dados semestrais, relatórios técnicos avançados, envio de pareceres regimentais e atas deliberativas.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-sm border-t border-surface-container-high/60 flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Homologação</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Pareceres Técnicos</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Atas COMTUR</span>
+</div>
+</label>
+<!-- Card 3: Coletor de Dados / Pesquisador -->
+<label class="group relative flex flex-col p-space-lg rounded-xl bg-surface-container-low cursor-pointer transition-all duration-200 hover:shadow-md role-card has-[:checked]:bg-surface-container has-[:checked]:shadow-md">
+<input class="sr-only peer" name="access_level" type="radio" value="pesquisador"/>
+<div class="flex items-start justify-between mb-space-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[26px]">fact_check</span>
+</div>
+<div class="w-6 h-6 rounded-full bg-surface-container-lowest flex items-center justify-center peer-checked:bg-primary transition-colors">
+<span class="w-2.5 h-2.5 rounded-full bg-primary peer-checked:bg-on-primary"></span>
+</div>
+</div>
+<div class="space-y-1 flex-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold tracking-wider">
+              Operacional &amp; Campo
+            </span>
+<h3 class="font-title-md text-title-md text-on-surface font-bold">
+              Coletor de Dados / Pesquisador
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-1">
+              Acesso restrito ao módulo de entrada de dados de campo, entrevistas de demanda em eventos e formulários periódicos de leitos.
+            </p>
+</div>
+<div class="mt-space-lg pt-space-sm border-t border-surface-container-high/60 flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Input de Dados</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Pesquisa de Demanda</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-highest text-on-surface">Sem Edição Master</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Section 4: Status da Conta -->
+<div class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-2xl shadow-sm space-y-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-primary flex items-center justify-center font-bold font-label-md text-label-md">
+            4
+          </div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">
+              Status Inicial da Conta
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Defina a liberação imediata ou o aguardo formal de posse documental
+            </p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Status 1: Ativo e Credenciado -->
+<label class="flex items-start gap-space-md p-space-md rounded-xl bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container has-[:checked]:bg-surface-container has-[:checked]:shadow-sm">
+<input checked="" class="mt-1" name="account_status" type="radio" value="ativo"/>
+<div class="space-y-1">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Ativo e Credenciado</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-primary font-label-sm text-label-sm font-bold ml-2">Imediato</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              O usuário recebe o e-mail de convite na hora e pode autenticar-se para iniciar suas atividades regimentais.
+            </p>
+</div>
+</label>
+<!-- Status 2: Pendente de Posse / Inativo -->
+<label class="flex items-start gap-space-md p-space-md rounded-xl bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container has-[:checked]:bg-surface-container has-[:checked]:shadow-sm">
+<input class="mt-1" name="account_status" type="radio" value="pendente"/>
+<div class="space-y-1">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Pendente de Posse / Inativo</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-secondary font-label-sm text-label-sm font-bold ml-2">Aguardando Ata</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Registro prévio armazenado no sistema. O acesso aos módulos só será desbloqueado após anexação do termo de posse.
+            </p>
+</div>
+</label>
+</div>
+</div>
+<!-- Form Action Bar -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[20px] text-primary">security</span>
+<span>Acesso protegido pelo protocolo criptográfico do Município de Santa Rita do Sapucaí.</span>
+</div>
+<div class="flex items-center gap-space-md w-full sm:w-auto">
+<a class="flex-1 sm:flex-none text-center px-space-lg py-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-bold transition-colors" data-path="gestao-usuarios" href="#">
+          Cancelar
+        </a>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-space-xs px-space-xl py-space-sm rounded-lg bg-gradient-to-r from-primary-container via-secondary to-tertiary-container hover:brightness-105 text-on-primary font-label-lg text-label-lg font-bold shadow-md transition-all active:scale-[0.98]" id="btn-salvar-usuario" type="button">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Salvar e Enviar Convite de Acesso</span>
+</button>
+</div>
+</div>
+</form>
+<!-- Institutional Framework Banner -->
+<div class="mt-space-xl p-space-lg rounded-2xl bg-surface-container flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">gavel</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-primary font-bold">
+          Marco Regulatório &amp; Governança COMTUR
+        </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Amparado pela Lei Municipal de Criação nº 4.890 e Resoluções vigentes da Secretaria Municipal de Cultura, Esporte, Lazer e Turismo (SMCELT).
+        </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto justify-end">
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-primary font-label-sm text-label-sm font-bold shadow-sm transition-all flex items-center gap-1" onclick="alert('Baixando íntegra do Regimento Interno COMTUR (PDF)...')" type="button">
+<span class="material-symbols-outlined text-[16px]">download</span>
+        Regimento Interno
+      </button>
+<button class="px-space-md py-space-xs rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-sm text-label-sm font-bold shadow-sm transition-all flex items-center gap-1" onclick="alert('Abrindo manual de operação do Observatório...')" type="button">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+        Manual de Operação
+      </button>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+    document.getElementById('btn-salvar-usuario')?.addEventListener('click', function() {
+      const nome = document.getElementById('nome-completo').value.trim();
+      const email = document.getElementById('email-oficial').value.trim();
+      const entidade = document.getElementById('entidade-orgao').value;
+
+      if (!nome || !email || !entidade) {
+        alert('Por favor, preencha todos os campos obrigatórios (*): Nome Completo, E-mail e Entidade Representada.');
+        return;
+      }
+
+      this.disabled = true;
+      this.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">sync</span><span>Processando credenciamento...</span>';
+      
+      setTimeout(() => {
+        alert('Usuário cadastrado com sucesso no Observatório de Santa Rita do Sapucaí! O convite de acesso com autenticação em duas etapas foi enviado para ' + email);
+        this.disabled = false;
+        this.innerHTML = '<span class="material-symbols-outlined text-[20px]">check_circle</span><span>Cadastrado com Sucesso!</span>';
+        this.classList.remove('from-primary-container', 'via-secondary', 'to-tertiary-container');
+        this.classList.add('bg-primary');
+      }, 900);
+    });
+
+    // Mask for CPF input
+    document.getElementById('cpf-doc')?.addEventListener('input', function (e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+      if (value.length > 9) {
+        value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, '$1.$2.$3-$4');
+      } else if (value.length > 6) {
+        value = value.replace(/^(\d{3})(\d{3})(\d{1,3})$/, '$1.$2.$3');
+      } else if (value.length > 3) {
+        value = value.replace(/^(\d{3})(\d{1,3})$/, '$1.$2');
+      }
+      e.target.value = value;
+    });
+
+    // Mask for Phone
+    document.getElementById('telefone-contato')?.addEventListener('input', function (e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+      if (value.length > 10) {
+        value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+      } else if (value.length > 6) {
+        value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+      } else if (value.length > 2) {
+        value = value.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+      }
+      e.target.value = value;
+    });
+  </script>
+</div></div></main></div></body></html>

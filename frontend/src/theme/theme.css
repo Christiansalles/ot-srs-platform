@@ -3,23 +3,43 @@
 :root {
   /* Identidade principal */
   --color-primary: #0A4AAD;
+  --color-primary-soft: #E6EEFB;
   --color-secondary: #6C5CE0;
+  /* Roxo escurecido para links e rótulos em texto pequeno */
+  --color-secondary-strong: #5746CA;
   --color-accent: #C750D6;
+  --color-accent-soft: #FBE8FD;
+  /* Acento escurecido para texto pequeno: o --color-accent puro não atinge o contraste AA */
+  --color-accent-strong: #8A059D;
 
   /* Superfícies */
   --color-background: #F8FAFC;
   --color-surface: #FFFFFF;
   --color-surface-muted: #F1F5F9;
+  --color-surface-translucent: rgba(255, 255, 255, 0.92);
+  --color-overlay: rgba(15, 23, 42, 0.4);
+  --shadow-elevated: 0 20px 45px rgba(11, 28, 48, 0.18);
+  --color-on-brand: #FFFFFF;
 
   /* Texto e bordas */
   --color-text: #0F172A;
   --color-text-secondary: #434653;
   --color-text-muted: #64748B;
   --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
 
   /* Estados */
   --color-success: #0D9488;
+  /* Verde claro para indicadores sobre o gradiente */
+  --color-success-bright: #34D399;
   --color-danger: #DC2626;
+  --color-danger-soft: #FEF2F2;
+  --color-danger-border: #FECACA;
+  --color-danger-strong: #B91C1C;
+
+  /* Sombras */
+  --shadow-card: 0 4px 16px rgba(15, 23, 42, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(108, 92, 224, 0.15);
 
   /* Paleta de apoio para gráficos */
   --chart-cyan: #5FE6E0;
@@ -32,9 +52,17 @@
   /* Gradiente institucional */
   --gradient-brand: linear-gradient(
     135deg,
-    #0A4AAD 0%,
-    #6C5CE0 52%,
-    #C750D6 100%
+    var(--color-primary) 0%,
+    var(--color-secondary) 52%,
+    var(--color-accent) 100%
+  );
+
+  /* O mesmo gradiente translúcido, para aplicar sobre fotos */
+  --gradient-brand-overlay: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary) 70%, transparent) 0%,
+    color-mix(in srgb, var(--color-secondary) 55%, transparent) 52%,
+    color-mix(in srgb, var(--color-accent) 65%, transparent) 100%
   );
 
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -62,7 +90,7 @@ body {
  */
 .ot-gradient {
   background: var(--gradient-brand);
-  color: #FFFFFF;
+  color: var(--color-on-brand);
 }
 
 .ot-button-primary {
@@ -70,7 +98,7 @@ body {
   border-radius: 8px;
   padding: 0.625rem 1rem;
   background: var(--gradient-brand);
-  color: #FFFFFF;
+  color: var(--color-on-brand);
   font-family: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -89,7 +117,7 @@ body {
   border: 1px solid var(--color-secondary);
   border-radius: 8px;
   padding: 0.625rem 1rem;
-  background: #FFFFFF;
+  background: var(--color-surface);
   color: var(--color-secondary);
   font-family: inherit;
   font-weight: 700;
@@ -97,7 +125,7 @@ body {
 }
 
 .ot-button-secondary:hover {
-  background: #F1F5F9;
+  background: var(--color-surface-muted);
 }
 
 .ot-focus:focus-visible,
@@ -105,5 +133,5 @@ body {
 .ot-button-secondary:focus-visible {
   outline: 2px solid var(--color-secondary);
   outline-offset: 2px;
-  box-shadow: 0 0 0 3px rgba(108, 92, 224, 0.15);
+  box-shadow: var(--shadow-focus);
 }

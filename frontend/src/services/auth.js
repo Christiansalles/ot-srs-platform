@@ -89,6 +89,11 @@ export function getUsuarioLogado() {
   }
 }
 
+// Só esconde os botões: quem decide o acesso é a API, que responde 403 ao editor.
+export function podePublicar() {
+  return getUsuarioLogado()?.perfil === 'administrador';
+}
+
 export function logout() {
   window.sessionStorage.removeItem(TOKEN_KEY);
   window.sessionStorage.removeItem(USER_KEY);
