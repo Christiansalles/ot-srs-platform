@@ -5,7 +5,9 @@ import RelatoriosPage from '../pages/RelatoriosPage';
 import { getRelatorios, getPeriodos, getSetores } from '../services/api';
 import { mockRelatorios } from '../mocks/relatorios';
 
-vi.mock('../services/api', () => ({ getRelatorios: vi.fn(), getPeriodos: vi.fn(), getSetores: vi.fn() }));
+vi.mock('../services/api', async (importarOriginal) => ({
+  ...await importarOriginal(), getRelatorios: vi.fn(), getPeriodos: vi.fn(), getSetores: vi.fn(), baixarRelatorio: vi.fn(),
+}));
 
 const publicacoes = [...mockRelatorios, { ...mockRelatorios[0], id: 3, data_publicacao: '2024-01-01' }];
 

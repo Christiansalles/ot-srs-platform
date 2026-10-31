@@ -101,6 +101,33 @@
   line-height: 1.7;
 }
 
+.relatorio-card__download {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .875rem;
+  text-decoration: none;
+}
+
+.relatorio-card__download svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.relatorio-card__download[aria-disabled="true"] {
+  opacity: .6;
+  cursor: wait;
+}
+
+.relatorio-card__erro {
+  margin-top: 1rem;
+}
+
 @media (max-width: 640px) {
   .relatorio-card {
     flex-direction: column;
