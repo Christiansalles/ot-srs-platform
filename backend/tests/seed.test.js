@@ -58,21 +58,27 @@ describe('Seed de todos os setores', () => {
     limparUploads();
   });
 
+  // Confere só o que veio da carga: o README roda os testes no mesmo banco do Compose,
+  // que pode ter indicadores e medições cadastrados pelo painel.
   test('carrega indicadores e medições dos formatos setor e setores', async () => {
+    const formatar = ({ ano, semestre }, valor) => `${ano}/${semestre}=${Number(valor)}`;
+
     for (const { setor, indicadores } of esperados) {
-      const carregados = await prisma.indicador.findMany({
-        where: { setor: { nome: setor.nome } },
-        include: { medicoes: true },
-      });
+      for (const indicador of indicadores) {
+        const carregado = await prisma.indicador.findFirst({
+          where: { nome: indicador.nome, setor: { nome: setor.nome } },
+          include: {
+            medicoes: {
+              where: { usuario: { email: 'carga-inicial@observatorio.local' } },
+              include: { periodo: true },
+            },
+          },
+        });
 
-      const quantidadeMedicoesEsperada = indicadores.reduce(
-        (total, indicador) => total + indicador.medicoes.length,
-        0
-      );
-
-      expect(carregados).toHaveLength(indicadores.length);
-      expect(carregados.reduce((total, indicador) => total + indicador.medicoes.length, 0))
-        .toBe(quantidadeMedicoesEsperada);
+        expect(carregado).not.toBeNull();
+        expect(carregado.medicoes.map(({ periodo, valor }) => formatar(periodo, valor)).sort())
+          .toEqual(indicador.medicoes.map(({ periodo, valor }) => formatar(periodo, valor)).sort());
+      }
     }
   });
 
