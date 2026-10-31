@@ -3,10 +3,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AdminPage from '../pages/AdminPage';
 import { getSetores } from '../services/api';
-import { listarIndicadoresAdmin } from '../services/admin';
+import { alterarStatusMedicao, listarIndicadoresAdmin } from '../services/admin';
 
 vi.mock('../services/api', () => ({ getSetores: vi.fn() }));
-vi.mock('../services/admin', () => ({ listarIndicadoresAdmin: vi.fn() }));
+vi.mock('../services/admin', () => ({ alterarStatusMedicao: vi.fn(), listarIndicadoresAdmin: vi.fn() }));
 
 const setores = [
   { id: 1, nome: 'Hospedagem' },
@@ -47,10 +47,16 @@ function renderPage() {
   return render(<MemoryRouter><AdminPage /></MemoryRouter>);
 }
 
+function entrarComo(perfil) {
+  window.sessionStorage.setItem('ot-srs-token', 'token');
+  window.sessionStorage.setItem('ot-srs-user', JSON.stringify({ id: 1, nome: 'Equipe', perfil }));
+}
+
 beforeEach(() => {
   vi.resetAllMocks();
   getSetores.mockResolvedValue(setores);
   listarIndicadoresAdmin.mockResolvedValue(indicadores);
+  window.sessionStorage.clear();
 });
 
 afterEach(() => vi.restoreAllMocks());
@@ -150,5 +156,144 @@ describe('AdminPage', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Carregando indicadores...');
     concluir(indicadores);
     expect(await screen.findByRole('table')).toBeInTheDocument();
+  });
+
+  describe('publicação', () => {
+    const contador = (classe) => document.querySelector(`.${classe} .admin-summary-card__value`).textContent;
+
+    it('mostra Publicar no rascunho e Despublicar no publicado para o administrador', async () => {
+      entrarComo('administrador');
+      renderPage();
+
+      const tabela = await screen.findByRole('table');
+      expect(within(tabela).getByRole('button', { name: 'Publicar Número de leitos, 2025/2' })).toBeInTheDocument();
+      expect(within(tabela).getByRole('button', { name: 'Despublicar Número de leitos, 2025/1' })).toBeInTheDocument();
+      expect(within(tabela).getByRole('button', { name: 'Despublicar Restaurantes, 2025/2' })).toBeInTheDocument();
+      // Indicador sem medição não tem o que publicar
+      expect(within(tabela).getAllByRole('button')).toHaveLength(3);
+    });
+
+    it('esconde os botões do editor, que continua podendo editar', async () => {
+      entrarComo('editor');
+      renderPage();
+
+      const tabela = await screen.findByRole('table');
+      expect(within(tabela).queryByRole('button')).not.toBeInTheDocument();
+      expect(within(tabela).getByRole('link', { name: 'Editar Número de leitos, 2025/1' })).toBeInTheDocument();
+    });
+
+    async function abrirConfirmacao(nome) {
+      fireEvent.click(await screen.findByRole('button', { name: nome }));
+      return screen.getByRole('dialog');
+    }
+
+    it('explica a ação no diálogo e não chama a API quando é cancelada', async () => {
+      entrarComo('administrador');
+      renderPage();
+
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+
+      expect(dialogo).toHaveAccessibleName('Publicar medição?');
+      expect(within(dialogo).getByText('Número de leitos - 2025/2')).toBeInTheDocument();
+      expect(dialogo).toHaveAccessibleDescription(/Após a publicação, a medição ficará visível no portal público\./);
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Cancelar' }));
+
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(alterarStatusMedicao).not.toHaveBeenCalled();
+    });
+
+    it('cancela com Esc e com clique no fundo', async () => {
+      entrarComo('administrador');
+      renderPage();
+
+      fireEvent(await abrirConfirmacao('Publicar Número de leitos, 2025/2'), new Event('cancel', { cancelable: true }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+      fireEvent.click(await abrirConfirmacao('Publicar Número de leitos, 2025/2'));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(alterarStatusMedicao).not.toHaveBeenCalled();
+    });
+
+    it('fecha o diálogo ainda na página, para o navegador devolver o foco ao botão', async () => {
+      entrarComo('administrador');
+      const fechar = vi.spyOn(HTMLDialogElement.prototype, 'close');
+      const naPagina = [];
+      fechar.mockImplementation(function close() { naPagina.push(this.isConnected); });
+      renderPage();
+
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Cancelar' }));
+
+      expect(naPagina).toEqual([true]);
+    });
+
+    it('publica depois de confirmar e atualiza a linha e os contadores sem recarregar', async () => {
+      entrarComo('administrador');
+      alterarStatusMedicao.mockResolvedValueOnce({ id: 2, ano: 2025, semestre: 2, valor: 350, status: 'publicado' });
+      renderPage();
+
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+
+      expect(await screen.findByRole('button', { name: 'Despublicar Número de leitos, 2025/2' })).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(alterarStatusMedicao).toHaveBeenCalledExactlyOnceWith(2, 'publicado');
+      expect(listarIndicadoresAdmin).toHaveBeenCalledOnce();
+      expect(within(screen.getByRole('table')).queryByText('Rascunho')).not.toBeInTheDocument();
+      expect(contador('admin-summary-card--published')).toBe('3');
+      expect(contador('admin-summary-card--draft')).toBe('0');
+      expect(screen.getByText('Número de leitos, 2025/2: publicada no portal.')).toBeInTheDocument();
+    });
+
+    it('despublica depois de confirmar', async () => {
+      entrarComo('administrador');
+      alterarStatusMedicao.mockResolvedValueOnce({ id: 1, ano: 2025, semestre: 1, valor: 312, status: 'rascunho' });
+      renderPage();
+
+      const dialogo = await abrirConfirmacao('Despublicar Número de leitos, 2025/1');
+      expect(dialogo).toHaveAccessibleName('Despublicar medição?');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Despublicar' }));
+
+      expect(await screen.findByRole('button', { name: 'Publicar Número de leitos, 2025/1' })).toBeInTheDocument();
+      expect(alterarStatusMedicao).toHaveBeenCalledExactlyOnceWith(1, 'rascunho');
+      expect(contador('admin-summary-card--draft')).toBe('2');
+    });
+
+    it('mantém o diálogo aberto e bloqueado enquanto a API responde', async () => {
+      entrarComo('administrador');
+      let concluir;
+      alterarStatusMedicao.mockReturnValueOnce(new Promise((resolve) => { concluir = resolve; }));
+      renderPage();
+
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+
+      expect(within(dialogo).getByRole('button', { name: 'Enviando...' })).toBeDisabled();
+      expect(within(dialogo).getByRole('button', { name: 'Cancelar' })).toBeDisabled();
+      fireEvent(dialogo, new Event('cancel', { cancelable: true }));
+      fireEvent.click(dialogo);
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+      concluir({ id: 2, status: 'publicado' });
+      expect(await screen.findByRole('button', { name: 'Despublicar Número de leitos, 2025/2' })).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it.each([
+      [403, 'Seu perfil não pode publicar conteúdo'],
+      [404, 'Medição não encontrada'],
+    ])('mostra a mensagem do erro %i e mantém a linha como estava', async (status, mensagem) => {
+      entrarComo('administrador');
+      alterarStatusMedicao.mockRejectedValueOnce(Object.assign(new Error(mensagem), { status }));
+      renderPage();
+
+      const dialogo = await abrirConfirmacao('Publicar Número de leitos, 2025/2');
+      fireEvent.click(within(dialogo).getByRole('button', { name: 'Publicar' }));
+
+      expect(await screen.findByRole('alert')).toHaveTextContent(mensagem);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Publicar Número de leitos, 2025/2' })).toBeEnabled();
+      expect(contador('admin-summary-card--draft')).toBe('1');
+    });
   });
 });
