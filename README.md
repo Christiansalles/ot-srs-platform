@@ -27,6 +27,7 @@ ot-srs-platform/
 │   └── tests/           testes Jest + Supertest
 ├── frontend/            React + Vite
 │   └── src/             components/, pages/, services/, mocks/, theme/, __tests__/
+├── e2e/                 testes de ponta a ponta com Playwright (ajudantes/, testes/)
 ├── docs/                contrato da API, fluxo, escopo, decisões, mockups e evidências (índice em docs/README.md)
 └── .github/workflows/   CI
 ```
@@ -176,6 +177,55 @@ docker compose down
 ```
 
 O CI também executa lint e build do frontend (`npm run lint` e `npm run build`).
+
+### Testes de ponta a ponta
+
+Os testes de ponta a ponta ficam em `e2e/`, com Playwright, e abrem o sistema no
+navegador como uma pessoa faria: front em `http://localhost:8080`, API em
+`http://localhost:3000`. Cada teste roda duas vezes, no desktop (1280 px) e no
+celular (390 px).
+
+Suba o sistema num projeto separado (`-p ot-e2e`), para os dados criados pelos
+testes não caírem no banco que você usa no dia a dia. As portas são as mesmas, então
+pare antes o `docker compose` normal, se estiver de pé.
+
+```bash
+docker compose -p ot-e2e up --build -d
+```
+
+Na primeira vez, instale as dependências e o Chromium do Playwright; depois, rode os
+testes:
+
+```bash
+cd e2e
+npm ci
+npx playwright install --with-deps chromium
+npx playwright test
+```
+
+Só um tamanho de tela: `npm run test:desktop` ou `npm run test:celular`. Quando um
+teste falha, o Playwright guarda o print e o trace em `e2e/test-results/`, e
+`npm run relatorio` abre o relatório.
+
+Ao terminar, derrube o sistema e apague o banco de teste, a partir da raiz:
+
+```bash
+cd ..
+docker compose -p ot-e2e down -v
+```
+
+Para escrever um teste novo, use os ajudantes de `e2e/ajudantes/`:
+
+- `entrarComo(page, 'administrador' | 'editor')` (`sessao.js`) entra pela tela de
+  login com os usuários de desenvolvimento do `docker-compose.yml`;
+- `api.js` cria dados pela API (`tokenDe`, `idDoSetor`, `criarIndicador`,
+  `criarMedicao`, `mudarStatusMedicao`). Medição de teste é sempre de **2031 em
+  diante** (`PRIMEIRO_ANO_DE_TESTE`), um período que a carga não tem, e usa um valor
+  que já está na carga. Dê nomes com `nomeUnico()`, porque o desktop e o celular
+  rodam o mesmo teste no mesmo banco.
+
+No CI, o job `compose` roda esses testes depois de subir o sistema e, se algum falha,
+guarda o relatório como artefato `relatorio-playwright`.
 
 ### Backend
 
