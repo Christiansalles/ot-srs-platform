@@ -48,3 +48,9 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-226](pr-226/README.md) | #226 | #174 | E13 | Publicar e despublicar medições na Tela 6: antes e depois, diálogo de confirmação, sucesso e perfil editor, com mock, em 375 e 1280 px |
 | [pr-227](pr-227/README.md) | #227 | #175 | E13 | Publicar e despublicar relatórios na Tela 8: antes e depois, confirmação, sucesso e perfil editor, mais o foco e a mensagem da Tela 6, com mock, em 375 e 1280 px |
 | [pr-228](pr-228/README.md) | #228 | #155 | Integração | Roteiro da #155 com a API real: medição, `409`, publicar e despublicar até o dashboard, upload, publicação e download de PDF, e o perfil editor com `403`, em 375 e 1280 px |
+
+## Milestone 7
+
+| Pasta | PR | Issue | Entrega | O que mostra |
+|---|---|---|---|---|
+| [issue-258](issue-258/README.md) | | #258 | E18 | Auditoria de acessibilidade: achados marcados em vermelho (contraste, Tab, "Pular para o conteúdo", gráficos, título da aba) e o que passou em verde, com mock, em 390 e 1280 px |
