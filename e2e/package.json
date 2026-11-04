@@ -1,0 +1,19 @@
+{
+  "name": "ot-srs-e2e",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Testes de ponta a ponta do OT-SRS com Playwright, contra o sistema rodando no Docker Compose",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:desktop": "playwright test --project=desktop",
+    "test:celular": "playwright test --project=celular",
+    "relatorio": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
