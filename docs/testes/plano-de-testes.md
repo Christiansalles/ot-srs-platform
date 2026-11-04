@@ -138,7 +138,7 @@ Para abrir o sistema no celular, o front precisa ser construído apontando para 
 
 Os testes do M7 contam como prontos quando:
 
-1. Cada caso `E2E` e `A11y` automático deste plano existe em `e2e/testes/`, com o id no nome, e passa nesse job nos dois projetos (desktop e celular).
+1. Cada caso `E2E` e `A11y` automático deste plano existe em `e2e/testes/`, com o id no nome, e passa no job `compose` do CI nos dois projetos (desktop e celular).
 2. Caso que falha por bug conhecido fica com `test.fixme`, e o comentário traz o número da issue do bug. Nenhum teste é apagado nem afrouxado para passar.
 3. Antes de abrir o PR, quem escreveu o teste quebrou de propósito o que ele confere e viu o teste falhar.
 4. Os casos `API` estão nos testes do backend e passam no CI.
