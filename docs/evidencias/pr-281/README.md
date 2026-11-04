@@ -1,4 +1,4 @@
-# Evidências da #258: auditoria de acessibilidade
+# Evidências do PR #281: auditoria de acessibilidade (#258)
 
 Prints da auditoria registrada na seção "Auditoria de acessibilidade" de [docs/testes/plano-de-testes.md](../../testes/plano-de-testes.md). Foram feitos com `VITE_USE_MOCK=true`, no Chrome, em 390 e 1280 px, na `develop` em `8198b19`. No painel, só a resposta de `/api/auth/me` foi simulada, para entrar como administrador.
 
