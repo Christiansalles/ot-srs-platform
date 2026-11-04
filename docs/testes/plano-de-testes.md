@@ -13,12 +13,12 @@ Cada pessoa revisa os casos da própria área (coluna "Revisa os casos" do [rod�
 | Unidade (back) | Jest | Serviços e funções puras: senha, filtros, variação percentual, nome do arquivo do PDF | `backend/tests/*.test.js` | `cd backend && npm test` | Todo PR, no CI (`ci.yml`) |
 | Unidade (front) | Vitest e Testing Library | Componentes, páginas com a API simulada, `utils/`, `services/`, o padrão visual | `frontend/src/__tests__/` | `cd frontend && npm test` | Todo PR, no CI (`ci.yml`) |
 | API | Jest e Supertest, com PostgreSQL de verdade | Rotas, códigos de erro do [contrato](../contrato-api.md), perfis, rascunho fora das rotas públicas | `backend/tests/*.test.js` | `cd backend && npm test` (com o banco de pé) | Todo PR, no CI (`ci.yml`) |
-| Ponta a ponta | Playwright, no desktop (1280 px) e no celular (390 px) | Fluxos inteiros no navegador, contra o sistema do Docker Compose | `e2e/testes/*.spec.js` | Seção "Testes de ponta a ponta" do [README](../../README.md) | Todo PR, no CI (job `compose`), depois que a base do E2E (#240) entrar na `develop` |
-| Acessibilidade automática | `@axe-core/playwright` dentro do E2E | Violações `serious` e `critical` em cada tela | `e2e/testes/acessibilidade.spec.js` (#259) | Junto com o E2E | Junto com o E2E, depois da #240 e da #259 |
+| Ponta a ponta | Playwright, no desktop (1280 px) e no celular (390 px) | Fluxos inteiros no navegador, contra o sistema do Docker Compose | `e2e/testes/*.spec.js` | Seção "Testes de ponta a ponta" do [README](../../README.md) | Todo PR, no CI (job `compose`) |
+| Acessibilidade automática | `@axe-core/playwright` dentro do E2E | Violações `serious` e `critical` em cada tela | `e2e/testes/acessibilidade.spec.js` (#259) | Junto com o E2E | Todo PR, no CI (job `compose`), depois da #259 |
 | Acessibilidade manual | Teclado, leitor de tela, medidor de contraste | O que o axe não pega: ordem do foco, textos dos gráficos, mensagens anunciadas | [Auditoria de acessibilidade](#auditoria-de-acessibilidade), abaixo | À mão | Uma vez no M7 (#258) e depois de cada correção |
 | Exploratório | Celular de verdade, sem roteiro fechado | Toque, teclado do celular, rede lenta, download do PDF no aparelho | [Rodízio](#rodízio) e [lista de bugs](#lista-de-bugs) | À mão, com o sistema acessível pela rede local | Uma rodada antes da triagem (#244) |
 
-**Situação hoje (04/11):** os testes de unidade e de API já rodam no CI em todo PR. O E2E e a acessibilidade automática ainda não: a pasta `e2e/`, os ajudantes e o passo do Playwright no job `compose` chegam com a base do E2E (#240, PR #274). Até ela entrar na `develop`, os casos `E2E` e `A11y` automáticos deste plano são o roteiro dos testes que as issues #256, #259, #260, #264 e #270 vão escrever, e não algo que o CI já confere. Os caminhos `e2e/...` citados abaixo são os dessa base.
+**Situação em 04/11:** unidade, API e E2E rodam no CI em todo PR. A base do E2E (#240) já está na `develop`, com o teste de fumaça da Home (CT-01) e os testes dos ajudantes. Os outros casos `E2E` e `A11y` automáticos deste plano são o roteiro que as issues #256, #259, #260, #264 e #270 vão escrever.
 
 O que cada nível **não** faz:
 
@@ -138,7 +138,7 @@ Para abrir o sistema no celular, o front precisa ser construído apontando para 
 
 Os testes do M7 contam como prontos quando:
 
-1. A base do E2E (#240) está na `develop`, com o passo do Playwright no job `compose`. Cada caso `E2E` e `A11y` automático deste plano existe em `e2e/testes/`, com o id no nome, e passa nesse job nos dois projetos (desktop e celular).
+1. Cada caso `E2E` e `A11y` automático deste plano existe em `e2e/testes/`, com o id no nome, e passa nesse job nos dois projetos (desktop e celular).
 2. Caso que falha por bug conhecido fica com `test.fixme`, e o comentário traz o número da issue do bug. Nenhum teste é apagado nem afrouxado para passar.
 3. Antes de abrir o PR, quem escreveu o teste quebrou de propósito o que ele confere e viu o teste falhar.
 4. Os casos `API` estão nos testes do backend e passam no CI.
