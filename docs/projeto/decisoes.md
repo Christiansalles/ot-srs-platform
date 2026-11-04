@@ -25,14 +25,14 @@ A Proposta pede só uma "área simples para que a equipe da SMCELT atualize e pu
   - `administrador`: cadastra, edita, sobe PDF, publica e despublica;
   - `editor`: cadastra, edita e sobe PDF, tudo como rascunho. Publicar ou despublicar devolve `403`, e no front os botões nem aparecem.
 - Tudo nasce em `rascunho`. Medição publicada não se edita direto: primeiro se despublica.
-- O seed cria um administrador e um editor de desenvolvimento a partir de `ADMIN_*` e `EDITOR_*`. O cadastro de usuários pelo painel ficou para depois.
+- O seed cria um administrador e um editor de desenvolvimento a partir de `ADMIN_*` e `EDITOR_*`. No M7, o administrador passa a criar, editar e desativar usuários pelo painel (`/api/admin/usuarios`). Usuário não se apaga, só se desativa, para preservar quem lançou cada medição.
 
 ## Login
 
 - JWT guardado no `sessionStorage` e enviado como `Authorization: Bearer <token>`.
 - A mesma mensagem para e-mail inexistente e senha errada; `senha_hash` nunca sai em resposta.
 - Sem "Esqueci minha senha": não se coloca um link que não funciona.
-- O limite de tentativas no login é dívida planejada para o M7.
+- Limite de tentativas no login (M7): 5 tentativas erradas por IP em 15 minutos, configuráveis por `LOGIN_MAX_TENTATIVAS` e `LOGIN_JANELA_MINUTOS`; depois, `429` com `Retry-After`. Quem esqueceu a senha pede ao administrador, que redefine pela tela Usuários.
 
 ## Escopo
 
