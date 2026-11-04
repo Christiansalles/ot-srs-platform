@@ -195,17 +195,41 @@ Meça de novo no fim do M7 e anote aqui, ao lado.
 
 ## Auditoria de acessibilidade
 
-Preenchida na #258, tela por tela. "Ok" quando passou; senão, o número do bug.
+Preenchida na #258, tela por tela. "Ok" quando passou; senão, onde a correção está: `#261` quando a parte é da Karolina, `A-n` quando é um achado de outra pessoa que vira bug (lista abaixo).
+
+**Como foi feita (04/11/2026, `develop` em `8198b19`):** front com `VITE_USE_MOCK=true`, no Chrome, em 1280 e 390 px. No painel, a sessão de administrador foi simulada. Em cada tela:
+
+- axe-core 4.10 com as regras WCAG 2.1 A e AA e as boas práticas;
+- Tab do começo ao fim da página, anotando cada parada e se o foco aparece;
+- `lang`, título da aba, `h1`, ordem dos títulos, `alt` e mensagens com `role="alert"`, `role="status"` ou `aria-live`;
+- contraste sobre foto e gradiente (capa da Home, painel de marca do Login, botões e avatar), que o axe não mede: o texto é escondido, o fundo é capturado e o contraste é calculado no percentil 5 dos pixels atrás do texto.
+
+Não foi usado leitor de tela de verdade (NVDA ou TalkBack): o que é anunciado foi conferido pelos papéis no código e no DOM.
 
 | Tela | Teclado (CT-36) | Rótulos e títulos (CT-37) | Contraste (CT-38) | axe (CT-35) | Observações |
 |---|---|---|---|---|---|
-| Home (`/`) | | | | | |
-| Indicadores | | | | | |
-| Dashboard | | | | | |
-| Relatórios | | | | | |
-| 404 | | | | | |
-| Login | | | | | |
-| Tela 6 (painel) | | | | | |
-| Tela 7 (cadastro de medição) | | | | | |
-| Tela 8 (relatórios no painel) | | | | | |
-| Usuários | | | | | |
+| Home (`/`) | A-2 | A-1 | #261 | #261 | Capa sobre a foto passa: título 7:1, texto 6,4:1, botões 4,5:1. Falha a variação dos cards (3,74:1). |
+| Indicadores | A-2 | A-1 | A-3 | A-3 | Filtros e tabela alcançáveis, com foco visível; a tabela rola com o teclado. |
+| Dashboard | #261 | #261 | #261 | #261 | Os três gráficos recebem Tab como `role="application"` sem nome; a rosca fica dentro de `aria-hidden` e continua focável. Série histórica e comparativo não têm resumo dos dados em texto (a distribuição tem a lista com os percentuais). |
+| Relatórios | A-2 | A-1 | Ok | Ok | Filtros, "Limpar filtros" e "Baixar PDF" com nome do relatório; vazio e erro anunciados. |
+| 404 | | | | | Ainda não existe (#266). Hoje uma URL inexistente mostra a página em branco. |
+| Login | Ok | A-1 | #261, A-4 | #261, A-4 | "Mostrar senha" funciona com Enter. No painel de marca, "Ambiente seguro" e o rodapé ficam em 3,3:1 sobre a foto, e "Voltar ao portal" em 4,4:1. O `h1` é o logo, com `alt`. |
+| Tela 6 (painel) | #261 | Ok | Ok | Ok | No celular, com o menu aberto, o Tab vai para "Sair" e para o conteúdo e não passa pelos links do menu. Esc fecha e devolve o foco ao botão. Sem "Pular para o conteúdo". |
+| Tela 7 (cadastro de medição) | #261 | Ok | Ok | Ok | Mesmo problema do menu da Tela 6. Campos com `label` e erros com `role="alert"`. |
+| Tela 8 (relatórios no painel) | #261 | Ok | Ok | Ok | Mesmo problema do menu da Tela 6. A área de upload recebe foco e o campo de data mostra o foco em cada parte. |
+| Usuários | | | | | Ainda não existe (#263). |
+
+Em todas as telas: `lang="pt-BR"`, um `h1`, títulos sem pular nível, nenhuma imagem sem `alt` e nenhum elemento focável sem foco visível.
+
+### Achados da auditoria
+
+Os achados `A-n` são de telas de outras pessoas e viram bug com os rótulos `bug` e `accessibility`; o número da issue entra aqui e na [lista de bugs](#lista-de-bugs). Os da Karolina são corrigidos na #261.
+
+| Achado | Onde | O que acontece | Esperado | Quem fez a parte | Bug |
+|---|---|---|---|---|---|
+| A-1 | Todas as telas (`frontend/index.html`) | O título da aba é sempre "Observatório do Turismo de Santa Rita do Sapucaí". | Cada página com o próprio título, por exemplo "Relatórios · Observatório do Turismo" (WCAG 2.4.2). | Global, a triagem decide | |
+| A-2 | Portal público (`AppLayout` em `App.jsx`) | Não há "Pular para o conteúdo": quem usa teclado passa pelos 5 links do cabeçalho em toda página. | Um link "Pular para o conteúdo" como primeira parada do Tab, levando ao `main` (WCAG 2.4.1). | Samuel | |
+| A-3 | Indicadores, cabeçalho da tabela | Texto `--color-text-muted` sobre `--color-surface-muted`: 4,34:1. | Pelo menos 4,5:1. | Samuel | |
+| A-4 | Login, nome do departamento no rodapé do cartão | `.admin-login-department` em `--color-text-muted` sobre o fundo azul claro: 4,27:1. | Pelo menos 4,5:1. | Maria Clara | |
+
+Na #261 (Karolina): a variação dos cards (`--color-success`, 3,74:1), os gráficos do Dashboard (nome, `aria-hidden` com foco e resumo em texto), o painel de marca e "Voltar ao portal" do Login, e no `AdminLayout` o Tab do menu do celular e o "Pular para o conteúdo" do painel.
