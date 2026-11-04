@@ -12,7 +12,8 @@
     "db:setup": "prisma migrate deploy && prisma db seed",
     "start": "npm run db:setup && node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "test:cobertura": "jest --runInBand --coverage"
   },
   "jest": {
     "setupFiles": ["<rootDir>/tests/setup-env.js"],
