@@ -160,7 +160,10 @@ Os testes do M7 contam como prontos quando:
 
 | Issue | Caso | Onde | Prioridade | Quem corrige | Status |
 |---|---|---|---|---|---|
-| | | | | | |
+| #282 | CT-37 (A-1) | Todas as telas, título da aba | A triar | A triar | Aberto |
+| #283 | CT-36 (A-2) | Portal, falta "Pular para o conteúdo" | A triar | A triar | Aberto |
+| #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | A triar | A triar | Aberto |
+| #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | A triar | A triar | Aberto |
 
 ## Cobertura
 
@@ -227,9 +230,9 @@ Os achados `A-n` são de telas de outras pessoas e viram bug com os rótulos `bu
 
 | Achado | Onde | O que acontece | Esperado | Quem fez a parte | Bug |
 |---|---|---|---|---|---|
-| A-1 | Todas as telas (`frontend/index.html`) | O título da aba é sempre "Observatório do Turismo de Santa Rita do Sapucaí". | Cada página com o próprio título, por exemplo "Relatórios · Observatório do Turismo" (WCAG 2.4.2). | Global, a triagem decide | |
-| A-2 | Portal público (`AppLayout` em `App.jsx`) | Não há "Pular para o conteúdo": quem usa teclado passa pelos 5 links do cabeçalho em toda página. | Um link "Pular para o conteúdo" como primeira parada do Tab, levando ao `main` (WCAG 2.4.1). | Samuel | |
-| A-3 | Indicadores, cabeçalho da tabela | Texto `--color-text-muted` sobre `--color-surface-muted`: 4,34:1. | Pelo menos 4,5:1. | Samuel | |
-| A-4 | Login, nome do departamento no rodapé do cartão | `.admin-login-department` em `--color-text-muted` sobre o fundo azul claro: 4,27:1. | Pelo menos 4,5:1. | Maria Clara | |
+| A-1 | Todas as telas (`frontend/index.html`) | O título da aba é sempre "Observatório do Turismo de Santa Rita do Sapucaí". | Cada página com o próprio título, por exemplo "Relatórios · Observatório do Turismo" (WCAG 2.4.2). | Global, a triagem decide | #282 |
+| A-2 | Portal público (`AppLayout` em `App.jsx`) | Não há "Pular para o conteúdo": quem usa teclado passa pelos 5 links do cabeçalho em toda página. | Um link "Pular para o conteúdo" como primeira parada do Tab, levando ao `main` (WCAG 2.4.1). | Samuel | #283 |
+| A-3 | Indicadores, cabeçalho da tabela | Texto `--color-text-muted` sobre `--color-surface-muted`: 4,34:1. | Pelo menos 4,5:1. | Samuel | #284 |
+| A-4 | Login, nome do departamento no rodapé do cartão | `.admin-login-department` em `--color-text-muted` sobre o fundo azul claro: 4,27:1. | Pelo menos 4,5:1. | Maria Clara | #285 |
 
 Na #261 (Karolina): a variação dos cards (`--color-success`, 3,74:1), os gráficos do Dashboard (nome, `aria-hidden` com foco e resumo em texto), o painel de marca e "Voltar ao portal" do Login, e no `AdminLayout` o Tab do menu do celular e o "Pular para o conteúdo" do painel.

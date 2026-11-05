@@ -15,7 +15,7 @@ O prefixo do arquivo diz quem corrige: `a1` a `a3` são os achados A-1 a A-3, qu
 | `a3-indicadores-cabecalho-tabela-390.png`, `-1280.png` | A-3: cabeçalho da tabela de Indicadores a 4,34:1 |
 | `login-contraste-390.png`, `-1280.png` | A-4: "SMCELT" a 4,27:1. Para a #261: "Voltar ao portal" (4,4:1) e, no desktop, "Ambiente seguro" e o rodapé da marca (3,3:1) |
 | `261-home-variacao-cards-390.png`, `-1280.png` | Variação dos cards da Home a 3,74:1 (o mesmo componente aparece no Dashboard) |
-| `261-dashboard-grafico-sem-nome-390.png`, `-1280.png` | O gráfico de evolução recebe Tab como `role="application"`, sem nome acessível |
+| `261-dashboard-grafico-sem-nome-390.png`, `-1280.png` | O gráfico de evolução recebendo Tab como `role="application"`, sem nome acessível. Os três gráficos (série histórica, rosca e comparativo) têm o mesmo problema; o print mostra o primeiro |
 | `261-dashboard-rosca-aria-hidden-390.png`, `-1280.png` | A rosca da distribuição fica dentro de `aria-hidden` e continua focável |
 | `261-painel-sem-pular-conteudo-390.png`, `-1280.png` | No painel, a primeira parada do Tab também não é "Pular para o conteúdo" |
 | `261-painel-menu-celular-tab-390.png` | Com o menu do celular aberto, o Tab vai para "Sair" e pula os links do menu, marcados em vermelho |
