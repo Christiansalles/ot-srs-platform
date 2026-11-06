@@ -42,13 +42,13 @@ model Periodo {
 }
 
 model Medicao {
-  id_medicao   Int       @id @default(autoincrement())
-  id_indicador Int
-  id_periodo   Int
-  id_usuario   Int
-  valor        Decimal   @db.Decimal(12, 2)
-  status       String    @db.VarChar(10)
-  criado_em    DateTime  @default(now())
+  id_medicao    Int      @id @default(autoincrement())
+  id_indicador  Int
+  id_periodo    Int
+  id_usuario    Int
+  valor         Decimal  @db.Decimal(12, 2)
+  status        String   @db.VarChar(10)
+  criado_em     DateTime @default(now())
   atualizado_em DateTime @updatedAt
 
   indicador    Indicador @relation(fields: [id_indicador], references: [id_indicador])
