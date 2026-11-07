@@ -4,6 +4,7 @@ import {
   consultar,
   criarIndicador,
   criarMedicao,
+  criarRelatorio,
   idDoSetor,
   nomeUnico,
   tokenDe,
@@ -50,5 +51,11 @@ test('dado criado pela API nasce em rascunho e fica fora do portal', async ({ re
 test('criarMedicao recusa período da carga', async ({ request }) => {
   await expect(criarMedicao(request, 'sem-token', {
     idIndicador: 1, ano: 2025, semestre: 2, valor: 350,
+  })).rejects.toThrow('2031 em diante');
+});
+
+test('criarRelatorio recusa data antes de 2031', async ({ request }) => {
+  await expect(criarRelatorio(request, 'sem-token', {
+    titulo: 'Relatório fora do período de teste', dataPublicacao: '2026-10-21',
   })).rejects.toThrow('2031 em diante');
 });
