@@ -18,7 +18,7 @@ Cada pessoa revisa os casos da própria área (coluna "Revisa os casos" do [rod�
 | Acessibilidade manual | Teclado, leitor de tela, medidor de contraste | O que o axe não pega: ordem do foco, textos dos gráficos, mensagens anunciadas | [Auditoria de acessibilidade](#auditoria-de-acessibilidade), abaixo | À mão | Uma vez no M7 (#258) e depois de cada correção |
 | Exploratório | Celular de verdade, sem roteiro fechado | Toque, teclado do celular, rede lenta, download do PDF no aparelho | [Rodízio](#rodízio) e [lista de bugs](#lista-de-bugs) | À mão, com o sistema acessível pela rede local | Uma rodada antes da triagem (#244) |
 
-**Situação em 04/11:** unidade, API e E2E rodam no CI em todo PR. A base do E2E (#240) já está na `develop`, com o teste de fumaça da Home (CT-01) e os testes dos ajudantes. Os outros casos `E2E` e `A11y` automáticos deste plano são o roteiro que as issues #256, #259, #260, #264 e #270 vão escrever.
+**Situação em 04/11:** unidade, API e E2E rodam no CI em todo PR. A base do E2E (#240) já está na `develop`, com o teste de fumaça da Home (CT-01) e os testes dos ajudantes. Os casos de relatórios públicos (CT-11 a CT-15) estão em `e2e/testes/relatorios.spec.js` (#260). Os outros casos `E2E` e `A11y` automáticos deste plano são o roteiro que as issues #256, #259, #264 e #270 vão escrever.
 
 O que cada nível **não** faz:
 

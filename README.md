@@ -219,8 +219,9 @@ Para escrever um teste novo, use os ajudantes de `e2e/ajudantes/`:
 - `entrarComo(page, 'administrador' | 'editor')` (`sessao.js`) entra pela tela de
   login com os usuários de desenvolvimento do `docker-compose.yml`;
 - `api.js` cria dados pela API (`tokenDe`, `idDoSetor`, `criarIndicador`,
-  `criarMedicao`, `mudarStatusMedicao`). Medição de teste é sempre de **2031 em
-  diante** (`PRIMEIRO_ANO_DE_TESTE`), um período que a carga não tem, e usa um valor
+  `criarMedicao`, `mudarStatusMedicao`, `criarRelatorio`, `baixarArquivoDoRelatorio`).
+  Medição e relatório de teste são sempre de **2031 em diante**
+  (`PRIMEIRO_ANO_DE_TESTE`), um período que a carga não tem, e a medição usa um valor
   que já está na carga. Dê nomes com `nomeUnico()`, porque o desktop e o celular
   rodam o mesmo teste no mesmo banco.
 

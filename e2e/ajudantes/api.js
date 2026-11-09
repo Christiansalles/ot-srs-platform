@@ -61,6 +61,42 @@ export async function criarMedicao(request, token, { idIndicador, ano, semestre,
   });
 }
 
+// O menor PDF que a API aceita: tipo application/pdf e conteúdo começando com %PDF.
+const PDF_DE_TESTE = Buffer.from('%PDF-1.4\n1 0 obj << /Type /Catalog >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n');
+
+// Nasce em rascunho, como pelo painel. A data é de 2031 em diante, como as medições de teste.
+export async function criarRelatorio(request, token, {
+  titulo,
+  edicao = 'E2E/2031',
+  categoria = 'Setor Hoteleiro',
+  dataPublicacao = `${PRIMEIRO_ANO_DE_TESTE}-01-15`,
+  descricao = 'Relatório criado pelo teste de ponta a ponta.',
+}) {
+  if (Number(dataPublicacao.slice(0, 4)) < PRIMEIRO_ANO_DE_TESTE) {
+    throw new Error(`Relatório de teste precisa ser de ${PRIMEIRO_ANO_DE_TESTE} em diante (veio ${dataPublicacao})`);
+  }
+  const resposta = await request.post(`${API_URL}/api/admin/relatorios`, {
+    headers: { Authorization: `Bearer ${token}` },
+    multipart: {
+      titulo,
+      edicao,
+      categoria,
+      data_publicacao: dataPublicacao,
+      descricao,
+      arquivo: { name: 'relatorio-e2e.pdf', mimeType: 'application/pdf', buffer: PDF_DE_TESTE },
+    },
+  });
+  if (!resposta.ok()) {
+    throw new Error(`POST /api/admin/relatorios respondeu ${resposta.status()}: ${await resposta.text()}`);
+  }
+  return resposta.json();
+}
+
+// Rota pública de download, sem lançar erro: o teste confere o status.
+export async function baixarArquivoDoRelatorio(request, id) {
+  return request.get(`${API_URL}/api/relatorios/${id}/arquivo`);
+}
+
 // Só o administrador muda o status; com o token do editor a API responde 403 e isto lança erro.
 export async function mudarStatusMedicao(request, token, idMedicao, status) {
   return chamar(request, 'PATCH', `/api/admin/medicoes/${idMedicao}/status`, {
