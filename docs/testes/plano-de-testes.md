@@ -160,10 +160,10 @@ Os testes do M7 contam como prontos quando:
 
 | Issue | Caso | Onde | Prioridade | Quem corrige | Status |
 |---|---|---|---|---|---|
-| #282 | CT-37 (A-1) | Todas as telas, título da aba | A triar | A triar | Aberto |
-| #283 | CT-36 (A-2) | Portal, falta "Pular para o conteúdo" | A triar | A triar | Aberto |
-| #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | A triar | A triar | Aberto |
-| #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | A triar | A triar | Aberto |
+| #282 | CT-37 (A-1) | Todas as telas, título da aba | Normal | Karolina | Aberto |
+| #283 | CT-36 (A-2) | Portal, falta "Pular para o conteúdo" | Normal | Karolina | Aberto |
+| #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | Normal | Samuel | Aberto |
+| #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Aberto |
 
 ## Cobertura
 
