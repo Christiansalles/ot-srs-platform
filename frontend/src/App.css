@@ -1,5 +1,7 @@
 ﻿.app-shell { min-height: 100vh; display: flex; flex-direction: column; }
 .topbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding: 1rem max(2rem, calc((100vw - 1280px) / 2)); background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.topbar-menu { display: contents; }
+.topbar-menu-toggle { display: none; }
 .topbar-admin-link { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; font-size: .875rem; text-decoration: none; white-space: nowrap; }
 .topbar-admin-link svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
 .brand-block, .footer-brand { display: flex; align-items: center; gap: 1rem; }
@@ -53,15 +55,22 @@ tr:last-child td { border-bottom: none; }
 a:focus-visible, select:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 3px; }
 .table-wrap:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 3px; }
 @media (max-width: 760px) {
-  .topbar, .section-header, .report-teaser { flex-direction: column; align-items: flex-start; }
-  .topbar, .page-shell, .footer-bar { padding: 1rem; }
-  .main-nav { width: 100%; }
-  .main-nav a { padding: .6rem .7rem; }
+  .section-header, .report-teaser { flex-direction: column; align-items: flex-start; }
+  .page-shell, .footer-bar { padding: 1rem; }
   .hero-banner { padding: 2.5rem 1.5rem; background-position: 56% center; background-size: cover; }
   .hero-banner .eyebrow { border-radius: 12px; font-size: .65rem; letter-spacing: .04em; }
   .footer-bar { grid-template-columns: 1fr; }
   .select-control { width: 100%; flex-wrap: wrap; }
   .select-control select { width: 100%; }
+}
+@media (width < 768px) {
+  .topbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .75rem; padding: 1rem; }
+  .topbar .observatorio-logo { min-width: 0; }
+  .topbar-menu-toggle { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; }
+  .topbar-menu-toggle svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  .topbar-menu { display: none; grid-column: 1 / -1; }
+  .topbar-menu-toggle[aria-expanded="true"] + .topbar-menu { display: flex; flex-direction: column; align-items: flex-start; gap: .75rem; }
+  .topbar .main-nav { flex-direction: column; width: 100%; }
 }
 .observatorio-logo { width: 230px; height: auto; object-fit: contain; }
 .institutional-logos { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }

@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import { BrowserRouter, Link, NavLink, Outlet, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
@@ -19,29 +20,53 @@ import mantiqueiraLogo from './assets/logos/mantiqueira.png';
 import minasLogo from './assets/logos/minas.png';
 
 function AppLayout() {
+  const [menuAberto, setMenuAberto] = useState(false);
+  const botaoMenu = useRef(null);
+
+  function fecharMenu() {
+    if (!menuAberto) return;
+    setMenuAberto(false);
+    botaoMenu.current?.focus();
+  }
+
   return (
     <div className="app-shell">
-      <header className="topbar">
+      <header className="topbar" onKeyDown={(evento) => {
+        if (evento.key === 'Escape') fecharMenu();
+      }}>
         <div className="brand-block">
           <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí, Cidade Criativa" />
           <img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" />
         </div>
 
-        <nav className="main-nav" aria-label="Navegação principal">
-          <NavLink to="/" end>
-            Home
-          </NavLink>
-          <NavLink to="/indicadores">Indicadores</NavLink>
-          <NavLink to="/dashboard">Dashboard</NavLink>
-          <NavLink to="/relatorios">Relatórios</NavLink>
-        </nav>
-        <Link className="ot-button-primary topbar-admin-link" to="/admin/login">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="5" y="10" width="14" height="11" rx="2" />
-            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+        <button
+          className="ot-button-secondary topbar-menu-toggle"
+          type="button"
+          ref={botaoMenu}
+          aria-label="Menu principal"
+          aria-expanded={menuAberto}
+          aria-controls="menu-principal"
+          onClick={() => setMenuAberto(!menuAberto)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d={menuAberto ? 'M6 6l12 12M18 6L6 18' : 'M4 6h16M4 12h16M4 18h16'} />
           </svg>
-          Acesso Administrativo
-        </Link>
+        </button>
+        <div className="topbar-menu" id="menu-principal">
+          <nav className="main-nav" aria-label="Navegação principal">
+            <NavLink to="/" end onClick={fecharMenu}>Home</NavLink>
+            <NavLink to="/indicadores" onClick={fecharMenu}>Indicadores</NavLink>
+            <NavLink to="/dashboard" onClick={fecharMenu}>Dashboard</NavLink>
+            <NavLink to="/relatorios" onClick={fecharMenu}>Relatórios</NavLink>
+          </nav>
+          <Link className="ot-button-primary topbar-admin-link" to="/admin/login" onClick={fecharMenu}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="5" y="10" width="14" height="11" rx="2" />
+              <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+            </svg>
+            Acesso Administrativo
+          </Link>
+        </div>
       </header>
 
       <main className="page-shell">

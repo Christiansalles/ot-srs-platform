@@ -23,6 +23,50 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
   });
 
+  it('abre e fecha o menu do celular pelo botão', async () => {
+    render(<App />);
+    const botao = screen.getByRole('button', { name: 'Menu principal' });
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    const menu = document.getElementById(botao.getAttribute('aria-controls'));
+
+    fireEvent.click(botao);
+    expect(botao).toHaveAttribute('aria-expanded', 'true');
+    expect(within(menu).getByRole('link', { name: 'Relatórios' })).toHaveAttribute('href', '/relatorios');
+    expect(within(menu).getByRole('link', { name: 'Acesso Administrativo' })).toHaveAttribute('href', '/admin/login');
+
+    fireEvent.click(botao);
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it('fecha o menu com Escape e devolve o foco ao botão', async () => {
+    render(<App />);
+    const botao = screen.getByRole('button', { name: 'Menu principal' });
+    fireEvent.click(botao);
+    const link = within(screen.getByRole('navigation', { name: 'Navegação principal' }))
+      .getByRole('link', { name: 'Home' });
+    link.focus();
+
+    fireEvent.keyDown(link, { key: 'Escape' });
+
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    expect(botao).toHaveFocus();
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it('fecha o menu ao escolher um link do portal', async () => {
+    render(<App />);
+    const botao = screen.getByRole('button', { name: 'Menu principal' });
+    fireEvent.click(botao);
+    const navegacao = screen.getByRole('navigation', { name: 'Navegação principal' });
+
+    fireEvent.click(within(navegacao).getByRole('link', { name: 'Relatórios' }));
+
+    expect(window.location.pathname).toBe('/relatorios');
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
   it('mostra no rodapé as logos de realização, apoio e contexto regional da Proposta', async () => {
     render(<App />);
     const rodape = screen.getByRole('contentinfo');
