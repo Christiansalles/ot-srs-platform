@@ -84,13 +84,14 @@ Para executar o backend fora do Docker, configure as mesmas variáveis em
 `backend/.env`, usando `backend/.env.example` como referência. Nunca use os valores
 de exemplo em ambientes compartilhados ou de produção.
 
-O painel tem três telas:
+O painel tem quatro telas:
 
 | Endereço | Tela |
 | --- | --- |
 | `/admin` | Painel de gestão (Tela 6): lista as medições com o status de cada uma |
 | `/admin/medicoes/nova` e `/admin/medicoes/:id/editar` | Cadastro e edição de medição (Tela 7) |
 | `/admin/relatorios` | Relatórios (Tela 8): upload de PDF e lista dos relatórios com o status |
+| `/admin/usuarios` | Usuários: lista, cadastro e manutenção das contas, só para o administrador |
 
 Todo conteúdo tem um de dois status: `rascunho` ou `publicado`. O portal público
 mostra só o que está `publicado`; rascunho não aparece em listagem, contagem,
@@ -102,6 +103,17 @@ destaque nem download. O que cada perfil pode fazer:
 | Cadastrar e editar indicadores e medições (sempre como rascunho) | Sim | Sim |
 | Enviar um PDF de relatório (sempre como rascunho) | Sim | Sim |
 | Publicar e despublicar medições e relatórios | Sim | Não: os botões não aparecem e a API responde `403` |
+| Criar usuários, alterar perfil, redefinir senha e desativar ou reativar | Sim | Não: o menu não aparece e a rota volta ao painel |
+
+Para criar um usuário, entre como `administrador`, abra **Usuários** no menu do painel,
+preencha nome, e-mail, senha inicial com pelo menos 8 caracteres e escolha o perfil.
+Clique em **Criar usuário**. A pessoa aparece na lista como **Ativo** e pode entrar
+com o e-mail e a senha informados. Se o e-mail já estiver em uso, o formulário mantém
+o que foi digitado para correção. Na mesma lista, o administrador pode alterar o
+perfil, redefinir a senha ou desativar e reativar o acesso. Desativar exige confirmação
+e preserva os dados lançados por essa pessoa. O administrador não pode desativar nem
+rebaixar a própria conta. Redefinir a senha não invalida um token já emitido; para
+cortar o acesso imediatamente, desative a conta.
 
 Uma medição publicada não pode ser editada: despublique antes de editar (a API
 responde `409`).
