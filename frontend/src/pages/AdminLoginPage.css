@@ -244,7 +244,7 @@
 
 .admin-login-institution-name { display: flex; align-items: center; gap: .4rem; font-size: .65rem; line-height: 1.35; }
 .admin-login-institution-name svg { flex: 0 0 auto; width: 16px; height: 16px; fill: none; stroke: var(--color-text-muted); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
-.admin-login-department { flex: 0 0 auto; color: var(--color-text-muted); font-size: .65rem; font-weight: 600; }
+.admin-login-department { flex: 0 0 auto; color: var(--color-text-secondary); font-size: .65rem; font-weight: 600; }
 
 .admin-login-page :focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 3px; }
 
