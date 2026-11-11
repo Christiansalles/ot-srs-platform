@@ -26,14 +26,15 @@ async function buscarPeriodos() {
   }));
 }
 
+function montarFiltroPeriodo(ano, semestre) {
+  if (ano === undefined) return undefined;
+  return semestre === undefined ? { ano } : { ano, semestre };
+}
+
 // setorId é opcional; sem ele, traz os indicadores de todos os setores.
 // Só medições publicadas vêm do banco.
 async function buscarIndicadores({ setorId, ano, semestre } = {}) {
-  const periodoWhere = ano === undefined
-    ? undefined
-    : semestre === undefined
-      ? { ano }
-      : { ano, semestre };
+  const periodoWhere = montarFiltroPeriodo(ano, semestre);
   const indicadores = await prisma.indicador.findMany({
     where: {
       ...(setorId === undefined ? {} : { id_setor: setorId }),
@@ -105,6 +106,21 @@ async function buscarIndicadores({ setorId, ano, semestre } = {}) {
   }));
 }
 
+// Maior atualizado_em entre as medições publicadas que passam pelos filtros,
+// ou null quando nenhuma passa. Rascunho não entra na conta.
+async function buscarAtualizacao({ setorId, ano, semestre } = {}) {
+  const periodoWhere = montarFiltroPeriodo(ano, semestre);
+  const { _max: maximo } = await prisma.medicao.aggregate({
+    where: {
+      status: STATUS_PUBLICADO,
+      ...(setorId === undefined ? {} : { indicador: { is: { id_setor: setorId } } }),
+      ...(periodoWhere ? { periodo: { is: periodoWhere } } : {}),
+    },
+    _max: { atualizado_em: true },
+  });
+  return maximo.atualizado_em;
+}
+
 // Consulta administrativa: inclui todos os indicadores e medições de qualquer
 // status. Os filtros não alteram a consulta pública acima.
 async function buscarIndicadoresAdmin({ setorId, status } = {}) {
@@ -117,7 +133,7 @@ async function buscarIndicadoresAdmin({ setorId, status } = {}) {
       setor: true,
       medicoes: {
         ...(status === undefined ? {} : { where: { status } }),
-        include: { periodo: true },
+        include: { periodo: true, usuario: { select: { nome: true } } },
       },
     },
   });
@@ -130,7 +146,7 @@ async function buscarIndicadoresAdmin({ setorId, status } = {}) {
       descricao: indicador.descricao,
       setor: { id: indicador.setor.id_setor, nome: indicador.setor.nome },
       medicoes: indicador.medicoes
-        .map(formatarMedicaoAdmin)
+        .map(formatarMedicaoPainel)
         .sort((a, b) => a.ano - b.ano || a.semestre - b.semestre),
     }))
     .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
@@ -143,6 +159,16 @@ function formatarMedicaoAdmin(medicao) {
     semestre: medicao.periodo.semestre,
     valor: Number(medicao.valor),
     status: medicao.status,
+  };
+}
+
+// Na listagem do painel a medição também diz quando mudou e quem a cadastrou.
+// lancado_por é sempre o id_usuario do cadastro, que editar e publicar não trocam.
+function formatarMedicaoPainel(medicao) {
+  return {
+    ...formatarMedicaoAdmin(medicao),
+    atualizado_em: medicao.atualizado_em,
+    lancado_por: medicao.usuario.nome,
   };
 }
 
@@ -397,6 +423,7 @@ module.exports = {
   buscarSetores,
   buscarPeriodos,
   buscarIndicadores,
+  buscarAtualizacao,
   buscarIndicadoresAdmin,
   criarIndicador,
   atualizarIndicador,
