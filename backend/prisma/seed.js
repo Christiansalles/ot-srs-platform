@@ -119,11 +119,7 @@ async function carregarSetor(setorDados, usuario) {
             id_periodo: periodo.id_periodo,
           },
         },
-        update: {
-          id_usuario: usuario.id_usuario,
-          valor: medicaoDados.valor,
-          status: 'publicado',
-        },
+        update: {},
         create: {
           id_indicador: indicador.id_indicador,
           id_periodo: periodo.id_periodo,
