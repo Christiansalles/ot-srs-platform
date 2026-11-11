@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import CardIndicador from '../components/CardIndicador/CardIndicador';
 import { getDestaques } from '../services/api';
 import capaSantaRita from '../assets/capa-santa-rita.jpg';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 
 // Os quatro destaques da Home seguem a ordem dos cards principais do dashboard.
 const DESTAQUES_DA_HOME = [
@@ -13,6 +14,8 @@ const DESTAQUES_DA_HOME = [
 ];
 
 export default function HomePage() {
+  useTituloDaPagina();
+
   const [destaques, setDestaques] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

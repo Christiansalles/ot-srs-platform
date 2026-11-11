@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './PaginaNaoEncontrada.css';
 
 export default function PaginaNaoEncontrada() {
+  useTituloDaPagina('Página não encontrada');
   return (
     <div className="page">
       <header className="page-heading">
