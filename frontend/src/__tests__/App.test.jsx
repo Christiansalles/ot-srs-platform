@@ -13,6 +13,30 @@ describe('App', () => {
     vi.unstubAllGlobals();
   });
 
+  it.each(['/endereco-invalido', '/admin/endereco-invalido'])('mostra a página 404 no layout público para %s', (caminho) => {
+    window.sessionStorage.clear();
+    window.history.replaceState({}, '', caminho);
+    render(<App />);
+
+    expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+    const conteudo = within(screen.getByRole('main'));
+    expect(conteudo.getByRole('heading', { name: 'Página não encontrada', level: 1 })).toBeInTheDocument();
+    expect(conteudo.getByRole('link', { name: 'Voltar à página inicial' })).toHaveAttribute('href', '/');
+    expect(window.location.pathname).toBe(caminho);
+  });
+
+  it('volta da página 404 para a Home pelo link', async () => {
+    window.history.replaceState({}, '', '/endereco-invalido');
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('link', { name: 'Voltar à página inicial' }));
+
+    expect(window.location.pathname).toBe('/');
+    expect(await screen.findByRole('heading', { name: /indicadores do turismo/i })).toBeInTheDocument();
+    await screen.findByRole('heading', { name: 'Número de leitos' });
+  });
+
   it.each(['/', '/indicadores', '/dashboard', '/relatorios'])('oferece acesso administrativo no cabeçalho de %s', async (caminho) => {
     window.history.replaceState({}, '', caminho);
     render(<App />);

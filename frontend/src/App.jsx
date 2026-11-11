@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import IndicadoresPage from './pages/IndicadoresPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import RelatoriosPage from './pages/RelatoriosPage';
+import PaginaNaoEncontrada from './pages/PaginaNaoEncontrada';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
 import AdminMedicaoFormPage from './pages/AdminMedicaoFormPage';
@@ -109,6 +110,7 @@ function App() {
           <Route path="/indicadores" element={<IndicadoresPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/relatorios" element={<RelatoriosPage />} />
+          <Route path="*" element={<PaginaNaoEncontrada />} />
         </Route>
       </Routes>
     </BrowserRouter>

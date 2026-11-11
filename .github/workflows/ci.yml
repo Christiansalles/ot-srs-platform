@@ -37,6 +37,8 @@ jobs:
       EDITOR_EMAIL: editor-ci@observatorio.local
       EDITOR_SENHA: senha-editor-ci-ficticia-nao-usar-em-producao
       JWT_SECRET: jwt-secret-ci-ficticio-nao-usar-em-producao
+      LOGIN_MAX_TENTATIVAS: '5'
+      LOGIN_JANELA_MINUTOS: '15'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
