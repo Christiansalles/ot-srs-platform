@@ -13,6 +13,7 @@ const TELAS = [
   { nome: 'Indicadores', rota: '/indicadores', titulo: 'Indicadores turísticos' },
   { nome: 'Dashboard', rota: '/dashboard', titulo: 'Dashboard' },
   { nome: 'Relatórios', rota: '/relatorios', titulo: 'Relatórios' },
+  { nome: 'Página 404', rota: '/pagina-que-nao-existe', titulo: 'Página não encontrada' },
   { nome: 'Login', rota: '/admin/login' },
   { nome: 'Tela 6 (painel)', rota: '/admin', titulo: 'Indicadores', administrador: true },
   { nome: 'Tela 7 (cadastro de medição)', rota: '/admin/medicoes/nova', administrador: true },
@@ -22,21 +23,24 @@ const TELAS = [
 // Violações conhecidas, que já têm bug aberto. Cada exceção vale só para a regra, a tela
 // e o elemento indicados. Quando o bug for corrigido, apague a exceção: o teste avisa,
 // numa anotação, a exceção que não encontrou mais nada.
+// O seletor é uma expressão regular sobre o alvo do axe, e não um trecho de texto:
+// "th" casaria com qualquer "nth-child" e esconderia um problema novo.
 const EXCECOES = [
   {
-    bug: '#284', regra: 'color-contrast', rotas: ['/indicadores'], seletor: 'th',
+    bug: '#284', regra: 'color-contrast', rotas: ['/indicadores'], seletor: /^th:nth-child\(\d+\)$/,
     motivo: 'Cabeçalho da tabela de Indicadores a 4,34:1 (achado A-3).',
   },
   {
-    bug: '#285', regra: 'color-contrast', rotas: ['/admin/login'], seletor: '.admin-login-department',
+    bug: '#285', regra: 'color-contrast', rotas: ['/admin/login'], seletor: /^\.admin-login-department$/,
     motivo: 'Nome do departamento no Login a 4,27:1 (achado A-4).',
   },
   {
-    bug: '#261', regra: 'color-contrast', rotas: ['/', '/dashboard'], seletor: '.card-indicador__variation',
+    bug: '#261', regra: 'color-contrast', rotas: ['/', '/dashboard'],
+    seletor: /\.card-indicador__variation(?![\w-])\S* > strong$/,
     motivo: 'Variação dos cards em --color-success, a 3,74:1.',
   },
   {
-    bug: '#261', regra: 'aria-hidden-focus', rotas: ['/dashboard'], seletor: '.grafico-distribuicao__rosca',
+    bug: '#261', regra: 'aria-hidden-focus', rotas: ['/dashboard'], seletor: /^\.grafico-distribuicao__rosca$/,
     motivo: 'Rosca da distribuição dentro de aria-hidden, mas focável.',
   },
 ];
@@ -44,7 +48,7 @@ const EXCECOES = [
 function excecaoDo(regra, rota, alvo) {
   return EXCECOES.find((excecao) => excecao.regra === regra
     && excecao.rotas.includes(rota)
-    && alvo.includes(excecao.seletor));
+    && excecao.seletor.test(alvo));
 }
 
 function descrever(violacoes) {
@@ -86,7 +90,7 @@ for (const tela of TELAS) {
     for (const excecao of EXCECOES.filter((item) => item.rotas.includes(tela.rota) && !usadas.has(item))) {
       test.info().annotations.push({
         type: 'exceção sem uso',
-        description: `${excecao.bug} ${excecao.regra} em ${excecao.seletor} não apareceu: se o bug foi corrigido, apague a exceção.`,
+        description: `${excecao.bug} ${excecao.regra} em ${excecao.seletor.source} não apareceu: se o bug foi corrigido, apague a exceção.`,
       });
     }
 
