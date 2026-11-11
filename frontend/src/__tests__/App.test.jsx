@@ -63,12 +63,13 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
   });
 
-  it('fecha o menu com Escape e devolve o foco ao botão', async () => {
+  it.each(['cabeçalho', 'conteúdo'])('fecha o menu com Escape a partir do %s e devolve o foco', async (origem) => {
     render(<App />);
     const botao = screen.getByRole('button', { name: 'Menu principal' });
     fireEvent.click(botao);
-    const link = within(screen.getByRole('navigation', { name: 'Navegação principal' }))
-      .getByRole('link', { name: 'Home' });
+    const link = origem === 'cabeçalho'
+      ? within(screen.getByRole('navigation', { name: 'Navegação principal' })).getByRole('link', { name: 'Home' })
+      : within(screen.getByRole('main')).getByRole('link', { name: /Consultar indicadores/ });
     link.focus();
 
     fireEvent.keyDown(link, { key: 'Escape' });
@@ -87,6 +88,23 @@ describe('App', () => {
     fireEvent.click(within(navegacao).getByRole('link', { name: 'Relatórios' }));
 
     expect(window.location.pathname).toBe('/relatorios');
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it('fecha o menu ao voltar pelo histórico do navegador', async () => {
+    render(<App />);
+    const navegacao = screen.getByRole('navigation', { name: 'Navegação principal' });
+    fireEvent.click(within(navegacao).getByRole('link', { name: 'Relatórios' }));
+    expect(window.location.pathname).toBe('/relatorios');
+
+    const botao = screen.getByRole('button', { name: 'Menu principal' });
+    fireEvent.click(botao);
+    expect(botao).toHaveAttribute('aria-expanded', 'true');
+    window.history.back();
+
+    expect(await screen.findByRole('heading', { name: /indicadores do turismo/i })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/');
     expect(botao).toHaveAttribute('aria-expanded', 'false');
     await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
   });

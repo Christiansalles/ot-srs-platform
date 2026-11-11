@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Link, NavLink, Outlet, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
@@ -24,17 +24,34 @@ function AppLayout() {
   const [menuAberto, setMenuAberto] = useState(false);
   const botaoMenu = useRef(null);
 
-  function fecharMenu() {
+  const fecharMenu = useCallback(() => {
     if (!menuAberto) return;
     setMenuAberto(false);
     botaoMenu.current?.focus();
-  }
+  }, [menuAberto]);
+
+  useEffect(() => {
+    if (!menuAberto) return;
+
+    function fecharComEscape(evento) {
+      if (evento.key === 'Escape' && !evento.defaultPrevented) fecharMenu();
+    }
+
+    function fecharAoNavegarNoHistorico() {
+      setMenuAberto(false);
+    }
+
+    document.addEventListener('keydown', fecharComEscape);
+    window.addEventListener('popstate', fecharAoNavegarNoHistorico);
+    return () => {
+      document.removeEventListener('keydown', fecharComEscape);
+      window.removeEventListener('popstate', fecharAoNavegarNoHistorico);
+    };
+  }, [menuAberto, fecharMenu]);
 
   return (
     <div className="app-shell">
-      <header className="topbar" onKeyDown={(evento) => {
-        if (evento.key === 'Escape') fecharMenu();
-      }}>
+      <header className="topbar">
         <div className="brand-block">
           <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí, Cidade Criativa" />
           <img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" />
