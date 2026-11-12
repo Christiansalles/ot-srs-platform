@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import CardIndicador from '../../components/CardIndicador/CardIndicador'
 import FiltrosPainel from '../../components/FiltrosPainel/FiltrosPainel'
 import GraficoSerieHistorica from '../../components/GraficoSerieHistorica/GraficoSerieHistorica'
-import { getDestaques, getIndicadores } from '../../services/api'
+import { getAtualizacao, getDestaques, getIndicadores } from '../../services/api'
 import GraficoDistribuicaoSetor from '../../components/GraficoDistribuicaoSetor/GraficoDistribuicaoSetor'
 import GraficoComparativoAnual from '../../components/GraficoComparativoAnual/GraficoComparativoAnual'
 
@@ -21,6 +21,7 @@ import {
   montarComparativoAnual,
 } from '../../utils/montarComparativoAnual'
 
+import { formatarData } from '../../utils/formatarData'
 import { montarCards } from '../../utils/montarCards'
 
 import { useTituloDaPagina } from '../../hooks/useTituloDaPagina'
@@ -115,8 +116,14 @@ function DashboardPage() {
         ano: anoFiltro,
         semestre: semestreFiltro,
       }),
+      // O texto "Atualizado em" é um complemento: se a rota falhar, só ele some.
+      getAtualizacao({
+        setor: setorFiltro,
+        ano: anoFiltro,
+        semestre: semestreFiltro,
+      }).catch(() => null),
     ])
-      .then(([destaques, indicadores, indicadoresComparativo]) => {
+      .then(([destaques, indicadores, indicadoresComparativo, atualizacao]) => {
         if (!active) return
 
         const cards = montarCards(destaques)
@@ -130,6 +137,7 @@ function DashboardPage() {
           status: 'ready',
           cards,
           indicadores,
+          atualizadoEm: formatarData(atualizacao?.atualizado_em),
           distribuicao: montarDistribuicao(indicadores),
           ano: periodoMaisRecente(indicadores)?.ano,
           comparativoAnual: montarComparativoAnual(indicadoresComparativo, {
@@ -147,7 +155,7 @@ function DashboardPage() {
     }
   }, [setorFiltro, anoFiltro, semestreFiltro])
 
-  const { status, cards, indicadores, distribuicao, ano, comparativoAnual } = estado
+  const { status, cards, indicadores, atualizadoEm, distribuicao, ano, comparativoAnual } = estado
 
   return (
     <div className="dashboard">
@@ -157,6 +165,12 @@ function DashboardPage() {
         <p>
           Observatório do Turismo de Santa Rita do Sapucaí
         </p>
+
+        {status === 'ready' && atualizadoEm && (
+          <p className="dashboard__atualizacao">
+            Atualizado em {atualizadoEm}
+          </p>
+        )}
       </header>
 
       <div className="dashboard__filtros">

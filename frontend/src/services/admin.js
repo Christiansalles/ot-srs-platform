@@ -145,6 +145,8 @@ export async function criarMedicao(dados) {
     semestre: Number(dados.semestre),
     valor: Number(dados.valor),
     status: 'rascunho',
+    atualizado_em: new Date().toISOString(),
+    lancado_por: getUsuarioLogado()?.nome ?? 'Administrador',
   };
   indicador.medicoes.push(medicao);
   indicador.medicoes.sort((a, b) => a.ano - b.ano || a.semestre - b.semestre);
@@ -172,7 +174,9 @@ export async function editarMedicao(id, dados) {
     && item.ano === ano && item.semestre === semestre);
   if (duplicada) erroMock(409, `Já existe uma medição deste indicador em ${ano}/${semestre}`);
 
-  Object.assign(encontrada.medicao, { valor: Number(dados.valor), ano, semestre });
+  Object.assign(encontrada.medicao, {
+    valor: Number(dados.valor), ano, semestre, atualizado_em: new Date().toISOString(),
+  });
   encontrada.indicador.medicoes.sort((a, b) => a.ano - b.ano || a.semestre - b.semestre);
   return structuredClone(encontrada.medicao);
 }
@@ -186,6 +190,7 @@ export async function alterarStatusMedicao(id, status) {
   if (!encontrada) erroMock(404, 'Medição não encontrada');
   if (!['rascunho', 'publicado'].includes(status)) erroMock(400, 'Status inválido');
   encontrada.medicao.status = status;
+  encontrada.medicao.atualizado_em = new Date().toISOString();
   return structuredClone(encontrada.medicao);
 }
 

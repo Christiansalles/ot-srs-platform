@@ -1,5 +1,5 @@
 ﻿import { API_URL } from '../config';
-import { mockSetores, mockIndicadores, mockPeriodos, montarDestaques } from '../mocks/dados';
+import { mockSetores, mockIndicadores, mockPeriodos, montarAtualizacao, montarDestaques } from '../mocks/dados';
 import { filtrarRelatoriosMock } from '../mocks/relatorios';
 import { AUTH_UNAUTHORIZED_EVENT, getToken, logout } from './auth';
 
@@ -87,6 +87,10 @@ export function getIndicadores(filtros = {}) {
 
 export function getDestaques(filtros = {}) {
   return request('indicadores/destaques', (params) => montarDestaques(filtrarMock(params)), filtros);
+}
+
+export function getAtualizacao(filtros = {}) {
+  return request('indicadores/atualizacao', (params) => montarAtualizacao(filtrarMock(params)), filtros);
 }
 
 export function getRelatorios(filtros = {}) {

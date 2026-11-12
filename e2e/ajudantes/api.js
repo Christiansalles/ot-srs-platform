@@ -104,3 +104,18 @@ export async function mudarStatusMedicao(request, token, idMedicao, status) {
     dados: { status },
   });
 }
+
+export async function mudarStatusRelatorio(request, token, idRelatorio, status) {
+  return chamar(request, 'PATCH', `/api/admin/relatorios/${idRelatorio}/status`, {
+    token,
+    dados: { status },
+  });
+}
+
+// Corta o acesso de um usuário criado pelo teste; usada na limpeza do fim do teste.
+export async function desativarUsuario(request, token, idUsuario) {
+  return chamar(request, 'PATCH', `/api/admin/usuarios/${idUsuario}`, {
+    token,
+    dados: { ativo: false },
+  });
+}

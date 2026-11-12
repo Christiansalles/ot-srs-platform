@@ -139,7 +139,11 @@
 }
 
 .admin-dashboard__table {
-  min-width: 840px;
+  min-width: 1040px;
+}
+
+.admin-dashboard__date {
+  white-space: nowrap;
 }
 
 .admin-dashboard__sector {

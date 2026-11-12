@@ -4,7 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import DashboardPage from '../pages/Dashboard/DashboardPage'
 
-function stubApi({ indicadores = [], destaques = [], ok = true } = {}) {
+function stubApi({
+  indicadores = [], destaques = [], ok = true, atualizacao = { atualizado_em: '2026-11-03T14:20:00.000Z' }, atualizacaoOk = true,
+} = {}) {
   vi.stubEnv('VITE_USE_MOCK', 'false')
 
   const fetchMock = vi.fn().mockImplementation((url) => {
@@ -29,6 +31,11 @@ function stubApi({ indicadores = [], destaques = [], ok = true } = {}) {
           { id: 1, nome: 'Hospedagem' },
         ],
       })
+    }
+
+    if (url.includes('/indicadores/atualizacao')) {
+      if (!atualizacaoOk) return Promise.resolve({ ok: false, status: 500 })
+      return Promise.resolve({ ok: true, json: async () => atualizacao })
     }
 
     const dados = url.includes('/destaques')
@@ -189,6 +196,50 @@ describe('DashboardPage', () => {
     expect(
       screen.queryByRole('region', { name: 'Série histórica do indicador' }),
     ).not.toBeInTheDocument()
+  })
+
+  it('mostra "Atualizado em dd/mm/aaaa" abaixo do título, no fuso de Brasília', async () => {
+    stubApi({
+      destaques: [destaque(1, 'Número de leitos')],
+      atualizacao: { atualizado_em: '2026-11-04T01:30:00.000Z' },
+    })
+
+    renderDashboard()
+
+    const texto = await screen.findByText('Atualizado em 03/11/2026')
+    const titulo = screen.getByRole('heading', { level: 1, name: 'Dashboard' })
+    expect(titulo.compareDocumentPosition(texto) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('esconde o "Atualizado em" quando a API devolve atualizado_em null', async () => {
+    stubApi({
+      destaques: [destaque(1, 'Número de leitos')],
+      atualizacao: { atualizado_em: null },
+    })
+
+    renderDashboard()
+
+    await screen.findAllByRole('article')
+    expect(screen.queryByText(/Atualizado em/)).not.toBeInTheDocument()
+  })
+
+  it('mantém o dashboard e esconde o texto quando só a rota de atualização falha', async () => {
+    stubApi({ destaques: [destaque(1, 'Número de leitos')], atualizacaoOk: false })
+
+    renderDashboard()
+
+    await screen.findAllByRole('article')
+    expect(screen.queryByText(/Atualizado em/)).not.toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  it('pede a atualização com os mesmos filtros da URL', async () => {
+    const fetchMock = stubApi({ destaques: [destaque(1, 'Número de leitos')] })
+
+    renderDashboard('/?setor=1&ano=2025&semestre=2')
+
+    await screen.findByText('Atualizado em 03/11/2026')
+    expect(chamadaComUrl(fetchMock, '/indicadores/atualizacao?setor=1&ano=2025&semestre=2')).toBe(true)
   })
 
   it('mostra o estado de carregando antes dos dados chegarem', async () => {
