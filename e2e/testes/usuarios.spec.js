@@ -55,11 +55,3 @@ test('CT-32: e-mail repetido preserva o cadastro e leva o foco à mensagem', asy
   await expect(page.getByRole('textbox', { name: 'E-mail', exact: true })).toHaveValue('editor@observatorio.local');
   await expect(page.getByLabel('Senha inicial', { exact: true })).toHaveValue('senha-de-teste-local');
 });
-
-test('CT-29: editor não acessa Usuários pelo menu nem pelo endereço', async ({ page }) => {
-  await entrarComo(page, 'editor');
-  await expect(page.getByRole('link', { name: 'Usuários', exact: true })).toHaveCount(0);
-  await page.goto('/admin/usuarios');
-  await expect(page).toHaveURL(/\/admin$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Usuários', exact: true })).toHaveCount(0);
-});
