@@ -54,7 +54,7 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | Pasta | PR | Issue | Entrega | O que mostra |
 |---|---|---|---|---|
 | [pr-281](pr-281/README.md) | #281 | #258 | E18 | Auditoria de acessibilidade: achados marcados em vermelho (contraste, Tab, "Pular para o conteúdo", gráficos, título da aba) e o que passou em verde, com mock, em 390 e 1280 px |
-| [pr-292](pr-292/README.md) | #292 | #263 | dívida | Gestão de usuários, edição com foco, erro e sucesso visíveis, estados da lista e comparação anterior, em celular e desktop |
+| [pr-292](pr-292/README.md) | #292 | #263 | E10 | Gestão de usuários, edição e mensagens com foco; estados da lista e comparação com o painel em celular e desktop |
 | [pr-290](pr-290/README.md) | #290 | #266 | E18 | Página 404 para endereços inválidos no portal e em `/admin`, em 375 e 1280 px |
 | [pr-291](pr-291/README.md) | #291 | #267 | E18 | Menu do celular aberto e fechado, comparação com a develop e cabeçalho em 768 e 1280 px |
 | [pr-294](pr-294/README.md) | #294 | #268 | E18 | Tabela de Indicadores com a primeira coluna fixa durante a rolagem em 375 e 390 px |
