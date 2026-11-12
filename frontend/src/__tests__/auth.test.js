@@ -40,6 +40,18 @@ describe('serviço de autenticação', () => {
     expect(getUsuarioLogado()).toBeNull();
   });
 
+  it('repassa o erro 429 do login sem criar sessão', async () => {
+    const mensagem = 'Muitas tentativas de login. Aguarde alguns minutos e tente de novo.';
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: false,
+      status: 429,
+      json: async () => ({ erro: mensagem }),
+    }));
+
+    await expect(login('admin@example.com', 'errada')).rejects.toThrow(mensagem);
+    expect(getToken()).toBeNull();
+  });
+
   it('guarda o perfil do login e só libera a publicação para o administrador', async () => {
     const entrar = (perfil) => {
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
