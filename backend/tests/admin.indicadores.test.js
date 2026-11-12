@@ -18,8 +18,24 @@ const indicadoresAdmin = [
     descricao: null,
     setor: { id: 1, nome: 'Hospedagem' },
     medicoes: [
-      { id: 7, ano: 2025, semestre: 2, valor: 350, status: 'rascunho' },
-      { id: 6, ano: 2025, semestre: 1, valor: 312, status: 'publicado' },
+      {
+        id: 7,
+        ano: 2025,
+        semestre: 2,
+        valor: 350,
+        status: 'rascunho',
+        atualizado_em: '2026-11-03T14:20:00.000Z',
+        lancado_por: 'Editora',
+      },
+      {
+        id: 6,
+        ano: 2025,
+        semestre: 1,
+        valor: 312,
+        status: 'publicado',
+        atualizado_em: '2026-10-21T09:00:00.000Z',
+        lancado_por: 'Administrador',
+      },
     ],
   },
 ];
