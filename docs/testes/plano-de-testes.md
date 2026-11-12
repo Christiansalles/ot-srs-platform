@@ -160,10 +160,13 @@ Os testes do M7 contam como prontos quando:
 
 | Issue | Caso | Onde | Prioridade | Quem corrige | Status |
 |---|---|---|---|---|---|
-| #282 | CT-37 (A-1) | Todas as telas, título da aba | A triar | A triar | Aberto |
-| #283 | CT-36 (A-2) | Portal, falta "Pular para o conteúdo" | A triar | A triar | Aberto |
-| #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | A triar | A triar | Aberto |
-| #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | A triar | A triar | Aberto |
+| #282 | CT-37 (A-1) | Todas as telas, título da aba | Normal | Karolina | Corrigido no #300 |
+| #283 | CT-36 (A-2) | Portal, falta "Pular para o conteúdo" | Normal | Karolina | Aberto |
+| #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | Normal | Samuel | Corrigido no #297 |
+| #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Aberto |
+| #298 | CT-18 | Painel, Sair leva ao login em vez da página inicial | Normal | Karolina | Aberto |
+
+**Triagem da #298 (12/11):** prioridade Normal (`Medium` no quadro), correção com Karolina e prazo em 13/11/2026, no M7. A sessão é encerrada, mas o destino contraria o CT-18. O teste permanece com `test.fixme` até corrigir o redirecionamento, ajustar o teste unitário que hoje espera o login e reativar o E2E. Os prazos anteriores da triagem eram de 10/11; este bug foi aberto em 12/11.
 
 ## Cobertura
 
