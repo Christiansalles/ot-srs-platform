@@ -252,7 +252,10 @@
 
 @media (max-width: 720px) {
   .admin-login-page { justify-content: flex-start; gap: 1rem; padding: 1rem; }
-  .admin-login-back { position: static; align-self: flex-start; }
+  .admin-login-back { position: static; align-self: flex-start; min-height: 44px; }
+  .admin-login-input-wrap input { font-size: 1rem; }
+  .admin-login-input-wrap input[name="senha"] { padding-right: 3rem; }
+  .admin-login-password-toggle { right: 0; width: 44px; height: 44px; }
   .admin-login-shell { width: min(100%, 460px); flex-direction: column; min-height: auto; }
   .admin-login-brand, .admin-login-form-panel { width: 100%; }
   .admin-login-brand { min-height: 255px; padding: 1.25rem 1.5rem; }
