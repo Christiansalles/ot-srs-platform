@@ -24,6 +24,15 @@
   max-width: 580px;
 }
 
+.admin-usuarios__edicao {
+  scroll-margin-top: 6rem;
+}
+
+.admin-usuarios__edicao:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
 .admin-usuarios__campos {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -35,7 +44,7 @@
 }
 
 .admin-usuarios__tabela {
-  min-width: 920px;
+  min-width: 900px;
 }
 
 .admin-usuarios__tabela td:nth-child(2) {

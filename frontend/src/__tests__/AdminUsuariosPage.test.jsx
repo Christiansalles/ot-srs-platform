@@ -110,15 +110,40 @@ describe('tela de usuários', () => {
     await screen.findByRole('table');
 
     fireEvent.click(screen.getByRole('button', { name: 'Alterar perfil de Editor' }));
+    expect(screen.getByRole('region', { name: 'Alterar perfil de Editor' })).toHaveFocus();
     fireEvent.change(screen.getByRole('combobox', { name: 'Novo perfil' }), { target: { value: 'administrador' } });
     fireEvent.click(screen.getByRole('button', { name: 'Salvar perfil' }));
     await waitFor(() => expect(atualizarUsuario).toHaveBeenCalledWith(2, { perfil: 'administrador' }));
 
     fireEvent.click(screen.getByRole('button', { name: 'Redefinir senha de Editor' }));
+    expect(screen.getByRole('region', { name: 'Redefinir senha de Editor' })).toHaveFocus();
     fireEvent.change(screen.getByLabelText('Nova senha'), { target: { value: 'nova-senha-segura' } });
     fireEvent.click(screen.getByRole('button', { name: 'Salvar nova senha' }));
     await waitFor(() => expect(atualizarUsuario).toHaveBeenCalledWith(2, { senha: 'nova-senha-segura' }));
     expect(screen.queryByText('nova-senha-segura')).not.toBeInTheDocument();
+  });
+
+  it('mantém o erro 409 dentro da edição com foco e mostra o sucesso ao salvar novamente', async () => {
+    atualizarUsuario.mockRejectedValueOnce(new Error('Você não pode desativar nem rebaixar o próprio usuário'))
+      .mockResolvedValueOnce(usuarios[0]);
+    mostrarPagina();
+    await screen.findByRole('table');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Alterar perfil de Administrador' }));
+    const cartao = screen.getByRole('region', { name: 'Alterar perfil de Administrador' });
+    fireEvent.change(within(cartao).getByLabelText('Novo perfil'), { target: { value: 'editor' } });
+    fireEvent.click(within(cartao).getByRole('button', { name: 'Salvar perfil' }));
+
+    const erro = await within(cartao).findByRole('alert');
+    expect(erro).toHaveTextContent('Você não pode desativar nem rebaixar o próprio usuário');
+    expect(erro).toHaveFocus();
+    expect(within(cartao).getByLabelText('Novo perfil')).toHaveValue('editor');
+
+    fireEvent.change(within(cartao).getByLabelText('Novo perfil'), { target: { value: 'administrador' } });
+    fireEvent.click(within(cartao).getByRole('button', { name: 'Salvar perfil' }));
+    const sucesso = await screen.findByText('Perfil de Administrador atualizado com sucesso.');
+    expect(sucesso).toHaveFocus();
+    expect(screen.queryByRole('region', { name: 'Alterar perfil de Administrador' })).not.toBeInTheDocument();
   });
 
   it('mostra estado vazio e permite tentar novamente após erro', async () => {

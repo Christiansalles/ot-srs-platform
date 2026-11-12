@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
 import DialogoConfirmacao from '../components/DialogoConfirmacao/DialogoConfirmacao';
 import { atualizarUsuario, criarUsuario, getUsuarios } from '../services/admin';
@@ -20,11 +20,34 @@ function AdminUsuariosPage() {
   const [novo, setNovo] = useState(NOVO_USUARIO);
   const [criando, setCriando] = useState(false);
   const [edicao, setEdicao] = useState(null);
+  const [aberturaEdicao, setAberturaEdicao] = useState(0);
   const [salvandoEdicao, setSalvandoEdicao] = useState(false);
   const [confirmacao, setConfirmacao] = useState(null);
   const [confirmando, setConfirmando] = useState(false);
   const [aviso, setAviso] = useState(null);
+  const [avisoEdicao, setAvisoEdicao] = useState('');
+  const cartaoEdicaoRef = useRef(null);
+  const avisoRef = useRef(null);
+  const avisoEdicaoRef = useRef(null);
   const usuarioLogado = getUsuarioLogado();
+
+  useEffect(() => {
+    if (!aberturaEdicao) return;
+    cartaoEdicaoRef.current?.focus({ preventScroll: true });
+    cartaoEdicaoRef.current?.scrollIntoView?.({ block: 'start' });
+  }, [aberturaEdicao]);
+
+  useEffect(() => {
+    if (!aviso) return;
+    avisoRef.current?.focus({ preventScroll: true });
+    avisoRef.current?.scrollIntoView?.({ block: 'center' });
+  }, [aviso]);
+
+  useEffect(() => {
+    if (!avisoEdicao) return;
+    avisoEdicaoRef.current?.focus({ preventScroll: true });
+    avisoEdicaoRef.current?.scrollIntoView?.({ block: 'center' });
+  }, [avisoEdicao]);
 
   useEffect(() => {
     let ativo = true;
@@ -63,13 +86,15 @@ function AdminUsuariosPage() {
 
   function iniciarEdicao(usuario, tipo) {
     setAviso(null);
+    setAvisoEdicao('');
     setEdicao({ usuario, tipo, valor: tipo === 'perfil' ? usuario.perfil : '' });
+    setAberturaEdicao((atual) => atual + 1);
   }
 
   async function salvarEdicao(evento) {
     evento.preventDefault();
     if (!edicao) return;
-    setAviso(null);
+    setAvisoEdicao('');
     setSalvandoEdicao(true);
     try {
       const dados = { [edicao.tipo]: edicao.valor };
@@ -80,7 +105,7 @@ function AdminUsuariosPage() {
         ? `Perfil de ${atualizado.nome} atualizado com sucesso.`
         : `Senha de ${atualizado.nome} redefinida com sucesso.` });
     } catch (erro) {
-      setAviso({ tipo: 'erro', texto: erro.message || 'Não foi possível atualizar o usuário.' });
+      setAvisoEdicao(erro.message || 'Não foi possível atualizar o usuário.');
     } finally {
       setSalvandoEdicao(false);
     }
@@ -112,7 +137,7 @@ function AdminUsuariosPage() {
       />
 
       {aviso && (
-        <p className={`admin-mensagem admin-mensagem--${aviso.tipo}`} role={aviso.tipo === 'erro' ? 'alert' : 'status'}>
+        <p ref={avisoRef} tabIndex={-1} className={`admin-mensagem admin-mensagem--${aviso.tipo}`} role={aviso.tipo === 'erro' ? 'alert' : 'status'}>
           {aviso.texto}
         </p>
       )}
@@ -191,12 +216,13 @@ function AdminUsuariosPage() {
       </section>
 
       {edicao && (
-        <section className="admin-cartao admin-usuarios__cartao" aria-labelledby="editar-usuario-titulo">
+        <section ref={cartaoEdicaoRef} tabIndex={-1} className="admin-cartao admin-usuarios__cartao admin-usuarios__edicao" aria-labelledby="editar-usuario-titulo">
           <div className="admin-usuarios__cartao-cabecalho">
             <h2 className="admin-cartao__titulo" id="editar-usuario-titulo">{edicao.tipo === 'perfil' ? 'Alterar perfil' : 'Redefinir senha'} de {edicao.usuario.nome}</h2>
             <p className="admin-cartao__descricao">{edicao.tipo === 'senha' ? 'A senha nova precisa ter pelo menos 8 caracteres.' : 'A alteração de perfil vale na próxima requisição.'}</p>
           </div>
           <form className="admin-usuarios__form admin-usuarios__form--edicao" onSubmit={salvarEdicao}>
+            {avisoEdicao && <p ref={avisoEdicaoRef} tabIndex={-1} className="admin-mensagem admin-mensagem--erro" role="alert">{avisoEdicao}</p>}
             {edicao.tipo === 'perfil' ? (
               <label className="admin-campo">Novo perfil
                 <select onChange={(evento) => setEdicao({ ...edicao, valor: evento.target.value })} value={edicao.valor}>
