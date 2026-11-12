@@ -23,6 +23,7 @@ import {
 
 import { montarCards } from '../../utils/montarCards'
 
+import { useTituloDaPagina } from '../../hooks/useTituloDaPagina'
 import './DashboardPage.css'
 
 const NOTA_DISTRIBUICAO =
@@ -85,6 +86,8 @@ async function buscarIndicadoresComparativo({
 }
 
 function DashboardPage() {
+  useTituloDaPagina('Dashboard')
+
   const [estado, setEstado] = useState({ status: 'loading' })
   const [params] = useSearchParams()
   const {

@@ -3,9 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 import FiltrosPainel from '../components/FiltrosPainel/FiltrosPainel';
 import { lerFiltros } from '../components/FiltrosPainel/filtros';
 import { getIndicadores } from '../services/api';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './IndicadoresPage.css';
 
 export default function IndicadoresPage() {
+  useTituloDaPagina('Indicadores');
+
   const [params] = useSearchParams();
   const { setor, ano, semestre } = lerFiltros(params);
   const consulta = `${setor}/${ano}/${semestre}`;
