@@ -6,6 +6,7 @@ import { CATEGORIAS_RELATORIO } from '../config/relatorios';
 import { useAlteracaoStatus } from '../hooks/useAlteracaoStatus';
 import { alterarStatusRelatorio, enviarRelatorio, listarRelatoriosAdmin } from '../services/admin';
 import { podePublicar } from '../services/auth';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './AdminRelatoriosPage.css';
 
 const LIMITE_PDF = 10 * 1024 * 1024;
@@ -55,6 +56,8 @@ function formatarData(data) {
 }
 
 function AdminRelatoriosPage() {
+  useTituloDaPagina('Publicador de Relatórios · Painel administrativo');
+
   const [relatorios, setRelatorios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erroLista, setErroLista] = useState('');

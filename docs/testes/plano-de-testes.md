@@ -14,11 +14,11 @@ Cada pessoa revisa os casos da própria área (coluna "Revisa os casos" do [rod�
 | Unidade (front) | Vitest e Testing Library | Componentes, páginas com a API simulada, `utils/`, `services/`, o padrão visual | `frontend/src/__tests__/` | `cd frontend && npm test` | Todo PR, no CI (`ci.yml`) |
 | API | Jest e Supertest, com PostgreSQL de verdade | Rotas, códigos de erro do [contrato](../contrato-api.md), perfis, rascunho fora das rotas públicas | `backend/tests/*.test.js` | `cd backend && npm test` (com o banco de pé) | Todo PR, no CI (`ci.yml`) |
 | Ponta a ponta | Playwright, no desktop (1280 px) e no celular (390 px) | Fluxos inteiros no navegador, contra o sistema do Docker Compose | `e2e/testes/*.spec.js` | Seção "Testes de ponta a ponta" do [README](../../README.md) | Todo PR, no CI (job `compose`) |
-| Acessibilidade automática | `@axe-core/playwright` dentro do E2E | Violações `serious` e `critical` em cada tela | `e2e/testes/acessibilidade.spec.js` (#259) | Junto com o E2E | Todo PR, no CI (job `compose`), depois da #259 |
+| Acessibilidade automática | `@axe-core/playwright` dentro do E2E | Violações `serious` e `critical` em cada tela | `e2e/testes/acessibilidade.spec.js` (#259) | Junto com o E2E | Todo PR, no CI (job `compose`) |
 | Acessibilidade manual | Teclado, leitor de tela, medidor de contraste | O que o axe não pega: ordem do foco, textos dos gráficos, mensagens anunciadas | [Auditoria de acessibilidade](#auditoria-de-acessibilidade), abaixo | À mão | Uma vez no M7 (#258) e depois de cada correção |
 | Exploratório | Celular de verdade, sem roteiro fechado | Toque, teclado do celular, rede lenta, download do PDF no aparelho | [Rodízio](#rodízio) e [lista de bugs](#lista-de-bugs) | À mão, com o sistema acessível pela rede local | Uma rodada antes da triagem (#244) |
 
-**Situação em 04/11:** unidade, API e E2E rodam no CI em todo PR. A base do E2E (#240) já está na `develop`, com o teste de fumaça da Home (CT-01) e os testes dos ajudantes. Os outros casos `E2E` e `A11y` automáticos deste plano são o roteiro que as issues #256, #259, #260, #264 e #270 vão escrever.
+**Situação em 10/11:** unidade, API e E2E rodam no CI em todo PR. A base do E2E (#240) já está na `develop`, com o teste de fumaça da Home (CT-01) e os testes dos ajudantes. Os casos de relatórios públicos (CT-11 a CT-15) estão em `e2e/testes/relatorios.spec.js` (#260), e o axe em cada tela (CT-35) está em `e2e/testes/acessibilidade.spec.js` (#259). Os outros casos `E2E` automáticos deste plano são o roteiro que as issues #256, #264 e #270 vão escrever.
 
 O que cada nível **não** faz:
 

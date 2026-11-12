@@ -88,4 +88,17 @@ describe('tela de login administrativa', () => {
     expect(screen.getByRole('heading', { name: 'Acesso Administrativo' })).toBeInTheDocument();
     await waitFor(() => expect(screen.getByRole('button', { name: 'Entrar' })).toBeEnabled());
   });
+
+  it('exibe a mensagem de limite de tentativas e permanece no login', async () => {
+    const mensagem = 'Muitas tentativas de login. Aguarde alguns minutos e tente de novo.';
+    login.mockRejectedValue(new Error(mensagem));
+    renderLogin();
+
+    fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'admin@example.com' } });
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'errada' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(mensagem);
+    expect(screen.getByRole('heading', { name: 'Acesso Administrativo' })).toBeInTheDocument();
+  });
 });

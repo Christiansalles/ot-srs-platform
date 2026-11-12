@@ -8,6 +8,7 @@ import { alterarStatusMedicao, listarIndicadoresAdmin } from '../services/admin'
 import { podePublicar } from '../services/auth';
 import { useAlteracaoStatus } from '../hooks/useAlteracaoStatus';
 import { formatarValor } from '../utils/formatarValor';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './AdminPage.css';
 
 function normalizarTexto(texto) {
@@ -21,6 +22,8 @@ function criarLinhas(indicadores) {
 }
 
 function AdminPage() {
+  useTituloDaPagina('Indicadores · Painel administrativo');
+
   const [indicadores, setIndicadores] = useState([]);
   const [setores, setSetores] = useState([]);
   const [carregando, setCarregando] = useState(true);
