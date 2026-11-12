@@ -204,4 +204,35 @@ describe('Seed de todos os setores', () => {
 
     expect(totaisDepois).toEqual(totaisAntes);
   });
+
+  test('executar novamente preserva alterações e atualizado_em das medições', async () => {
+    const medicaoOriginal = await prisma.medicao.findFirst({
+      where: { usuario: { email: 'carga-inicial@observatorio.local' } },
+    });
+    const medicaoAlterada = await prisma.medicao.update({
+      where: { id_medicao: medicaoOriginal.id_medicao },
+      data: { valor: 9876.54, status: 'rascunho' },
+    });
+
+    try {
+      executarSeed();
+
+      const depois = await prisma.medicao.findUnique({
+        where: { id_medicao: medicaoOriginal.id_medicao },
+      });
+      expect(Number(depois.valor)).toBe(9876.54);
+      expect(depois.status).toBe('rascunho');
+      expect(depois.atualizado_em).toEqual(medicaoAlterada.atualizado_em);
+    } finally {
+      await prisma.medicao.update({
+        where: { id_medicao: medicaoOriginal.id_medicao },
+        data: {
+          valor: medicaoOriginal.valor,
+          status: medicaoOriginal.status,
+          id_usuario: medicaoOriginal.id_usuario,
+          atualizado_em: medicaoOriginal.atualizado_em,
+        },
+      });
+    }
+  });
 });
