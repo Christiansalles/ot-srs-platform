@@ -1,6 +1,6 @@
-# PR #292: gestão de usuários
+# PR #301: gestão de usuários
 
-Issue #263, Milestone 7. Capturas no Microsoft Edge.
+Issue #263, entrega E11, Milestone 7. Substitui o PR #292 para corrigir o nome da branch. Capturas no Microsoft Edge.
 
 ## Capturas da revisão
 
