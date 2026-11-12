@@ -41,6 +41,7 @@
 table { width: 100%; border-collapse: collapse; background: var(--color-surface); }
 th, td { text-align: left; padding: 1rem 1.5rem; border-bottom: 1px solid var(--color-border); font-size: .875rem; }
 th { background: var(--color-surface-muted); color: var(--color-text-muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; }
+.indicadores-page thead th { color: var(--color-text-secondary); }
 tr:last-child td { border-bottom: none; }
 .select-control { display: inline-flex; align-items: center; gap: 1rem; font-size: .875rem; font-weight: 600; }
 .select-control select { border: 1px solid var(--color-border-strong); border-radius: 8px; background: var(--color-surface); color: var(--color-text); padding: .65rem 1rem; min-width: 200px; }

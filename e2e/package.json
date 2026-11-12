@@ -11,6 +11,7 @@
     "relatorio": "playwright show-report"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@playwright/test": "1.63.0"
   },
   "engines": {

@@ -45,4 +45,14 @@ router.get('/destaques', async (req, res) => {
   res.json(montarDestaques(formatarIndicadores(indicadores)));
 });
 
+router.get('/atualizacao', async (req, res) => {
+  const { setorId, ano, semestre, erro } = lerFiltros(req.query);
+  if (erro) {
+    return res.status(400).json({ erro });
+  }
+
+  const atualizadoEm = await dados.buscarAtualizacao({ setorId, ano, semestre });
+  res.json({ atualizado_em: atualizadoEm });
+});
+
 module.exports = router;
