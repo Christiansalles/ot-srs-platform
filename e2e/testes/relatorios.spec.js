@@ -37,15 +37,27 @@ function cardsDe(page) {
   return listaDe(page).getByRole('article');
 }
 
+function cardDe(page, titulo) {
+  return cardsDe(page).filter({ has: page.getByRole('heading', { level: 3, name: titulo, exact: true }) });
+}
+
+// Títulos da carga na ordem em que aparecem. Outros testes (o CT-27 da #256) publicam um
+// relatório de 2031 enquanto rodam em paralelo; ele pode estar na lista, então os casos
+// conferem os relatórios da carga sem contar o total de cards.
+async function titulosDaCargaNaLista(page) {
+  const titulos = await cardsDe(page).getByRole('heading', { level: 3 }).allTextContents();
+  const daCarga = RELATORIOS_DA_CARGA.map((relatorio) => relatorio.titulo);
+  return titulos.filter((titulo) => daCarga.includes(titulo));
+}
+
 test('CT-11: /relatorios mostra os dois relatórios da carga com os dados de cada um', async ({ page }) => {
   await page.goto('/relatorios');
 
-  const cards = cardsDe(page);
-  await expect(cards).toHaveCount(RELATORIOS_DA_CARGA.length);
-  await expect(cards.getByRole('heading', { level: 3 })).toHaveText(RELATORIOS_DA_CARGA.map((r) => r.titulo));
+  await expect.poll(() => titulosDaCargaNaLista(page)).toEqual(RELATORIOS_DA_CARGA.map((r) => r.titulo));
 
-  for (const [indice, relatorio] of RELATORIOS_DA_CARGA.entries()) {
-    const card = cards.nth(indice);
+  for (const relatorio of RELATORIOS_DA_CARGA) {
+    const card = cardDe(page, relatorio.titulo);
+    await expect(card).toHaveCount(1);
     await expect(card).toContainText(`Edição ${relatorio.edicao}`);
     await expect(card).toContainText(relatorio.categoria);
     await expect(card).toContainText(`Publicado em ${relatorio.data}`);
@@ -56,11 +68,13 @@ test('CT-11: /relatorios mostra os dois relatórios da carga com os dados de cad
 
 test('CT-12: filtro por categoria e ano fica na URL e continua depois de recarregar', async ({ page }) => {
   await page.goto('/relatorios');
-  await expect(cardsDe(page)).toHaveCount(RELATORIOS_DA_CARGA.length);
+  await expect(cardDe(page, HOTELEIRO.titulo)).toHaveCount(1);
 
   await page.getByLabel('Categoria').selectOption({ label: 'Setor Hoteleiro' });
   await expect(page).toHaveURL(/[?&]categoria=Setor(\+|%20)Hoteleiro/);
-  await expect(cardsDe(page).getByRole('heading', { level: 3 })).toHaveText([HOTELEIRO.titulo]);
+  await expect.poll(() => titulosDaCargaNaLista(page)).toEqual([HOTELEIRO.titulo]);
+  // Só com a categoria, um relatório de teste da mesma categoria ainda pode aparecer;
+  // o ano 2026, abaixo, deixa a lista exata.
 
   await page.getByLabel('Ano de publicação').selectOption('2026');
   await expect(page).toHaveURL(/[?&]ano=2026/);
@@ -81,7 +95,7 @@ test('CT-13: ano sem relatório, vindo pela URL, mostra o estado vazio', async (
 
 test('CT-14: "Baixar PDF" baixa um PDF com o nome da edição e do título', async ({ page }) => {
   await page.goto('/relatorios');
-  const card = cardsDe(page).filter({ has: page.getByRole('heading', { name: HOTELEIRO.titulo }) });
+  const card = cardDe(page, HOTELEIRO.titulo);
 
   const resposta = page.waitForResponse((r) => /\/api\/relatorios\/\d+\/arquivo$/.test(r.url()));
   const download = page.waitForEvent('download');
@@ -105,7 +119,8 @@ test('CT-15: relatório em rascunho não aparece na lista e o download dele dá 
   expect(noPainel.map((item) => item.titulo)).toContain(titulo);
 
   await page.goto('/relatorios');
-  await expect(cardsDe(page)).toHaveCount(RELATORIOS_DA_CARGA.length);
+  // Espera a lista carregar; a ordem é conferida no CT-11.
+  await expect.poll(async () => (await titulosDaCargaNaLista(page)).length).toBe(RELATORIOS_DA_CARGA.length);
   await expect(page.getByText(titulo)).toHaveCount(0);
 
   const download = await baixarArquivoDoRelatorio(request, rascunho.id);

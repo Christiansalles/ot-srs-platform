@@ -225,6 +225,12 @@ Para escrever um teste novo, use os ajudantes de `e2e/ajudantes/`:
   que já está na carga. Dê nomes com `nomeUnico()`, porque o desktop e o celular
   rodam o mesmo teste no mesmo banco.
 
+O `acessibilidade.spec.js` roda o axe (`@axe-core/playwright`) em cada tela do portal e
+do painel e reprova violação `serious` ou `critical`. Violação que já tem bug aberto
+entra na lista `EXCECOES` do próprio arquivo, com o número do bug; quando o bug for
+corrigido, apague a exceção (o relatório do Playwright mostra a anotação "exceção sem
+uso").
+
 No CI, o job `compose` roda esses testes depois de subir o sistema e, se algum falha,
 guarda o relatório como artefato `relatorio-playwright`.
 
