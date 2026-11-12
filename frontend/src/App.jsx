@@ -10,7 +10,9 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
 import AdminMedicaoFormPage from './pages/AdminMedicaoFormPage';
 import AdminRelatoriosPage from './pages/AdminRelatoriosPage';
+import AdminUsuariosPage from './pages/AdminUsuariosPage';
 import RotaProtegida from './components/RotaProtegida';
+import RotaAdministrador from './components/RotaAdministrador';
 import AdminLayout from './components/AdminLayout/AdminLayout';
 import cidadeLogo from './assets/logos/santa-rita.svg';
 import observatorioLogo from './assets/logos/observatorio.png';
@@ -120,6 +122,9 @@ function App() {
             <Route path="medicoes/nova" element={<AdminMedicaoFormPage />} />
             <Route path="medicoes/:id/editar" element={<AdminMedicaoFormPage />} />
             <Route path="relatorios" element={<AdminRelatoriosPage />} />
+            <Route element={<RotaAdministrador />}>
+              <Route path="usuarios" element={<AdminUsuariosPage />} />
+            </Route>
           </Route>
         </Route>
         <Route element={<AppLayout />}>

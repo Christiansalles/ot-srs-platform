@@ -70,10 +70,18 @@ export const mockRelatoriosAdmin = [
   },
 ];
 
+// Mesma ordem de criação do seed em um banco novo.
+export const mockUsuariosAdmin = [
+  { id: 1, nome: 'Administrador', email: 'admin@observatorio.local', perfil: 'administrador', ativo: true },
+  { id: 2, nome: 'Editor', email: 'editor@observatorio.local', perfil: 'editor', ativo: true },
+  { id: 3, nome: 'Carga inicial', email: 'carga-inicial@observatorio.local', perfil: 'administrador', ativo: false },
+];
+
 export function criarEstadoAdminMock() {
   return {
     indicadores: structuredClone(mockIndicadoresAdmin),
     relatorios: structuredClone(mockRelatoriosAdmin),
+    usuarios: structuredClone(mockUsuariosAdmin),
   };
 }
 

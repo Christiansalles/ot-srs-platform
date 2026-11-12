@@ -63,6 +63,7 @@ describe('título da aba em cada rota', () => {
     ['/admin/medicoes/nova', 'Cadastrar medição · Painel administrativo · Observatório do Turismo'],
     ['/admin/medicoes/1/editar', 'Editar medição · Painel administrativo · Observatório do Turismo'],
     ['/admin/relatorios', 'Publicador de Relatórios · Painel administrativo · Observatório do Turismo'],
+    ['/admin/usuarios', 'Usuários · Painel administrativo · Observatório do Turismo'],
   ])('%s, no painel, mostra "%s"', async (caminho, titulo) => {
     entrarNoPainel();
     window.history.replaceState({}, '', caminho);

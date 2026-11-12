@@ -31,6 +31,12 @@ const MENU = [
     label: 'Relatórios',
     icon: <><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z" /><path d="M14 3v6h6M8 13h8M8 17h5" /></>,
   },
+  {
+    to: '/admin/usuarios',
+    label: 'Usuários',
+    somenteAdministrador: true,
+    icon: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 7h5M18.5 4.5v5M16 17h5" /></>,
+  },
 ];
 
 function iniciais(nome) {
@@ -80,7 +86,7 @@ function AdminLayout() {
 
         <nav className="admin-nav" aria-label="Menu administrativo">
           <p className="admin-nav-title">Módulos de gestão</p>
-          {MENU.map((item) => (
+          {MENU.filter((item) => !item.somenteAdministrador || usuario.perfil === 'administrador').map((item) => (
             <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setMenuAberto(false)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">{item.icon}</svg>
               {item.label}

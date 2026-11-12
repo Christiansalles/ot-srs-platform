@@ -1,0 +1,93 @@
+.admin-usuarios {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admin-usuarios .admin-cabecalho {
+  margin-bottom: 0;
+}
+
+.admin-usuarios__cartao {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.admin-usuarios__cartao-cabecalho {
+  padding: 1.25rem 1.5rem;
+}
+
+.admin-usuarios__form {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.admin-usuarios__form--edicao {
+  max-width: 580px;
+}
+
+.admin-usuarios__edicao {
+  scroll-margin-top: 6rem;
+}
+
+.admin-usuarios__edicao:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+.admin-usuarios__campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-usuarios__acoes {
+  margin-top: 1.25rem;
+}
+
+.admin-usuarios__tabela {
+  min-width: 900px;
+}
+
+.admin-usuarios__tabela td:nth-child(2) {
+  overflow-wrap: anywhere;
+}
+
+.admin-usuarios__situacao {
+  display: inline-flex;
+  padding: .3rem .65rem;
+  border-radius: 999px;
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.admin-usuarios__situacao--ativo {
+  background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface));
+  color: color-mix(in srgb, var(--color-success) 65%, var(--color-text));
+}
+
+.admin-usuarios .admin-mensagem--sucesso {
+  color: color-mix(in srgb, var(--color-success) 65%, var(--color-text));
+}
+
+.admin-usuarios__situacao--inativo {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+}
+
+.admin-usuarios__tabela .admin-tabela__acoes button:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+@media (max-width: 640px) {
+  .admin-usuarios__cartao-cabecalho {
+    padding: 1rem;
+  }
+
+  .admin-usuarios__form {
+    padding: 0 1rem 1rem;
+  }
+
+  .admin-usuarios__campos {
+    grid-template-columns: 1fr;
+  }
+}

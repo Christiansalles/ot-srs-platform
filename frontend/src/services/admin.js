@@ -4,7 +4,7 @@ import {
   criarMockIndicador,
 } from '../mocks/admin';
 import { mockSetores } from '../mocks/dados';
-import { AUTH_UNAUTHORIZED_EVENT, getToken, logout } from './auth';
+import { AUTH_UNAUTHORIZED_EVENT, getToken, getUsuarioLogado, logout } from './auth';
 
 const mensagensPorStatus = {
   400: 'Confira os dados informados e tente novamente.',
@@ -226,6 +226,78 @@ export async function alterarStatusRelatorio(id, status) {
   if (!['rascunho', 'publicado'].includes(status)) erroMock(400, 'Status inválido');
   relatorio.status = status;
   return structuredClone(relatorio);
+}
+
+function exigirAdministradorMock() {
+  if (!getToken()) erroMock(401, 'Token inválido ou expirado');
+  if (getUsuarioLogado()?.perfil !== 'administrador') erroMock(403, 'Só o administrador gerencia usuários');
+}
+
+function validarUsuarioMock(dados, novo) {
+  if (!dados || typeof dados !== 'object' || Array.isArray(dados)) erroMock(400, 'Campos obrigatórios inválidos');
+  const campos = ['nome', 'email', 'senha', 'perfil', 'ativo'].filter((campo) => dados[campo] !== undefined);
+  if (!campos.length || (novo && ['nome', 'email', 'senha', 'perfil'].some((campo) => dados[campo] === undefined))) {
+    erroMock(400, 'Campos obrigatórios inválidos');
+  }
+  if (dados.nome !== undefined && (typeof dados.nome !== 'string' || !dados.nome.trim() || dados.nome.trim().length > 80)) {
+    erroMock(400, 'Campos obrigatórios inválidos');
+  }
+  if (dados.email !== undefined) {
+    if (typeof dados.email !== 'string' || !dados.email.trim() || dados.email.trim().length > 120) {
+      erroMock(400, 'Campos obrigatórios inválidos');
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email.trim())) erroMock(400, 'E-mail inválido');
+  }
+  if (dados.senha !== undefined && (typeof dados.senha !== 'string' || dados.senha.length < 8)) {
+    erroMock(400, 'A senha deve ter pelo menos 8 caracteres');
+  }
+  if (dados.perfil !== undefined && !['administrador', 'editor'].includes(dados.perfil)) erroMock(400, 'Perfil inválido');
+  if (dados.ativo !== undefined && typeof dados.ativo !== 'boolean') erroMock(400, 'Campos obrigatórios inválidos');
+}
+
+export async function getUsuarios() {
+  if (!estaUsandoMock()) return requisitarAdmin('usuarios');
+  exigirAdministradorMock();
+  return structuredClone(estadoMock.usuarios).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+}
+
+export async function criarUsuario(dados) {
+  if (!estaUsandoMock()) return requisitarAdmin('usuarios', { method: 'POST', body: dados });
+  exigirAdministradorMock();
+  validarUsuarioMock(dados, true);
+  const email = dados.email.trim().toLowerCase();
+  if (estadoMock.usuarios.some((usuario) => usuario.email === email)) erroMock(409, 'Já existe um usuário com este e-mail');
+  const usuario = {
+    id: Math.max(0, ...estadoMock.usuarios.map((item) => item.id)) + 1,
+    nome: dados.nome.trim(),
+    email,
+    perfil: dados.perfil,
+    ativo: true,
+  };
+  estadoMock.usuarios.push(usuario);
+  return structuredClone(usuario);
+}
+
+export async function atualizarUsuario(id, dados) {
+  if (!estaUsandoMock()) return requisitarAdmin(`usuarios/${id}`, { method: 'PATCH', body: dados });
+  exigirAdministradorMock();
+  const usuario = estadoMock.usuarios.find((item) => item.id === Number(id));
+  if (!usuario) erroMock(404, 'Recurso não encontrado');
+  validarUsuarioMock(dados, false);
+  if (usuario.id === getUsuarioLogado().id && (dados.ativo === false || dados.perfil === 'editor')) {
+    erroMock(409, 'Você não pode desativar nem rebaixar o próprio usuário');
+  }
+  const email = dados.email?.trim().toLowerCase();
+  if (email && estadoMock.usuarios.some((item) => item.id !== usuario.id && item.email === email)) {
+    erroMock(409, 'Já existe um usuário com este e-mail');
+  }
+  Object.assign(usuario, {
+    ...(dados.nome !== undefined && { nome: dados.nome.trim() }),
+    ...(email !== undefined && { email }),
+    ...(dados.perfil !== undefined && { perfil: dados.perfil }),
+    ...(dados.ativo !== undefined && { ativo: dados.ativo }),
+  });
+  return structuredClone(usuario);
 }
 
 export function resetarMocksAdmin() {
