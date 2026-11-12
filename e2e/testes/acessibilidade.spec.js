@@ -18,6 +18,7 @@ const TELAS = [
   { nome: 'Tela 6 (painel)', rota: '/admin', titulo: 'Indicadores', administrador: true },
   { nome: 'Tela 7 (cadastro de medição)', rota: '/admin/medicoes/nova', administrador: true },
   { nome: 'Tela 8 (relatórios no painel)', rota: '/admin/relatorios', administrador: true },
+  { nome: 'Usuários', rota: '/admin/usuarios', titulo: 'Usuários', administrador: true },
 ];
 
 // Violações conhecidas, que já têm bug aberto. Cada exceção vale só para a regra, a tela

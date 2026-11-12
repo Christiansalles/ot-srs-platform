@@ -61,6 +61,7 @@ describe('tela de usuários', () => {
       nome: 'Nova Editora', email: 'NOVA@EXAMPLE.COM', senha: 'senha-inicial', perfil: 'editor',
     }));
     expect(await screen.findByText('Usuário Nova Editora criado com sucesso.')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveFocus();
     expect(within(screen.getByRole('table')).getByText('nova@example.com')).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Nome' })).toHaveValue('');
   });
@@ -72,6 +73,7 @@ describe('tela de usuários', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Criar usuário' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Já existe um usuário com este e-mail');
+    expect(screen.getByRole('alert')).toHaveFocus();
     expect(screen.getByRole('textbox', { name: 'Nome' })).toHaveValue('Nova Editora');
     expect(screen.getByRole('textbox', { name: 'E-mail' })).toHaveValue('nova@example.com');
     expect(screen.getByLabelText('Senha inicial')).toHaveValue('senha-inicial');
@@ -110,15 +112,38 @@ describe('tela de usuários', () => {
     await screen.findByRole('table');
 
     fireEvent.click(screen.getByRole('button', { name: 'Alterar perfil de Editor' }));
+    expect(screen.getByRole('combobox', { name: 'Novo perfil' })).toHaveFocus();
     fireEvent.change(screen.getByRole('combobox', { name: 'Novo perfil' }), { target: { value: 'administrador' } });
     fireEvent.click(screen.getByRole('button', { name: 'Salvar perfil' }));
     await waitFor(() => expect(atualizarUsuario).toHaveBeenCalledWith(2, { perfil: 'administrador' }));
+    expect(await screen.findByText('Perfil de Editor atualizado com sucesso.')).toHaveFocus();
 
     fireEvent.click(screen.getByRole('button', { name: 'Redefinir senha de Editor' }));
+    expect(screen.getByLabelText('Nova senha')).toHaveFocus();
     fireEvent.change(screen.getByLabelText('Nova senha'), { target: { value: 'nova-senha-segura' } });
     fireEvent.click(screen.getByRole('button', { name: 'Salvar nova senha' }));
     await waitFor(() => expect(atualizarUsuario).toHaveBeenCalledWith(2, { senha: 'nova-senha-segura' }));
+    expect(await screen.findByText('Senha de Editor redefinida com sucesso.')).toHaveFocus();
     expect(screen.queryByText('nova-senha-segura')).not.toBeInTheDocument();
+  });
+
+  it('leva o foco ao erro de edição, mantém o valor e devolve o foco ao cancelar', async () => {
+    atualizarUsuario.mockRejectedValue(new Error('Você não pode desativar nem rebaixar o próprio usuário'));
+    mostrarPagina();
+    await screen.findByRole('table');
+    const botao = screen.getByRole('button', { name: 'Alterar perfil de Administrador' });
+    fireEvent.click(botao);
+    const perfil = screen.getByRole('combobox', { name: 'Novo perfil' });
+    expect(perfil).toHaveFocus();
+    fireEvent.change(perfil, { target: { value: 'editor' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Salvar perfil' }));
+
+    const erro = await screen.findByRole('alert');
+    expect(erro).toHaveFocus();
+    expect(perfil).toHaveValue('editor');
+    fireEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
+    expect(screen.queryByRole('combobox', { name: 'Novo perfil' })).not.toBeInTheDocument();
+    expect(botao).toHaveFocus();
   });
 
   it('mostra estado vazio e permite tentar novamente após erro', async () => {

@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
 import DialogoConfirmacao from '../components/DialogoConfirmacao/DialogoConfirmacao';
 import { atualizarUsuario, criarUsuario, getUsuarios } from '../services/admin';
 import { getUsuarioLogado } from '../services/auth';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './AdminUsuariosPage.css';
 
 const NOVO_USUARIO = { nome: '', email: '', senha: '', perfil: 'editor' };
@@ -13,6 +14,8 @@ function ordenarUsuarios(usuarios) {
 }
 
 function AdminUsuariosPage() {
+  useTituloDaPagina('Usuários · Painel administrativo');
+
   const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erroLista, setErroLista] = useState('');
@@ -24,7 +27,24 @@ function AdminUsuariosPage() {
   const [confirmacao, setConfirmacao] = useState(null);
   const [confirmando, setConfirmando] = useState(false);
   const [aviso, setAviso] = useState(null);
+  const campoEdicaoRef = useRef(null);
+  const mensagemRef = useRef(null);
+  const botaoEdicaoRef = useRef(null);
   const usuarioLogado = getUsuarioLogado();
+  const idEmEdicao = edicao?.usuario.id;
+  const tipoEdicao = edicao?.tipo;
+
+  useEffect(() => {
+    if (idEmEdicao === undefined) return;
+    campoEdicaoRef.current?.focus({ preventScroll: true });
+    campoEdicaoRef.current?.scrollIntoView?.({ block: 'center', behavior: 'instant' });
+  }, [idEmEdicao, tipoEdicao]);
+
+  useEffect(() => {
+    if (!aviso) return;
+    mensagemRef.current?.focus({ preventScroll: true });
+    mensagemRef.current?.scrollIntoView?.({ block: 'center', behavior: 'instant' });
+  }, [aviso]);
 
   useEffect(() => {
     let ativo = true;
@@ -61,9 +81,15 @@ function AdminUsuariosPage() {
     }
   }
 
-  function iniciarEdicao(usuario, tipo) {
+  function iniciarEdicao(usuario, tipo, botao) {
+    botaoEdicaoRef.current = botao;
     setAviso(null);
     setEdicao({ usuario, tipo, valor: tipo === 'perfil' ? usuario.perfil : '' });
+  }
+
+  function cancelarEdicao() {
+    setEdicao(null);
+    botaoEdicaoRef.current?.focus();
   }
 
   async function salvarEdicao(evento) {
@@ -112,7 +138,7 @@ function AdminUsuariosPage() {
       />
 
       {aviso && (
-        <p className={`admin-mensagem admin-mensagem--${aviso.tipo}`} role={aviso.tipo === 'erro' ? 'alert' : 'status'}>
+        <p className={`admin-mensagem admin-mensagem--${aviso.tipo}`} ref={mensagemRef} tabIndex={-1} role={aviso.tipo === 'erro' ? 'alert' : 'status'}>
           {aviso.texto}
         </p>
       )}
@@ -171,8 +197,8 @@ function AdminUsuariosPage() {
                     <td>{PERFIS[usuario.perfil] || usuario.perfil}</td>
                     <td><span className={`admin-usuarios__situacao admin-usuarios__situacao--${usuario.ativo ? 'ativo' : 'inativo'}`}>{usuario.ativo ? 'Ativo' : 'Inativo'}</span></td>
                     <td className="admin-tabela__acoes">
-                      <button aria-label={`Alterar perfil de ${usuario.nome}`} onClick={() => iniciarEdicao(usuario, 'perfil')} type="button">Alterar perfil</button>
-                      <button aria-label={`Redefinir senha de ${usuario.nome}`} onClick={() => iniciarEdicao(usuario, 'senha')} type="button">Redefinir senha</button>
+                      <button aria-label={`Alterar perfil de ${usuario.nome}`} onClick={(evento) => iniciarEdicao(usuario, 'perfil', evento.currentTarget)} type="button">Alterar perfil</button>
+                      <button aria-label={`Redefinir senha de ${usuario.nome}`} onClick={(evento) => iniciarEdicao(usuario, 'senha', evento.currentTarget)} type="button">Redefinir senha</button>
                       <button
                         aria-label={`${usuario.ativo ? 'Desativar' : 'Reativar'} ${usuario.nome}`}
                         disabled={usuario.ativo && usuario.id === usuarioLogado?.id}
@@ -199,18 +225,18 @@ function AdminUsuariosPage() {
           <form className="admin-usuarios__form admin-usuarios__form--edicao" onSubmit={salvarEdicao}>
             {edicao.tipo === 'perfil' ? (
               <label className="admin-campo">Novo perfil
-                <select onChange={(evento) => setEdicao({ ...edicao, valor: evento.target.value })} value={edicao.valor}>
+                <select ref={campoEdicaoRef} onChange={(evento) => setEdicao({ ...edicao, valor: evento.target.value })} value={edicao.valor}>
                   <option value="editor">Editor</option>
                   <option value="administrador">Administrador</option>
                 </select>
               </label>
             ) : (
               <label className="admin-campo">Nova senha
-                <input autoComplete="new-password" minLength={8} onChange={(evento) => setEdicao({ ...edicao, valor: evento.target.value })} required type="password" value={edicao.valor} />
+                <input ref={campoEdicaoRef} autoComplete="new-password" minLength={8} onChange={(evento) => setEdicao({ ...edicao, valor: evento.target.value })} required type="password" value={edicao.valor} />
               </label>
             )}
             <div className="admin-acoes admin-usuarios__acoes">
-              <button className="admin-botao admin-botao--secundario" disabled={salvandoEdicao} onClick={() => setEdicao(null)} type="button">Cancelar</button>
+              <button className="admin-botao admin-botao--secundario" disabled={salvandoEdicao} onClick={cancelarEdicao} type="button">Cancelar</button>
               <button className="admin-botao admin-botao--primario" disabled={salvandoEdicao} type="submit">{salvandoEdicao ? 'Salvando...' : edicao.tipo === 'perfil' ? 'Salvar perfil' : 'Salvar nova senha'}</button>
             </div>
           </form>
