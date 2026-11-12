@@ -32,10 +32,6 @@ const EXCECOES = [
     motivo: 'Cabeçalho da tabela de Indicadores a 4,34:1 (achado A-3).',
   },
   {
-    bug: '#285', regra: 'color-contrast', rotas: ['/admin/login'], seletor: /^\.admin-login-department$/,
-    motivo: 'Nome do departamento no Login a 4,27:1 (achado A-4).',
-  },
-  {
     bug: '#261', regra: 'color-contrast', rotas: ['/', '/dashboard'],
     seletor: /\.card-indicador__variation(?![\w-])\S* > strong$/,
     motivo: 'Variação dos cards em --color-success, a 3,74:1.',

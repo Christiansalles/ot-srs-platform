@@ -57,6 +57,7 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-301](pr-301/README.md) | #301 (substitui #292) | #263 | E11 | Gestão de usuários, edição e mensagens com foco; estados da lista e comparação com o painel em celular e desktop |
 | [pr-290](pr-290/README.md) | #290 | #266 | E18 | Página 404 para endereços inválidos no portal e em `/admin`, em 375 e 1280 px |
 | [pr-291](pr-291/README.md) | #291 | #267 | E18 | Menu do celular aberto e fechado, comparação com a develop e cabeçalho em 768 e 1280 px |
+| [pr-293](pr-293/README.md) | #293 | #285 | E18 | Contraste do departamento no Login antes e depois em 390 e 1280 px |
 | [pr-294](pr-294/README.md) | #294 | #268 | E18 | Tabela de Indicadores com a primeira coluna fixa durante a rolagem em 375 e 390 px |
 | [pr-297](pr-297/README.md) | #297 | #284 | E18 | Contraste dos títulos da tabela de Indicadores antes e depois em 390 e 1280 px |
 | [pr-299](pr-299/README.md) | #299 | #270 | E19 | Resultado do E2E do painel e captura da falha de logout do CT-18 (#298) |
