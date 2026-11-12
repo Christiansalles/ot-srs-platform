@@ -4,6 +4,7 @@ import FiltrosPainel from '../components/FiltrosPainel/FiltrosPainel';
 import { lerFiltros } from '../components/FiltrosPainel/filtros';
 import { getIndicadores } from '../services/api';
 import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
+import './IndicadoresPage.css';
 
 export default function IndicadoresPage() {
   useTituloDaPagina('Indicadores');
@@ -66,32 +67,35 @@ export default function IndicadoresPage() {
         ) : linhas.length === 0 ? (
           <p className="state-message" role="status">Sem dados para os filtros selecionados. Use "Limpar filtros" para consultar todos os indicadores.</p>
         ) : (
-          <div className="table-wrap" role="region" aria-label="Tabela de indicadores turísticos" tabIndex={0}>
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Indicador</th>
-                  <th scope="col">Setor</th>
-                  <th scope="col">Unidade</th>
-                  <th scope="col">Ano</th>
-                  <th scope="col">Semestre</th>
-                  <th scope="col">Valor</th>
-                </tr>
-              </thead>
-              <tbody>
-                {linhas.map((linha) => (
-                  <tr key={linha.id}>
-                    <td>{linha.nome}</td>
-                    <td>{linha.setor}</td>
-                    <td>{linha.unidade}</td>
-                    <td>{linha.ano}</td>
-                    <td>{linha.semestre}</td>
-                    <td>{linha.valor.toLocaleString('pt-BR')}</td>
+          <>
+            <p className="indicadores-rolagem">Deslize a tabela na horizontal para ver as demais colunas.</p>
+            <div className="table-wrap" role="region" aria-label="Tabela de indicadores turísticos" tabIndex={0}>
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Indicador</th>
+                    <th scope="col">Setor</th>
+                    <th scope="col">Unidade</th>
+                    <th scope="col">Ano</th>
+                    <th scope="col">Semestre</th>
+                    <th scope="col">Valor</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {linhas.map((linha) => (
+                    <tr key={linha.id}>
+                      <td>{linha.nome}</td>
+                      <td>{linha.setor}</td>
+                      <td>{linha.unidade}</td>
+                      <td>{linha.ano}</td>
+                      <td>{linha.semestre}</td>
+                      <td>{linha.valor.toLocaleString('pt-BR')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
         <p className="data-note">Valores ilustrativos do Milestone III. A unidade e o período acompanham cada medição.</p>
       </section>

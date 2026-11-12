@@ -117,8 +117,8 @@ describe('services/dados', () => {
       setor: { id: hospedagem.id_setor, nome: hospedagem.nome },
     });
     expect(indicadores[0].medicoes).toEqual([
-      { id: expect.any(Number), ano: ANO_TESTE, semestre: 1, valor: 312, status: 'publicado' },
-      { id: expect.any(Number), ano: ANO_TESTE, semestre: 2, valor: 350, status: 'rascunho' },
+      { id: expect.any(Number), ano: ANO_TESTE, semestre: 1, valor: 312, status: 'publicado', atualizado_em: expect.any(Date), lancado_por: 'Teste dados' },
+      { id: expect.any(Number), ano: ANO_TESTE, semestre: 2, valor: 350, status: 'rascunho', atualizado_em: expect.any(Date), lancado_por: 'Teste dados' },
     ]);
   });
 
@@ -128,7 +128,15 @@ describe('services/dados', () => {
     expect(indicadores.map((indicador) => indicador.id)).toContain(leitos.id_indicador);
     expect(indicadores.map((indicador) => indicador.id)).not.toContain(restaurantes.id_indicador);
     expect(indicadores.find((indicador) => indicador.id === leitos.id_indicador).medicoes)
-      .toEqual([{ id: expect.any(Number), ano: ANO_TESTE, semestre: 2, valor: 350, status: 'rascunho' }]);
+      .toEqual([{
+        id: expect.any(Number),
+        ano: ANO_TESTE,
+        semestre: 2,
+        valor: 350,
+        status: 'rascunho',
+        atualizado_em: expect.any(Date),
+        lancado_por: 'Teste dados',
+      }]);
   });
 
   it('buscarIndicadores sem setor traz indicadores de todos os setores', async () => {
