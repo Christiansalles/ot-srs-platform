@@ -57,3 +57,4 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-290](pr-290/README.md) | #290 | #266 | E18 | Página 404 para endereços inválidos no portal e em `/admin`, em 375 e 1280 px |
 | [pr-291](pr-291/README.md) | #291 | #267 | E18 | Menu do celular aberto e fechado, comparação com a develop e cabeçalho em 768 e 1280 px |
 | [pr-294](pr-294/README.md) | #294 | #268 | E18 | Tabela de Indicadores com a primeira coluna fixa durante a rolagem em 375 e 390 px |
+| [pr-297](pr-297/README.md) | #297 | #284 | E18 | Contraste dos títulos da tabela de Indicadores antes e depois em 390 e 1280 px |
