@@ -72,8 +72,6 @@ async function preencherRelatorio(cadastro, titulo) {
 }
 
 test.describe('Cenários de desktop e do CT-24 no celular', () => {
-  test.fixme(({ isMobile }) => isMobile, 'CT-24 depende do painel no celular (#269).');
-
   test('CT-16: senha errada mostra o erro e mantém a tela de login', async ({ page, isMobile }) => {
     await page.goto('/admin/login');
     await page.getByLabel('E-mail', { exact: true }).fill(usuarioDe('administrador').email);

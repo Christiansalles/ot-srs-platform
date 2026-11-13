@@ -233,10 +233,19 @@
 }
 
 /* Tabelas: a rolagem lateral fica no contêiner, nunca na página */
+.admin-tabela-dica {
+  display: none;
+}
+
 .admin-tabela-rolagem {
   position: relative;
   overflow-x: auto;
   border-top: 1px solid var(--color-border);
+}
+
+.admin-tabela-rolagem:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: -2px;
 }
 
 .admin-tabela {
@@ -330,6 +339,33 @@
   .admin-acoes {
     flex-direction: column-reverse;
     align-items: stretch;
+  }
+
+  .admin-campo input,
+  .admin-campo select,
+  .admin-campo textarea {
+    min-width: 0;
+    font-size: 1rem;
+  }
+
+  .admin-botao,
+  .admin-botao-contorno,
+  .admin-tabela__acoes a,
+  .admin-tabela__acoes button {
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .admin-tabela-dica {
+    display: block;
+    margin: 0;
+    padding: .5rem 1rem;
+    color: var(--color-text-secondary);
+    font-size: .8rem;
+  }
+
+  .admin-tabela-rolagem {
+    overscroll-behavior-inline: contain;
   }
 
   .admin-tabela th:first-child,
