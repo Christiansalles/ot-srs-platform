@@ -20,6 +20,11 @@
   color: var(--color-text-muted);
 }
 
+.dashboard__header .dashboard__atualizacao {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+}
+
 .dashboard__indicators {
   width: 100%;
   margin: 0 auto;

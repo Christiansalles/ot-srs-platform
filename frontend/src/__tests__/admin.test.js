@@ -208,6 +208,17 @@ describe('serviço administrativo', () => {
     expect((await listarRelatoriosAdmin()).map((relatorio) => relatorio.id)).toEqual([1, 2]);
   });
 
+  it('traz atualizado_em e lancado_por nas medições do mock e atualiza a data ao mudar o status', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'true');
+    const medicoes = (await listarIndicadoresAdmin()).flatMap((indicador) => indicador.medicoes);
+    expect(medicoes.every((medicao) => medicao.atualizado_em === '2026-11-03T14:20:00.000Z'
+      && medicao.lancado_por === 'Carga inicial')).toBe(true);
+
+    const alterada = await alterarStatusMedicao(medicoes[0].id, 'rascunho');
+    expect(alterada.atualizado_em).not.toBe('2026-11-03T14:20:00.000Z');
+    expect(alterada.lancado_por).toBe('Carga inicial');
+  });
+
   it('faz operações de edição/status em modo mock sem expor referências mutáveis', async () => {
     vi.stubEnv('VITE_USE_MOCK', 'true');
     const indicadorOriginal = (await listarIndicadoresAdmin())

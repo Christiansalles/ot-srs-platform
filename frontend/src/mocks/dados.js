@@ -105,6 +105,14 @@ export const mockIndicadores = [
 ].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
 // A medição anterior vem da série completa, mesmo quando está fora do filtro.
+// Data fixa, no formato do contrato (ISO 8601 UTC), para os testes e os prints não mudarem com o relógio.
+export const ATUALIZADO_EM_MOCK = '2026-11-03T14:20:00.000Z';
+
+export function montarAtualizacao(indicadores) {
+  const temMedicao = indicadores.some((indicador) => indicador.medicoes.length > 0);
+  return { atualizado_em: temMedicao ? ATUALIZADO_EM_MOCK : null };
+}
+
 export function montarDestaques(indicadores) {
   return indicadores.map((indicador) => {
     const atual = indicador.medicoes.at(-1);

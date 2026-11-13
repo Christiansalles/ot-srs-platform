@@ -8,6 +8,7 @@ import { getSetores } from '../services/api';
 import { alterarStatusMedicao, listarIndicadoresAdmin } from '../services/admin';
 import { podePublicar } from '../services/auth';
 import { useAlteracaoStatus } from '../hooks/useAlteracaoStatus';
+import { formatarData } from '../utils/formatarData';
 import { formatarValor } from '../utils/formatarValor';
 import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './AdminPage.css';
@@ -230,6 +231,8 @@ function AdminPage() {
                   <th scope="col">Período</th>
                   <th scope="col">Valor</th>
                   <th scope="col">Status</th>
+                  <th scope="col">Atualizado em</th>
+                  <th scope="col">Lançado por</th>
                   <th scope="col"><span className="sr-only">Ações</span></th>
                 </tr>
               </thead>
@@ -250,6 +253,8 @@ function AdminPage() {
                         ? <StatusBadge status={medicao.status} />
                         : <span className="admin-dashboard__no-measurement">Sem medições</span>}
                     </td>
+                    <td className="admin-dashboard__date">{medicao && formatarData(medicao.atualizado_em)}</td>
+                    <td>{medicao?.lancado_por}</td>
                     <td className="admin-tabela__acoes">
                       {mostrarPublicacao && medicao && (
                         <button

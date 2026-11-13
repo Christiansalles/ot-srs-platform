@@ -1,4 +1,4 @@
-import { mockSetores, mockIndicadores } from './dados';
+import { mockSetores, mockIndicadores, ATUALIZADO_EM_MOCK } from './dados';
 
 // Os ids refletem a ordem determinística do seed em um banco vazio.
 const idsMedicoesPorIndicador = {
@@ -41,6 +41,9 @@ export const mockIndicadoresAdmin = mockIndicadores.map((indicador) => ({
       ...medicao,
       // O rascunho demonstra o estado de edição no painel; o seed publica os dados iniciais.
       status: id === 7 ? 'rascunho' : 'publicado',
+      // A carga do seed é lançada pelo usuário "Carga inicial", na data da migração.
+      atualizado_em: ATUALIZADO_EM_MOCK,
+      lancado_por: 'Carga inicial',
     };
   }),
 }));
