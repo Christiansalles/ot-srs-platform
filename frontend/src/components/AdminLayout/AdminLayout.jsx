@@ -68,7 +68,8 @@ function AdminLayout() {
 
   function handleLogout() {
     logout();
-    navigate('/admin/login', { replace: true });
+    // CT-18: quem sai volta ao portal. Com replace, o painel sai do histórico do Voltar.
+    navigate('/', { replace: true });
   }
 
   return (
