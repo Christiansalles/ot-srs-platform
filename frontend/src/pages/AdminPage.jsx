@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
+import AdminTabelaRolagem from '../components/AdminLayout/AdminTabelaRolagem';
 import DialogoConfirmacao from '../components/DialogoConfirmacao/DialogoConfirmacao';
 import StatusBadge from '../components/StatusBadge/StatusBadge';
 import { getSetores } from '../services/api';
@@ -221,7 +222,7 @@ function AdminPage() {
         )}
 
         {!carregando && !erro && linhas.length > 0 && (
-          <div className="admin-tabela-rolagem">
+          <AdminTabelaRolagem rotulo="Tabela de indicadores do painel">
             <table className="admin-tabela admin-dashboard__table">
               <thead>
                 <tr>
@@ -282,7 +283,7 @@ function AdminPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </AdminTabelaRolagem>
         )}
       </section>
 

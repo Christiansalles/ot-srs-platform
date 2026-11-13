@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
+import AdminTabelaRolagem from '../components/AdminLayout/AdminTabelaRolagem';
 import DialogoConfirmacao from '../components/DialogoConfirmacao/DialogoConfirmacao';
 import { atualizarUsuario, criarUsuario, getUsuarios } from '../services/admin';
 import { getUsuarioLogado } from '../services/auth';
@@ -196,7 +197,7 @@ function AdminUsuariosPage() {
         )}
         {!carregando && !erroLista && usuarios.length === 0 && <p className="admin-estado" role="status">Nenhum usuário cadastrado.</p>}
         {!carregando && !erroLista && usuarios.length > 0 && (
-          <div className="admin-tabela-rolagem">
+          <AdminTabelaRolagem rotulo="Tabela de usuários">
             <table className="admin-tabela admin-usuarios__tabela">
               <thead><tr><th scope="col">Nome</th><th scope="col">E-mail</th><th scope="col">Perfil</th><th scope="col">Situação</th><th scope="col"><span className="sr-only">Ações</span></th></tr></thead>
               <tbody>
@@ -222,7 +223,7 @@ function AdminUsuariosPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </AdminTabelaRolagem>
         )}
       </section>
 

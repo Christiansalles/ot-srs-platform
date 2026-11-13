@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
+import AdminTabelaRolagem from '../components/AdminLayout/AdminTabelaRolagem';
 import DialogoConfirmacao from '../components/DialogoConfirmacao/DialogoConfirmacao';
 import StatusBadge from '../components/StatusBadge/StatusBadge';
 import { CATEGORIAS_RELATORIO } from '../config/relatorios';
@@ -251,7 +252,7 @@ function AdminRelatoriosPage() {
         )}
         {!carregando && !erroLista && relatorios.length === 0 && <p className="admin-estado" role="status">Nenhum relatório cadastrado.</p>}
         {!carregando && !erroLista && relatorios.length > 0 && (
-          <div className="admin-tabela-rolagem">
+          <AdminTabelaRolagem rotulo="Tabela de relatórios enviados">
             <table className="admin-tabela admin-relatorios__table">
               <thead><tr><th scope="col">Relatório</th><th scope="col">Edição</th><th scope="col">Categoria</th><th scope="col">Data</th><th scope="col">Status</th>{mostrarPublicacao && <th scope="col"><span className="sr-only">Ações</span></th>}</tr></thead>
               <tbody>
@@ -280,7 +281,7 @@ function AdminRelatoriosPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </AdminTabelaRolagem>
         )}
       </section>
 

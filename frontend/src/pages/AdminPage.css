@@ -205,6 +205,12 @@
     min-width: 0;
   }
 
+  .admin-dashboard__search input,
+  .admin-dashboard__filter select {
+    min-height: 44px;
+    font-size: 1rem;
+  }
+
   .admin-dashboard__list-heading {
     padding: 1rem 1rem .5rem;
   }
