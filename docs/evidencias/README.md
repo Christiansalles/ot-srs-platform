@@ -55,6 +55,7 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 |---|---|---|---|---|
 | [pr-281](pr-281/README.md) | #281 | #258 | E18 | Auditoria de acessibilidade: achados marcados em vermelho (contraste, Tab, "Pular para o conteúdo", gráficos, título da aba) e o que passou em verde, com mock, em 390 e 1280 px |
 | [pr-301](pr-301/README.md) | #301 (substitui #292) | #263 | E11 | Gestão de usuários, edição e mensagens com foco; estados da lista e comparação com o painel em celular e desktop |
+| [pr-306](pr-306/README.md) | #306 | #283 | E18 | "Pular para o conteúdo" como primeira parada do Tab no portal e o foco já no conteúdo depois dele, com a API real, em 390 e 1280 px |
 | [pr-290](pr-290/README.md) | #290 | #266 | E18 | Página 404 para endereços inválidos no portal e em `/admin`, em 375 e 1280 px |
 | [pr-291](pr-291/README.md) | #291 | #267 | E18 | Menu do celular aberto e fechado, comparação com a develop e cabeçalho em 768 e 1280 px |
 | [pr-293](pr-293/README.md) | #293 | #285 | E18 | Contraste do departamento no Login antes e depois em 390 e 1280 px |
