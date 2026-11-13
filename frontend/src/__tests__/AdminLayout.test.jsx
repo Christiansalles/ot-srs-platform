@@ -15,6 +15,7 @@ function renderAdmin(caminho = '/admin') {
   return render(
     <MemoryRouter initialEntries={[caminho]}>
       <Routes>
+        <Route path="/" element={<h1>Página inicial do portal</h1>} />
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminPage />} />
@@ -81,15 +82,19 @@ describe('AdminLayout', () => {
     expect(within(topo).queryByText('Administrador')).not.toBeInTheDocument();
   });
 
-  it('encerra a sessão e volta para o login ao sair', () => {
-    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
+  it.each([
+    ['administrador', 'Admin'],
+    ['editor', 'Editora'],
+  ])('encerra a sessão do %s e volta para a página inicial ao sair', (perfil, nome) => {
+    entrarComo({ id: 2, nome, email: `${perfil}@example.com`, perfil });
 
     renderAdmin();
     fireEvent.click(screen.getByRole('button', { name: 'Sair' }));
 
     expect(window.sessionStorage.getItem('ot-srs-token')).toBeNull();
     expect(window.sessionStorage.getItem('ot-srs-user')).toBeNull();
-    expect(screen.getByRole('heading', { name: 'Acesso Administrativo' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Página inicial do portal' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Acesso Administrativo' })).not.toBeInTheDocument();
   });
 
   it('lista os módulos e marca o item ativo conforme a rota', () => {

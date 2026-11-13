@@ -62,3 +62,4 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-297](pr-297/README.md) | #297 | #284 | E18 | Contraste dos títulos da tabela de Indicadores antes e depois em 390 e 1280 px |
 | [pr-299](pr-299/README.md) | #299 | #270 | E19 | Resultado do E2E do painel e captura da falha de logout do CT-18 (#298) |
 | [pr-302](pr-302/README.md) | #302 | #269 | E18 | Login, gaveta, formulários e tabelas do painel em 375 px, com conferência em 320, 768 e 1280 px |
+| [pr-305](pr-305/README.md) | #305 | #298 | E10 | Sair do painel volta à página inicial do portal, com o editor no celular e o administrador no desktop, com a API real, em 390 e 1280 px |
