@@ -94,3 +94,28 @@ for (const tela of TELAS) {
     expect(reprovadas, `Violações do axe em ${tela.rota}:\n${descrever(reprovadas)}`).toEqual([]);
   });
 }
+
+// Parte automática do CT-36 (#283): no portal, a primeira parada do Tab é
+// "Pular para o conteúdo", que aparece com o foco e leva ao main.
+const TELAS_DO_PORTAL = TELAS.filter((tela) => tela.titulo && !tela.rota.startsWith('/admin'));
+
+for (const tela of TELAS_DO_PORTAL) {
+  test(`CT-36: ${tela.nome} (${tela.rota}) começa o Tab por "Pular para o conteúdo"`, async ({ page }) => {
+    await page.goto(tela.rota);
+    await expect(page.getByRole('heading', { level: 1, name: tela.titulo })).toBeVisible();
+    const pular = page.getByRole('link', { name: 'Pular para o conteúdo' });
+    await expect(pular).not.toBeInViewport();
+
+    await page.keyboard.press('Tab');
+    await expect(pular).toBeFocused();
+    await expect(pular).toBeInViewport();
+
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('main')).toBeFocused();
+    await expect(page).toHaveURL(new URL(tela.rota, page.url()).href);
+
+    // A parada seguinte já está no conteúdo, e não no menu.
+    await page.keyboard.press('Tab');
+    expect(await page.evaluate(() => document.querySelector('main').contains(document.activeElement))).toBe(true);
+  });
+}

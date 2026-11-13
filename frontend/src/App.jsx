@@ -14,6 +14,7 @@ import AdminUsuariosPage from './pages/AdminUsuariosPage';
 import RotaProtegida from './components/RotaProtegida';
 import RotaAdministrador from './components/RotaAdministrador';
 import AdminLayout from './components/AdminLayout/AdminLayout';
+import PularParaConteudo from './components/PularParaConteudo/PularParaConteudo';
 import cidadeLogo from './assets/logos/santa-rita.svg';
 import observatorioLogo from './assets/logos/observatorio.png';
 import prefeituraLogo from './assets/logos/prefeitura.png';
@@ -53,6 +54,7 @@ function AppLayout() {
 
   return (
     <div className="app-shell">
+      <PularParaConteudo alvo="conteudo" />
       <header className="topbar">
         <div className="brand-block">
           <img className="brand-logo" src={cidadeLogo} alt="Santa Rita do Sapucaí, Cidade Criativa" />
@@ -89,7 +91,7 @@ function AppLayout() {
         </div>
       </header>
 
-      <main className="page-shell">
+      <main className="page-shell" id="conteudo" tabIndex={-1} data-alvo-do-pular>
         <Outlet />
       </main>
 

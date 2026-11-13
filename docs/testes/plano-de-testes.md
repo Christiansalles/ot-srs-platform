@@ -161,7 +161,7 @@ Os testes do M7 contam como prontos quando:
 | Issue | Caso | Onde | Prioridade | Quem corrige | Status |
 |---|---|---|---|---|---|
 | #282 | CT-37 (A-1) | Todas as telas, título da aba | Normal | Karolina | Corrigido no #300 |
-| #283 | CT-36 (A-2) | Portal, falta "Pular para o conteúdo" | Normal | Karolina | Aberto |
+| #283 | CT-36 (A-2) | Portal, falta "Pular para o conteúdo" | Normal | Karolina | Corrigido no #306 |
 | #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | Normal | Samuel | Corrigido no #297 |
 | #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Aberto |
 | #298 | CT-18 | Painel, Sair leva ao login em vez da página inicial | Normal | Karolina | Corrigido no #305 |
