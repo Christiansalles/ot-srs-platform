@@ -4,8 +4,11 @@ import { usuarioDe } from './usuarios.js';
 // Entra pela tela de login, como uma pessoa faria, e espera o painel abrir.
 // Login certo não conta para o limite de tentativas, então dá para chamar em todo teste.
 export async function entrarComo(page, perfil) {
-  const { email, senha } = usuarioDe(perfil);
+  await entrarCom(page, usuarioDe(perfil));
+}
 
+// O mesmo, com um usuário criado pelo próprio teste.
+export async function entrarCom(page, { email, senha }) {
   await page.goto('/admin/login');
   await page.getByLabel('E-mail', { exact: true }).fill(email);
   await page.getByLabel('Senha', { exact: true }).fill(senha);
