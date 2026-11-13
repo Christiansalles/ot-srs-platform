@@ -141,15 +141,24 @@ test.describe('Demais cenários de desktop', () => {
     await expect(page.getByRole('heading', { name: 'Acesso Administrativo' })).toBeVisible();
   });
 
-  test('CT-18: Sair volta à página inicial e encerra a sessão do painel', async ({ page }) => {
-    test.fixme(true, '#298: Sair leva ao login em vez da página inicial.');
-    await entrarComo(page, 'administrador');
-    await page.getByRole('button', { name: 'Sair', exact: true }).click();
+  for (const perfil of ['administrador', 'editor']) {
+    test(`CT-18: Sair volta à página inicial e encerra a sessão do ${perfil}`, async ({ page }) => {
+      await entrarComo(page, perfil);
+      await page.getByRole('button', { name: 'Sair', exact: true }).click();
 
-    await expect(page).toHaveURL(new URL('/', page.url()).href);
-    await page.goto('/admin');
-    await expect(page).toHaveURL(/\/admin\/login$/);
-  });
+      await expect(page).toHaveURL(new URL('/', page.url()).href);
+      await expect(page.getByRole('heading', { level: 1, name: 'Indicadores do Turismo' })).toBeVisible();
+
+      // Nem o Voltar nem o recarregar devolvem o painel.
+      await page.goBack();
+      await expect(page.getByRole('button', { name: 'Sair', exact: true })).toHaveCount(0);
+      await page.goto('/admin');
+      await expect(page).toHaveURL(/\/admin\/login$/);
+      await page.reload();
+      await expect(page).toHaveURL(/\/admin\/login$/);
+      await expect(page.getByRole('heading', { name: 'Acesso Administrativo' })).toBeVisible();
+    });
+  }
 
   test('CT-20: medição duplicada mostra o erro e preserva os campos', async ({ page, request }) => {
     const indicador = await prepararRascunho(request);
