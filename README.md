@@ -219,6 +219,12 @@ Só um tamanho de tela: `npm run test:desktop` ou `npm run test:celular`. Quando
 teste falha, o Playwright guarda o print e o trace em `e2e/test-results/`, e
 `npm run relatorio` abre o relatório.
 
+Para rodar apenas o portal público (CT-01 a CT-09 do plano), em `e2e/`, execute
+`npx playwright test testes/portal.spec.js`. Os casos cobrem Home, menu, tabela e
+filtros, Dashboard, 404 e rascunhos fora do portal. Os valores esperados são lidos
+dos JSONs de `backend/prisma/dados/`, sem mock da API. Os testes entram no job
+`compose` existente, nos projetos desktop e celular.
+
 Ao terminar, derrube o sistema e apague o banco de teste, a partir da raiz:
 
 ```bash
