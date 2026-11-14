@@ -20,6 +20,8 @@ Cada pessoa revisa os casos da própria área (coluna "Revisa os casos" do [rod�
 
 **Situação em 10/11:** unidade, API e E2E rodam no CI em todo PR. A base do E2E (#240) já está na `develop`, com o teste de fumaça da Home (CT-01) e os testes dos ajudantes. Os casos de relatórios públicos (CT-11 a CT-15) estão em `e2e/testes/relatorios.spec.js` (#260), e o axe em cada tela (CT-35) está em `e2e/testes/acessibilidade.spec.js` (#259). Os outros casos `E2E` automáticos deste plano são o roteiro que as issues #256, #264 e #270 vão escrever.
 
+**Portal público, #264 (13/11):** CT-01 a CT-09 estão em `e2e/testes/portal.spec.js`. Na validação com Docker Compose e API real, 16 execuções passaram e quatro ficaram com `test.fixme` (CT-07, duas páginas em dois tamanhos), vinculadas ao bug #307. As expectativas do vazio foram preservadas. A regressão deliberada no filtro de ano fez o CT-06 falhar em desktop e celular; o código original foi restaurado e os casos ativos voltaram a passar. Veja o [registro da validação](validacao-portal.md).
+
 O que cada nível **não** faz:
 
 - Teste de unidade e de API não abre o navegador. Se o bug só aparece na tela, ele vira caso E2E.
@@ -165,6 +167,7 @@ Os testes do M7 contam como prontos quando:
 | #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | Normal | Samuel | Corrigido no #297 |
 | #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Aberto |
 | #298 | CT-18 | Painel, Sair leva ao login em vez da página inicial | Normal | Karolina | Corrigido no #305 |
+| #307 | CT-07 | Indicadores e Dashboard removem ano sem dados da URL e mostram a carga completa | A triar | A triar | Aberto, testes com `fixme` |
 
 **Triagem da #298 (12/11):** prioridade Normal (`Medium` no quadro), correção com Karolina e prazo em 13/11/2026, no M7. A sessão é encerrada, mas o destino contraria o CT-18. O teste permanece com `test.fixme` até corrigir o redirecionamento, ajustar o teste unitário que hoje espera o login e reativar o E2E. Os prazos anteriores da triagem eram de 10/11; este bug foi aberto em 12/11.
 
