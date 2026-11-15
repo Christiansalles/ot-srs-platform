@@ -96,8 +96,8 @@ it('informa falha ao carregar as opções', async () => {
 
 it.each([
   ['?semestre=2', ''],
-  ['?ano=abc&setor=999&semestre=2&pagina=3', '?pagina=3'],
-  ['?ano=2023&semestre=1&setor=1', '?setor=1'],
+  ['?ano=abc&setor=999&semestre=2&pagina=3', '?setor=999&pagina=3'],
+  ['?setor=-1', ''],
   ['?ano=2024&semestre=3&setor=1', '?ano=2024&setor=1'],
   ['?ano=&semestre=&setor=', ''],
 ])('corrige a URL %s preservando parâmetros válidos e substituindo o histórico', async (consulta, esperado) => {
@@ -107,7 +107,7 @@ it.each([
   if (!esperado.includes('ano=')) expect(screen.getByRole('combobox', { name: 'Semestre' })).toBeDisabled();
 });
 
-it('aguarda as opções antes de remover valores inexistentes e preserva a URL em caso de erro', async () => {
+it('preserva a URL durante o carregamento e em caso de erro nas opções', async () => {
   let rejeitar;
   getSetores.mockReturnValue(new Promise((resolve, reject) => { rejeitar = reject; }));
   abrir('/dashboard?ano=2024&semestre=2&setor=999');
@@ -118,6 +118,18 @@ it('aguarda as opções antes de remover valores inexistentes e preserva a URL e
   expect(screen.getByLabelText('URL').textContent).toBe('/dashboard?ano=2024&semestre=2&setor=999');
 });
 
+it('exibe ano e setor da URL mesmo quando não aparecem no catálogo', async () => {
+  const consulta = '?ano=2019&semestre=2&setor=999';
+  abrir(`/dashboard${consulta}`);
+  await screen.findByRole('option', { name: 'Hospedagem' });
+
+  expect(screen.getByRole('combobox', { name: 'Período' })).toHaveDisplayValue('2019');
+  expect(screen.getByRole('combobox', { name: 'Semestre' })).toHaveValue('2');
+  expect(screen.getByRole('combobox', { name: 'Semestre' })).toBeEnabled();
+  expect(screen.getByRole('combobox', { name: 'Setor' })).toHaveDisplayValue('999');
+  expect(screen.getByLabelText('URL')).toHaveTextContent(`/dashboard${consulta}`);
+});
+
 it('lê filtros válidos com a função compartilhada e descarta filtros inválidos', () => {
   expect(lerFiltros(new URLSearchParams('ano=2024&semestre=2&setor=1')))
     .toEqual({ ano: '2024', semestre: '2', setor: '1' });
@@ -125,6 +137,6 @@ it('lê filtros válidos com a função compartilhada e descarta filtros inváli
     .toEqual({ ano: '', semestre: '', setor: '' });
   expect(lerFiltros(new URLSearchParams('semestre=2')))
     .toEqual({ ano: '', semestre: '', setor: '' });
-  expect(lerFiltros(new URLSearchParams('ano=2023&semestre=2&setor=999'), { anos: [2024, 2025], setores }))
-    .toEqual({ ano: '', semestre: '', setor: '' });
+  expect(lerFiltros(new URLSearchParams('ano=2019&semestre=2&setor=999')))
+    .toEqual({ ano: '2019', semestre: '2', setor: '999' });
 });

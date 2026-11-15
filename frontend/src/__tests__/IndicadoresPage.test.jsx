@@ -67,11 +67,23 @@ it('recupera a lista completa pelo botão Limpar filtros quando não há resulta
   expect(screen.getByLabelText('Consulta da URL').textContent).toBe('');
 });
 
-it.each(['?semestre=2', '?ano=abc&setor=999', '?ano=2019&semestre=2'])('corrige o link inválido %s e consulta todos os setores', async (consulta) => {
+it.each(['?semestre=2', '?ano=abc&setor=-1'])('corrige o link inválido %s e consulta todos os setores', async (consulta) => {
   abrir(consulta);
   await waitFor(() => expect(screen.getByLabelText('Consulta da URL').textContent).toBe(''));
   const total = mockIndicadores.reduce((soma, item) => soma + item.medicoes.length, 0);
   await waitFor(() => expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(total + 1));
+});
+
+it.each([
+  ['?ano=2019&semestre=2', '?ano=2019&semestre=2'],
+  ['?ano=abc&setor=999', '?setor=999'],
+])('mantém o filtro válido sem dados de %s', async (consulta, esperado) => {
+  abrir(consulta);
+  await screen.findByRole('option', { name: 'Hospedagem' });
+  expect(await screen.findByText(/Sem dados para os filtros selecionados/)).toBeInTheDocument();
+  expect(screen.getByLabelText('Consulta da URL').textContent).toBe(esperado);
+  expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });
 
 it('recarrega a tabela ao escolher o período e ao voltar e avançar no histórico', async () => {

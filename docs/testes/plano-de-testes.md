@@ -167,13 +167,13 @@ Os testes do M7 contam como prontos quando:
 | #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | Normal | Samuel | Corrigido no #297 |
 | #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Corrigido no #293 |
 | #298 | CT-18 | Painel, Sair leva ao login em vez da página inicial | Normal | Karolina | Corrigido no #305 |
-| #307 | CT-07 | Indicadores e Dashboard removem da URL o ano ou o setor sem dados e mostram a carga completa | Normal | Samuel | Aberto, testes com `fixme` |
+| #307 | CT-07 | Indicadores e Dashboard removem da URL o ano ou o setor sem dados e mostram a carga completa | Normal | Samuel | Corrigido no #310, CT-07 reativado para ano e setor |
 
 **Triagem da #298 (12/11):** prioridade Normal (`Medium` no quadro), correção com Karolina e prazo em 13/11/2026, no M7. A sessão é encerrada, mas o destino contraria o CT-18. O teste permanece com `test.fixme` até corrigir o redirecionamento, ajustar o teste unitário que hoje espera o login e reativar o E2E. Os prazos anteriores da triagem eram de 10/11; este bug foi aberto em 12/11.
 
 **Triagem da #307 (15/11):** prioridade Normal (`Medium` no quadro), correção com Samuel e prazo em 17/11/2026, no M7. A remoção é intencional e está coberta por testes de unidade, mas contraria a #110 (o link mantém o filtro), a #111 (filtro sem resultado mostra o estado de sem dados) e o contrato da API, que trata ano sem dados e `setor=999` como filtro sem resultado. A correção mantém na URL o ano e o setor bem formados, mesmo fora das opções, como a tela de Relatórios já faz, atualiza os testes de unidade que esperam a remoção e reativa o CT-07.
 
-**Fechamento da triagem, #244 (15/11):** os seis bugs do M7 foram reproduzidos, receberam prioridade, responsável e prazo, e nenhum foi `Urgent`. Cinco já foram corrigidos e fechados. A #307 continua aberta, com o Samuel e prazo em 17/11, e o CT-07 segue com `test.fixme` até a correção; é o único `fixme` na develop. Os prazos de 10/11 da issue valeram para os achados da auditoria; a #298 e a #307 chegaram depois e receberam prazo próprio. Não há registro do exploratório no celular (CT-39) nem bug com esse id: ele continua pendente para o critério de pronto 5, junto da integração (#245).
+**Fechamento da triagem, #244 (15/11):** os seis bugs do M7 foram reproduzidos, receberam prioridade, responsável e prazo, e nenhum foi `Urgent`. Os seis já foram corrigidos e fechados; a #307 foi corrigida no #310, dentro do prazo, e o CT-07 voltou a rodar. Não há mais `test.fixme` na develop. Os prazos de 10/11 da issue valeram para os achados da auditoria; a #298 e a #307 chegaram depois e receberam prazo próprio. Não há registro do exploratório no celular (CT-39) nem bug com esse id: ele continua pendente para o critério de pronto 5, junto da integração (#245).
 
 ## Cobertura
 
