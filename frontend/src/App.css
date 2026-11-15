@@ -12,7 +12,9 @@
 .main-nav { display: flex; gap: .25rem; flex-wrap: wrap; }
 .main-nav a { text-decoration: none; color: var(--color-text-secondary); font-weight: 600; padding: .7rem 1rem; border-radius: 8px; font-size: .875rem; }
 .main-nav a.active, .main-nav a:hover { background: var(--color-primary-soft); color: var(--color-primary); }
-.page-shell { flex: 1; padding: 2rem; }
+/* Ao trocar de aba a página nova começa só com "Carregando..."; sem essa altura mínima o rodapé
+   aparece no meio da tela e depois pula para o fim quando os dados chegam */
+.page-shell { flex: 1; min-height: 100vh; padding: 2rem; }
 .page { width: min(1280px, 100%); margin: 0 auto; }
 .hero-banner { position: relative; isolation: isolate; overflow: hidden; padding: 4.5rem 3rem; border-radius: 16px; background: var(--color-primary) var(--hero-foto, none) 0% 35% / 115% auto no-repeat; color: var(--color-on-brand); box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary) 9%, transparent); }
 /* Gradiente da Proposta sobre a foto, mais escuro embaixo para o texto ter contraste */
