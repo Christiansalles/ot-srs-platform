@@ -167,7 +167,7 @@ Os testes do M7 contam como prontos quando:
 | #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | Normal | Samuel | Corrigido no #297 |
 | #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Aberto |
 | #298 | CT-18 | Painel, Sair leva ao login em vez da página inicial | Normal | Karolina | Corrigido no #305 |
-| #307 | CT-07 | Indicadores e Dashboard removem ano sem dados da URL e mostram a carga completa | A triar | A triar | Aberto, testes com `fixme` |
+| #307 | CT-07 | Indicadores e Dashboard removem filtros válidos sem dados da URL e mostram a carga completa | Normal | Samuel | Corrigido, CT-07 reativado para ano e setor |
 
 **Triagem da #298 (12/11):** prioridade Normal (`Medium` no quadro), correção com Karolina e prazo em 13/11/2026, no M7. A sessão é encerrada, mas o destino contraria o CT-18. O teste permanece com `test.fixme` até corrigir o redirecionamento, ajustar o teste unitário que hoje espera o login e reativar o E2E. Os prazos anteriores da triagem eram de 10/11; este bug foi aberto em 12/11.
 
