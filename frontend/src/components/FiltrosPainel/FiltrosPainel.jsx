@@ -9,7 +9,7 @@ export default function FiltrosPainel({ opcoes, statusOpcoes = 'pronto' }) {
   const [dados, setDados] = useState({ anos: [], setores: [], status: 'carregando' });
   const filtros = opcoes
     ? Object.fromEntries(opcoes.map(({ campo }) => [campo, params.get(campo) ?? '']))
-    : lerFiltros(params, dados);
+    : lerFiltros(params);
   const status = opcoes ? statusOpcoes : dados.status;
   const campos = opcoes ?? [
     { campo: 'ano', rotulo: 'Período', todos: 'Todos os períodos',
@@ -38,7 +38,7 @@ export default function FiltrosPainel({ opcoes, statusOpcoes = 'pronto' }) {
 
   useEffect(() => {
     if (opcoes || dados.status !== 'pronto') return;
-    const validos = lerFiltros(params, dados);
+    const validos = lerFiltros(params);
     const proximos = new URLSearchParams(params);
     for (const [campo, valor] of Object.entries(validos)) {
       if (!valor) proximos.delete(campo);
@@ -46,7 +46,7 @@ export default function FiltrosPainel({ opcoes, statusOpcoes = 'pronto' }) {
     if (proximos.toString() !== params.toString()) {
       setParams(proximos, { replace: true });
     }
-  }, [params, setParams, dados, opcoes]);
+  }, [params, setParams, dados.status, opcoes]);
 
   function alterarFiltro(campo, valor) {
     setParams((anteriores) => {
@@ -74,7 +74,7 @@ export default function FiltrosPainel({ opcoes, statusOpcoes = 'pronto' }) {
           <select value={filtros[campo]} disabled={status !== 'pronto' || desabilitado}
             onChange={(evento) => alterarFiltro(campo, evento.target.value)}>
             <option value="">{todos}</option>
-            {opcoes && filtros[campo] && !valores.some(({ valor }) => valor === filtros[campo]) && (
+            {filtros[campo] && !valores.some(({ valor }) => valor === filtros[campo]) && (
               <option value={filtros[campo]} hidden>{filtros[campo]}</option>
             )}
             {valores.map(({ valor, nome }) => <option key={valor} value={valor}>{nome}</option>)}

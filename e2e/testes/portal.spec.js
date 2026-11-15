@@ -138,15 +138,23 @@ for (const [rota, mensagem] of [
   ['/indicadores', /^Sem dados para os filtros selecionados/],
   ['/dashboard', 'Sem indicadores disponíveis no momento.'],
 ]) {
-  test(`CT-07: ano sem dados mostra o vazio em ${rota}`, async ({ page }) => {
-    test.fixme(true, 'Bug #307: a normalização remove ano=2019 da URL e mostra a carga completa.');
-    await page.goto(`${rota}?ano=2019`);
-    await expect(page.getByText(mensagem)).toBeVisible();
-    await conferirAnoNaUrl(page, 2019);
-    await expect(page.getByRole('article')).toHaveCount(0);
-    await expect(page.getByRole('table')).toHaveCount(0);
-    await expect(page.getByRole('alert')).toHaveCount(0);
-  });
+  for (const [campo, rotulo, valor] of [['ano', 'Período', '2019'], ['setor', 'Setor', '999']]) {
+    test(`CT-07: ${campo} sem dados mostra o vazio em ${rota}`, async ({ page }) => {
+      await page.goto(`${rota}?${campo}=${valor}`);
+      const filtro = page.getByRole('combobox', { name: rotulo, exact: true });
+      await expect(filtro).toBeEnabled();
+      await expect(filtro).toHaveValue(valor);
+      await expect.poll(() => new URL(page.url()).searchParams.get(campo)).toBe(valor);
+      await expect(page.getByText(mensagem)).toBeVisible();
+      await expect(page.getByRole('article')).toHaveCount(0);
+      await expect(page.getByRole('table')).toHaveCount(0);
+      await expect(page.getByRole('alert')).toHaveCount(0);
+
+      await page.getByRole('button', { name: 'Limpar filtros' }).click();
+      await expect.poll(() => new URL(page.url()).searchParams.has(campo)).toBe(false);
+      await expect(page.getByRole(rota === '/indicadores' ? 'table' : 'article').first()).toBeVisible();
+    });
+  }
 }
 
 test('CT-08: endereço inexistente mostra 404, menu, rodapé e link para Home', async ({ page, isMobile }) => {
