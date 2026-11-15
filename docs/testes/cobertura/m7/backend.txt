@@ -1,0 +1,129 @@
+
+> ot-srs-backend@0.1.0 test:cobertura
+> jest --runInBand --coverage
+
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Alimentação & Bares executada com sucesso.
+Carga do setor Serviços & Eventos executada com sucesso.
+Carga do setor Comércio Turístico executada com sucesso.
+Carga do setor Outros executada com sucesso.
+Carga do setor Turismo executada com sucesso.
+Carga do relatório OT-ILUS-01/2025 executada com sucesso.
+Carga do relatório OT-ILUS-02/2025 executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Alimentação & Bares executada com sucesso.
+Carga do setor Serviços & Eventos executada com sucesso.
+Carga do setor Comércio Turístico executada com sucesso.
+Carga do setor Outros executada com sucesso.
+Carga do setor Turismo executada com sucesso.
+Carga do relatório OT-ILUS-01/2025 executada com sucesso.
+Carga do relatório OT-ILUS-02/2025 executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Alimentação & Bares executada com sucesso.
+Carga do setor Serviços & Eventos executada com sucesso.
+Carga do setor Comércio Turístico executada com sucesso.
+Carga do setor Outros executada com sucesso.
+Carga do setor Turismo executada com sucesso.
+Carga do relatório OT-ILUS-01/2025 executada com sucesso.
+Carga do relatório OT-ILUS-02/2025 executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Alimentação & Bares executada com sucesso.
+Carga do setor Serviços & Eventos executada com sucesso.
+Carga do setor Comércio Turístico executada com sucesso.
+Carga do setor Outros executada com sucesso.
+Carga do setor Turismo executada com sucesso.
+Carga do relatório OT-ILUS-01/2025 executada com sucesso.
+Carga do relatório OT-ILUS-02/2025 executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Alimentação & Bares executada com sucesso.
+Carga do setor Serviços & Eventos executada com sucesso.
+Carga do setor Comércio Turístico executada com sucesso.
+Carga do setor Outros executada com sucesso.
+Carga do setor Turismo executada com sucesso.
+Carga do relatório OT-ILUS-01/2025 executada com sucesso.
+Carga do relatório OT-ILUS-02/2025 executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Alimentação & Bares executada com sucesso.
+Carga do setor Serviços & Eventos executada com sucesso.
+Carga do setor Comércio Turístico executada com sucesso.
+Carga do setor Outros executada com sucesso.
+Carga do setor Turismo executada com sucesso.
+Carga do relatório OT-ILUS-01/2025 executada com sucesso.
+Carga do relatório OT-ILUS-02/2025 executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Alimentação & Bares executada com sucesso.
+Carga do setor Serviços & Eventos executada com sucesso.
+Carga do setor Comércio Turístico executada com sucesso.
+Carga do setor Outros executada com sucesso.
+Carga do setor Turismo executada com sucesso.
+Carga do relatório OT-ILUS-01/2025 executada com sucesso.
+Carga do relatório OT-ILUS-02/2025 executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Hospedagem executada com sucesso.
+Carga do setor Alimentação & Bares executada com sucesso.
+Carga do setor Serviços & Eventos executada com sucesso.
+Carga do setor Comércio Turístico executada com sucesso.
+Carga do setor Outros executada com sucesso.
+Carga do setor Turismo executada com sucesso.
+Carga do relatório OT-ILUS-01/2025 executada com sucesso.
+Carga do relatório OT-ILUS-02/2025 executada com sucesso.
+-----------------------|---------|----------|---------|---------|---------------------------------------------
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-----------------------|---------|----------|---------|---------|---------------------------------------------
+All files              |    91.2 |     85.9 |   93.79 |   95.26 |
+ src                   |   97.56 |       75 |   66.66 |   97.56 |
+  app.js               |     100 |      100 |     100 |     100 |
+  db.js                |     100 |      100 |     100 |     100 |
+  server.js            |   83.33 |       50 |       0 |   83.33 | 13
+ src/config            |     100 |      100 |     100 |     100 |
+  uploads.js           |     100 |      100 |     100 |     100 |
+ src/middlewares       |   92.85 |    89.74 |     100 |   95.12 |
+  autenticar.js        |     100 |      100 |     100 |     100 |
+  error-handler.js     |    87.5 |    85.71 |     100 |    87.5 | 11
+  exigir-perfil.js     |     100 |      100 |     100 |     100 |
+  limitar-login.js     |   84.61 |    81.81 |     100 |   91.66 | 11
+ src/routes            |   91.66 |    85.92 |   88.09 |   96.12 |
+  admin-indicadores.js |      90 |    83.33 |     100 |     100 | 11-12,16,30-38
+  admin-medicoes.js    |   84.48 |    80.35 |     100 |   97.87 | 29
+  admin-relatorios.js  |   83.33 |    83.33 |   58.33 |   86.56 | 35,46,53-54,60,67-68,96-97
+  admin-usuarios.js    |     100 |      100 |     100 |     100 |
+  auth.js              |     100 |       90 |     100 |     100 | 11
+  indicadores.js       |     100 |      100 |     100 |     100 |
+  periodos.js          |     100 |      100 |     100 |     100 |
+  relatorios.js        |    97.5 |       85 |     100 |   97.36 | 59
+  setores.js           |     100 |      100 |     100 |     100 |
+ src/services          |   88.62 |    84.18 |   97.26 |   93.24 |
+  auth.js              |      88 |    83.78 |     100 |   97.56 | 52
+  dados.js             |   82.14 |    76.92 |   94.11 |   86.51 | 190-191,211-213,239-240,280-281,334-337,381
+  indicadores.js       |     100 |      100 |     100 |     100 |
+  relatorios.js        |     100 |      100 |     100 |     100 |
+  senha.js             |   90.47 |    83.33 |     100 |   94.44 | 9
+  status.js            |     100 |      100 |     100 |     100 |
+  usuarios.js          |   93.05 |       90 |     100 |   96.36 | 103,123
+ src/utils             |     100 |      100 |     100 |     100 |
+  filtros.js           |     100 |      100 |     100 |     100 |
+ tests/fixtures        |     100 |      100 |     100 |     100 |
+  dados.js             |     100 |      100 |     100 |     100 |
+ tests/helpers         |     100 |      100 |     100 |     100 |
+  seed.js              |     100 |      100 |     100 |     100 |
+-----------------------|---------|----------|---------|---------|---------------------------------------------
+
+=============================== Coverage summary ===============================
+Statements   : 91.2% ( 664/728 )
+Branches     : 85.9% ( 390/454 )
+Functions    : 93.79% ( 121/129 )
+Lines        : 95.26% ( 604/634 )
+================================================================================
+
+Test Suites: 26 passed, 26 total
+Tests:       303 passed, 303 total
+Snapshots:   0 total
+Time:        12.424 s, estimated 41 s
+Ran all test suites.

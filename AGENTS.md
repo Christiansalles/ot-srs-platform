@@ -48,7 +48,7 @@ cd backend && npm ci && npm run db:setup && npm test
 cd frontend && npm ci && npm run lint && npm test && npm run build
 ```
 
-O CI (`.github/workflows/ci.yml`) roda exatamente isso, com Node 24, e também roda `db:setup` duas vezes, para garantir que migrações e seed podem ser repetidos. `compose.yml` sobe o Docker Compose completo e `docker.yml` constrói as imagens.
+O CI (`.github/workflows/ci.yml`) roda exatamente isso, com Node 24, e também roda `db:setup` duas vezes, para garantir que migrações e seed podem ser repetidos. No lugar de `npm test`, ele roda `npm run test:cobertura` (os mesmos testes, medindo a cobertura), publica o total no "Summary" da execução e sobe `coverage/` como artefato (`cobertura-backend` e `cobertura-frontend`). `compose.yml` sobe o Docker Compose completo e `docker.yml` constrói as imagens.
 
 Antes de dizer que terminou, rode os testes e o lint da parte que mudou. Se não conseguir rodar algo, por exemplo o Docker, diga isso no PR.
 
