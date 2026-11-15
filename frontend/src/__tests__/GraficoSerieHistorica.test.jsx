@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { cloneElement } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -16,6 +16,9 @@ vi.mock('recharts', async (importOriginal) => {
       cloneElement(children, { width: 800, height: 280 }),
   }
 })
+
+// O texto do gráfico se repete na tabela de dados para o leitor de tela; aqui interessa o desenho.
+const FORA_DA_TABELA = { ignore: 'script, style, table *' }
 
 const indicadores = [
   {
@@ -95,12 +98,12 @@ describe('GraficoSerieHistorica', () => {
       />,
     )
 
-    expect(screen.getByText('2020/2')).toBeInTheDocument()
-    expect(screen.getByText('2021/2')).toBeInTheDocument()
-    expect(screen.getByText('2022/2')).toBeInTheDocument()
-    expect(screen.getByText('2023/2')).toBeInTheDocument()
-    expect(screen.getByText('2024/2')).toBeInTheDocument()
-    expect(screen.getByText('2025/2')).toBeInTheDocument()
+    expect(screen.getByText('2020/2', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2021/2', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2022/2', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2023/2', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2024/2', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2025/2', FORA_DA_TABELA)).toBeInTheDocument()
   })
 
   it('desenha a linha e o preenchimento abaixo dela', () => {
@@ -160,9 +163,9 @@ describe('GraficoSerieHistorica', () => {
       },
     })
 
-    expect(screen.getByText('2023/2')).toBeInTheDocument()
-    expect(screen.getByText('2024/2')).toBeInTheDocument()
-    expect(screen.getByText('2025/2')).toBeInTheDocument()
+    expect(screen.getByText('2023/2', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2024/2', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2025/2', FORA_DA_TABELA)).toBeInTheDocument()
 
     expect(
       screen.queryByText('2020/2'),
@@ -319,5 +322,41 @@ describe('GraficoSerieHistorica', () => {
     expect(
       container.querySelector(`[id="${idGradiente}"]`),
     ).toHaveAttribute('gradientUnits', 'userSpaceOnUse')
+  })
+
+  it('dá nome ao gráfico e repete os dados numa tabela para o leitor de tela', () => {
+    render(<GraficoSerieHistorica indicadores={indicadores} />)
+
+    expect(
+      screen.getByRole('application', {
+        name: 'Gráfico: Evolução do número de visitantes',
+      }),
+    ).toBeInTheDocument()
+
+    const tabela = screen.getByRole('table', {
+      name: 'Dados do gráfico: Evolução do número de visitantes',
+    })
+    const linhas = within(tabela).getAllByRole('row').slice(1)
+    expect(linhas.map((linha) => linha.textContent)).toEqual([
+      '2020/21.100 visitantes',
+      '2021/21.900 visitantes',
+      '2022/22.450 visitantes',
+      '2023/23.600 visitantes',
+      '2024/24.400 visitantes',
+      '2025/25.200 visitantes',
+    ])
+
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'Indicador da série histórica' }),
+      { target: { value: INDICADORES.LEITOS } },
+    )
+
+    const tabelaDeLeitos = screen.getByRole('table', {
+      name: 'Dados do gráfico: Evolução do número de leitos',
+    })
+    expect(within(tabelaDeLeitos).getAllByRole('row')).toHaveLength(4)
+    expect(within(tabelaDeLeitos).getByRole('rowheader', { name: '2025/2' }))
+      .toBeInTheDocument()
+    expect(within(tabelaDeLeitos).getByText('350 leitos')).toBeInTheDocument()
   })
 })

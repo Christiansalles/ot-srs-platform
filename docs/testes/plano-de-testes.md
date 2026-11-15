@@ -165,11 +165,15 @@ Os testes do M7 contam como prontos quando:
 | #282 | CT-37 (A-1) | Todas as telas, título da aba | Normal | Karolina | Corrigido no #300 |
 | #283 | CT-36 (A-2) | Portal, falta "Pular para o conteúdo" | Normal | Karolina | Corrigido no #306 |
 | #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | Normal | Samuel | Corrigido no #297 |
-| #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Aberto |
+| #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Corrigido no #293 |
 | #298 | CT-18 | Painel, Sair leva ao login em vez da página inicial | Normal | Karolina | Corrigido no #305 |
-| #307 | CT-07 | Indicadores e Dashboard removem filtros válidos sem dados da URL e mostram a carga completa | Normal | Samuel | Corrigido, CT-07 reativado para ano e setor |
+| #307 | CT-07 | Indicadores e Dashboard removem da URL o ano ou o setor sem dados e mostram a carga completa | Normal | Samuel | Corrigido no #310, CT-07 reativado para ano e setor |
 
 **Triagem da #298 (12/11):** prioridade Normal (`Medium` no quadro), correção com Karolina e prazo em 13/11/2026, no M7. A sessão é encerrada, mas o destino contraria o CT-18. O teste permanece com `test.fixme` até corrigir o redirecionamento, ajustar o teste unitário que hoje espera o login e reativar o E2E. Os prazos anteriores da triagem eram de 10/11; este bug foi aberto em 12/11.
+
+**Triagem da #307 (15/11):** prioridade Normal (`Medium` no quadro), correção com Samuel e prazo em 17/11/2026, no M7. A remoção é intencional e está coberta por testes de unidade, mas contraria a #110 (o link mantém o filtro), a #111 (filtro sem resultado mostra o estado de sem dados) e o contrato da API, que trata ano sem dados e `setor=999` como filtro sem resultado. A correção mantém na URL o ano e o setor bem formados, mesmo fora das opções, como a tela de Relatórios já faz, atualiza os testes de unidade que esperam a remoção e reativa o CT-07.
+
+**Fechamento da triagem, #244 (15/11):** os seis bugs do M7 foram reproduzidos, receberam prioridade, responsável e prazo, e nenhum foi `Urgent`. Os seis já foram corrigidos e fechados; a #307 foi corrigida no #310, dentro do prazo, e o CT-07 voltou a rodar. Não há mais `test.fixme` na develop. Os prazos de 10/11 da issue valeram para os achados da auditoria; a #298 e a #307 chegaram depois e receberam prazo próprio. Não há registro do exploratório no celular (CT-39) nem bug com esse id: ele continua pendente para o critério de pronto 5, junto da integração (#245).
 
 ## Cobertura
 
@@ -242,3 +246,5 @@ Os achados `A-n` são de telas de outras pessoas e viram bug com os rótulos `bu
 | A-4 | Login, nome do departamento no rodapé do cartão | `.admin-login-department` em `--color-text-muted` sobre o fundo azul claro: 4,27:1. | Pelo menos 4,5:1. | Maria Clara | #285 |
 
 Na #261 (Karolina): a variação dos cards (`--color-success`, 3,74:1), os gráficos do Dashboard (nome, `aria-hidden` com foco e resumo em texto), o painel de marca e "Voltar ao portal" do Login, e no `AdminLayout` o Tab do menu do celular e o "Pular para o conteúdo" do painel.
+
+**Correções da #261 (15/11):** a variação dos cards usa o token novo `--color-success-strong` (também na mensagem de sucesso do painel). A rosca saiu do Tab, e a série histórica e o comparativo ganharam nome ("Gráfico: ...") e uma tabela com os dados para o leitor de tela. No Login, "Voltar ao portal", "Ambiente seguro", a citação e o rodapé do painel de marca passaram de 4,44:1, 3,96:1, 4,46:1 e 2,83:1 para pelo menos 7:1, medidos pelo mesmo método da auditoria (`e2e/ajudantes/contraste.js`). No painel, o menu do celular recebe o foco ao abrir, e cada tela começa o Tab por "Pular para o conteúdo". A lista de exceções do `acessibilidade.spec.js` ficou vazia, inclusive a da #284, que já tinha sido corrigida no #297.

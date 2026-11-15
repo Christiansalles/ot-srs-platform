@@ -186,4 +186,15 @@ describe('GraficoDistribuicaoSetor', () => {
       screen.getByText('Não há dados disponíveis para exibir a distribuição por setor.'),
     ).toBeInTheDocument()
   })
+
+  it('não deixa a rosca escondida do leitor de tela receber o foco do Tab', () => {
+    const { container } = renderizar({ dados: dadosDoMock })
+    const rosca = container.querySelector('.grafico-distribuicao__rosca')
+
+    expect(rosca).toHaveAttribute('aria-hidden', 'true')
+    expect(fatias(container)).toHaveLength(dadosDoMock.length)
+    const focaveis = [...rosca.querySelectorAll('[tabindex]')]
+      .filter((elemento) => elemento.tabIndex >= 0)
+    expect(focaveis).toEqual([])
+  })
 })

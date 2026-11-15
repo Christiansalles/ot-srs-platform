@@ -151,4 +151,28 @@ describe('AdminLayout', () => {
     expect(botao).toHaveAttribute('aria-expanded', 'false');
     expect(botao).toHaveFocus();
   });
+
+  it('leva o foco ao primeiro link do menu quando ele abre', () => {
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
+
+    renderAdmin();
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir menu' }));
+
+    const menu = screen.getByRole('navigation', { name: 'Menu administrativo' });
+    expect(within(menu).getByRole('link', { name: 'Painel de gestão' })).toHaveFocus();
+  });
+
+  it('começa por "Pular para o conteúdo", que leva o foco ao conteúdo do painel', () => {
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
+
+    const { container } = renderAdmin('/admin/relatorios');
+    const pular = screen.getByRole('link', { name: 'Pular para o conteúdo' });
+    const conteudo = screen.getByRole('main');
+
+    expect(container.querySelector('a')).toBe(pular);
+    expect(pular).toHaveAttribute('href', `#${conteudo.id}`);
+    fireEvent.click(pular);
+    expect(conteudo).toHaveFocus();
+    expect(within(conteudo).getByRole('heading', { name: 'Relatórios' })).toBeInTheDocument();
+  });
 });

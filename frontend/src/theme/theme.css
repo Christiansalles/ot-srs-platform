@@ -30,6 +30,8 @@
 
   /* Estados */
   --color-success: #0D9488;
+  /* Verde escurecido para texto pequeno: o --color-success puro fica em 3,74:1 sobre o branco */
+  --color-success-strong: #0F766E;
   /* Verde claro para indicadores sobre o gradiente */
   --color-success-bright: #34D399;
   --color-danger: #DC2626;

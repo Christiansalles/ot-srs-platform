@@ -25,6 +25,7 @@ export const colors = {
   borderStrong: '#CBD5E1',
 
   success: '#0D9488',
+  successStrong: '#0F766E',
   successBright: '#34D399',
   danger: '#DC2626',
   dangerSoft: '#FEF2F2',
