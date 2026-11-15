@@ -167,11 +167,11 @@ Os testes do M7 contam como prontos quando:
 | #284 | CT-35, CT-38 (A-3) | Indicadores, cabeçalho da tabela | Normal | Samuel | Corrigido no #297 |
 | #285 | CT-35, CT-38 (A-4) | Login, nome do departamento | Normal | Maria Clara | Aberto |
 | #298 | CT-18 | Painel, Sair leva ao login em vez da página inicial | Normal | Karolina | Corrigido no #305 |
-| #307 | CT-07 | Indicadores e Dashboard removem da URL o ano ou o setor sem dados e mostram a carga completa | Normal | Samuel | Aberto, testes com `fixme` |
+| #307 | CT-07 | Indicadores e Dashboard removem da URL o ano ou o setor sem dados e mostram a carga completa | Normal | Christian | Aberto, testes com `fixme` |
 
 **Triagem da #298 (12/11):** prioridade Normal (`Medium` no quadro), correção com Karolina e prazo em 13/11/2026, no M7. A sessão é encerrada, mas o destino contraria o CT-18. O teste permanece com `test.fixme` até corrigir o redirecionamento, ajustar o teste unitário que hoje espera o login e reativar o E2E. Os prazos anteriores da triagem eram de 10/11; este bug foi aberto em 12/11.
 
-**Triagem da #307 (15/11):** prioridade Normal (`Medium` no quadro), correção com Samuel e prazo em 17/11/2026, no M7. A remoção é intencional e está coberta por testes de unidade, mas contraria a #110 (o link mantém o filtro), a #111 (filtro sem resultado mostra o estado de sem dados) e o contrato da API, que trata ano sem dados e `setor=999` como filtro sem resultado. A correção mantém na URL o ano e o setor bem formados, mesmo fora das opções, como a tela de Relatórios já faz, atualiza os testes de unidade que esperam a remoção e reativa o CT-07.
+**Triagem da #307 (15/11):** prioridade Normal (`Medium` no quadro), correção com Christian e prazo em 17/11/2026, no M7. A remoção é intencional e está coberta por testes de unidade, mas contraria a #110 (o link mantém o filtro), a #111 (filtro sem resultado mostra o estado de sem dados) e o contrato da API, que trata ano sem dados e `setor=999` como filtro sem resultado. A correção mantém na URL o ano e o setor bem formados, mesmo fora das opções, como a tela de Relatórios já faz, atualiza os testes de unidade que esperam a remoção e reativa o CT-07.
 
 ## Cobertura
 
