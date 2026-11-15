@@ -1,0 +1,736 @@
+{
+  "total": {
+    "lines": {
+      "total": 634,
+      "covered": 604,
+      "skipped": 0,
+      "pct": 95.26
+    },
+    "statements": {
+      "total": 728,
+      "covered": 664,
+      "skipped": 0,
+      "pct": 91.2
+    },
+    "functions": {
+      "total": 129,
+      "covered": 121,
+      "skipped": 0,
+      "pct": 93.79
+    },
+    "branches": {
+      "total": 454,
+      "covered": 390,
+      "skipped": 0,
+      "pct": 85.9
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/app.js": {
+    "lines": {
+      "total": 32,
+      "covered": 32,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 32,
+      "covered": 32,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/db.js": {
+    "lines": {
+      "total": 3,
+      "covered": 3,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 3,
+      "covered": 3,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/server.js": {
+    "lines": {
+      "total": 6,
+      "covered": 5,
+      "skipped": 0,
+      "pct": 83.33
+    },
+    "functions": {
+      "total": 1,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 0
+    },
+    "statements": {
+      "total": 6,
+      "covered": 5,
+      "skipped": 0,
+      "pct": 83.33
+    },
+    "branches": {
+      "total": 2,
+      "covered": 1,
+      "skipped": 0,
+      "pct": 50
+    }
+  },
+  "src/config/uploads.js": {
+    "lines": {
+      "total": 4,
+      "covered": 4,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 4,
+      "covered": 4,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/middlewares/autenticar.js": {
+    "lines": {
+      "total": 11,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 1,
+      "covered": 1,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 11,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 6,
+      "covered": 6,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/middlewares/error-handler.js": {
+    "lines": {
+      "total": 8,
+      "covered": 7,
+      "skipped": 0,
+      "pct": 87.5
+    },
+    "functions": {
+      "total": 1,
+      "covered": 1,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 8,
+      "covered": 7,
+      "skipped": 0,
+      "pct": 87.5
+    },
+    "branches": {
+      "total": 14,
+      "covered": 12,
+      "skipped": 0,
+      "pct": 85.71
+    }
+  },
+  "src/middlewares/exigir-perfil.js": {
+    "lines": {
+      "total": 10,
+      "covered": 10,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 10,
+      "covered": 10,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 8,
+      "covered": 8,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/middlewares/limitar-login.js": {
+    "lines": {
+      "total": 12,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 91.66
+    },
+    "functions": {
+      "total": 3,
+      "covered": 3,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 13,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 84.61
+    },
+    "branches": {
+      "total": 11,
+      "covered": 9,
+      "skipped": 0,
+      "pct": 81.81
+    }
+  },
+  "src/routes/admin-indicadores.js": {
+    "lines": {
+      "total": 41,
+      "covered": 41,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 4,
+      "covered": 4,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 50,
+      "covered": 45,
+      "skipped": 0,
+      "pct": 90
+    },
+    "branches": {
+      "total": 36,
+      "covered": 30,
+      "skipped": 0,
+      "pct": 83.33
+    }
+  },
+  "src/routes/admin-medicoes.js": {
+    "lines": {
+      "total": 47,
+      "covered": 46,
+      "skipped": 0,
+      "pct": 97.87
+    },
+    "functions": {
+      "total": 8,
+      "covered": 8,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 58,
+      "covered": 49,
+      "skipped": 0,
+      "pct": 84.48
+    },
+    "branches": {
+      "total": 56,
+      "covered": 45,
+      "skipped": 0,
+      "pct": 80.35
+    }
+  },
+  "src/routes/admin-relatorios.js": {
+    "lines": {
+      "total": 67,
+      "covered": 58,
+      "skipped": 0,
+      "pct": 86.56
+    },
+    "functions": {
+      "total": 12,
+      "covered": 7,
+      "skipped": 0,
+      "pct": 58.33
+    },
+    "statements": {
+      "total": 72,
+      "covered": 60,
+      "skipped": 0,
+      "pct": 83.33
+    },
+    "branches": {
+      "total": 42,
+      "covered": 35,
+      "skipped": 0,
+      "pct": 83.33
+    }
+  },
+  "src/routes/admin-usuarios.js": {
+    "lines": {
+      "total": 27,
+      "covered": 27,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 3,
+      "covered": 3,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 34,
+      "covered": 34,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 14,
+      "covered": 14,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/routes/auth.js": {
+    "lines": {
+      "total": 14,
+      "covered": 14,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 15,
+      "covered": 15,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 10,
+      "covered": 9,
+      "skipped": 0,
+      "pct": 90
+    }
+  },
+  "src/routes/indicadores.js": {
+    "lines": {
+      "total": 34,
+      "covered": 34,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 5,
+      "covered": 5,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 37,
+      "covered": 37,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 21,
+      "covered": 21,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/routes/periodos.js": {
+    "lines": {
+      "total": 8,
+      "covered": 8,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 9,
+      "covered": 9,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/routes/relatorios.js": {
+    "lines": {
+      "total": 38,
+      "covered": 37,
+      "skipped": 0,
+      "pct": 97.36
+    },
+    "functions": {
+      "total": 4,
+      "covered": 4,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 40,
+      "covered": 39,
+      "skipped": 0,
+      "pct": 97.5
+    },
+    "branches": {
+      "total": 20,
+      "covered": 17,
+      "skipped": 0,
+      "pct": 85
+    }
+  },
+  "src/routes/setores.js": {
+    "lines": {
+      "total": 8,
+      "covered": 8,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 9,
+      "covered": 9,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/services/auth.js": {
+    "lines": {
+      "total": 41,
+      "covered": 40,
+      "skipped": 0,
+      "pct": 97.56
+    },
+    "functions": {
+      "total": 7,
+      "covered": 7,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 50,
+      "covered": 44,
+      "skipped": 0,
+      "pct": 88
+    },
+    "branches": {
+      "total": 37,
+      "covered": 31,
+      "skipped": 0,
+      "pct": 83.78
+    }
+  },
+  "src/services/dados.js": {
+    "lines": {
+      "total": 89,
+      "covered": 77,
+      "skipped": 0,
+      "pct": 86.51
+    },
+    "functions": {
+      "total": 34,
+      "covered": 32,
+      "skipped": 0,
+      "pct": 94.11
+    },
+    "statements": {
+      "total": 112,
+      "covered": 92,
+      "skipped": 0,
+      "pct": 82.14
+    },
+    "branches": {
+      "total": 78,
+      "covered": 60,
+      "skipped": 0,
+      "pct": 76.92
+    }
+  },
+  "src/services/indicadores.js": {
+    "lines": {
+      "total": 21,
+      "covered": 21,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 15,
+      "covered": 15,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 21,
+      "covered": 21,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 11,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/services/relatorios.js": {
+    "lines": {
+      "total": 4,
+      "covered": 4,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 4,
+      "covered": 4,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/services/senha.js": {
+    "lines": {
+      "total": 18,
+      "covered": 17,
+      "skipped": 0,
+      "pct": 94.44
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 21,
+      "covered": 19,
+      "skipped": 0,
+      "pct": 90.47
+    },
+    "branches": {
+      "total": 12,
+      "covered": 10,
+      "skipped": 0,
+      "pct": 83.33
+    }
+  },
+  "src/services/status.js": {
+    "lines": {
+      "total": 9,
+      "covered": 9,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 10,
+      "covered": 10,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 8,
+      "covered": 8,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "src/services/usuarios.js": {
+    "lines": {
+      "total": 55,
+      "covered": 53,
+      "skipped": 0,
+      "pct": 96.36
+    },
+    "functions": {
+      "total": 11,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 72,
+      "covered": 67,
+      "skipped": 0,
+      "pct": 93.05
+    },
+    "branches": {
+      "total": 50,
+      "covered": 45,
+      "skipped": 0,
+      "pct": 90
+    }
+  },
+  "src/utils/filtros.js": {
+    "lines": {
+      "total": 11,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 11,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 12,
+      "covered": 12,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "tests/fixtures/dados.js": {
+    "lines": {
+      "total": 6,
+      "covered": 6,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 6,
+      "covered": 6,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "tests/helpers/seed.js": {
+    "lines": {
+      "total": 10,
+      "covered": 10,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 10,
+      "covered": 10,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    }
+  }
+}

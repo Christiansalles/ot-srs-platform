@@ -197,16 +197,20 @@ npm run test:cobertura
 
 Os dois scripts rodam `jest --runInBand --coverage` e `vitest run --coverage` (este com o `@vitest/coverage-v8`). O resumo aparece no terminal, e o relatório detalhado fica em `backend/coverage/` e `frontend/coverage/`: abra o `lcov-report/index.html` (backend) ou o `index.html` (frontend) no navegador. As pastas `coverage/` estão no `.gitignore`.
 
+O CI roda esses mesmos scripts no lugar de `npm test`: o total de cada parte aparece no "Summary" da execução, e as pastas `coverage/` ficam nos artefatos `cobertura-backend` e `cobertura-frontend`.
+
 ### Linha de base
 
-Medida em 03/11/2026, na `develop` em `1a288ce`, com o banco recém-criado pelo `db:setup`:
+Medida em 03/11/2026, na `develop` em `1a288ce`, e de novo no fim do M7, em 15/11/2026, na `main` entregue (`be59bd3`), as duas com o banco recém-criado pelo `db:setup`:
 
-| Parte | Linhas | Instruções | Ramos | Funções |
-|---|---|---|---|---|
-| Backend (Jest, 231 testes) | 94,81% | 90,32% | 84,23% | 92,59% |
-| Frontend (Vitest, 319 testes) | 94,28% | 91,25% | 87,66% | 95,13% |
+| Parte | Medição | Testes | Linhas | Instruções | Ramos | Funções |
+|---|---|---|---|---|---|---|
+| Backend (Jest) | 03/11, `1a288ce` | 231 | 94,81% | 90,32% | 84,23% | 92,59% |
+| Backend (Jest) | 15/11, `be59bd3` | 303 | 95,26% | 91,20% | 85,90% | 93,79% |
+| Frontend (Vitest) | 03/11, `1a288ce` | 319 | 94,28% | 91,25% | 87,66% | 95,13% |
+| Frontend (Vitest) | 15/11, `be59bd3` | 385 | 95,02% | 91,92% | 87,06% | 95,46% |
 
-Meça de novo no fim do M7 e anote aqui, ao lado.
+A cobertura de linhas subiu nas duas partes, então o critério 7 de [pronto](#critério-de-pronto) foi atendido. No frontend, a de ramos caiu 0,6 ponto, mas continua acima de 87%. O extrato completo do M7 (saída das ferramentas, resumos em JSON, prints do HTML e o PDF para o arquivo do milestone) está em [cobertura/m7/](cobertura/m7/README.md).
 
 ## Auditoria de acessibilidade
 
