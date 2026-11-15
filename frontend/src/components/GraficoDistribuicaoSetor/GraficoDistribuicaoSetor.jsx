@@ -47,10 +47,13 @@ function GraficoDistribuicaoSetor({
         </div>
       ) : (
         <div className="grafico-distribuicao__conteudo">
+          {/* A rosca repete a legenda abaixo, que é o que o leitor de tela lê. Escondida dele,
+              ela também não pode receber o foco do Tab (WCAG 4.1.2). */}
           <div className="grafico-distribuicao__rosca" aria-hidden="true">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart accessibilityLayer={false}>
                 <Pie
+                  rootTabIndex={-1}
                   data={dados}
                   dataKey="valor"
                   nameKey="nome"

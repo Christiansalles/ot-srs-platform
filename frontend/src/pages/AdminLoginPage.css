@@ -24,7 +24,8 @@
   padding: .5rem .9rem;
   border: 1px solid color-mix(in srgb, var(--color-on-brand) 30%, transparent);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-on-brand) 12%, transparent);
+  /* Fundo escuro, e não claro: sobre as partes claras da foto o texto branco caía para 4,4:1 */
+  background: color-mix(in srgb, var(--color-text) 40%, transparent);
   color: var(--color-on-brand);
   font-size: .8rem;
   font-weight: 700;
@@ -33,7 +34,7 @@
   transition: background 150ms ease;
 }
 
-.admin-login-back:hover { background: color-mix(in srgb, var(--color-on-brand) 22%, transparent); }
+.admin-login-back:hover { background: color-mix(in srgb, var(--color-text) 55%, transparent); }
 .admin-login-back svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 
 .admin-login-shell {
@@ -55,7 +56,9 @@
   overflow: hidden;
   padding: 2rem;
   /* Vidro com o gradiente da Proposta puxado para o roxo e o magenta */
+  /* A última camada de cima escurece a base, atrás da citação e do rodapé (contraste AA) */
   background:
+    linear-gradient(180deg, transparent 55%, color-mix(in srgb, var(--color-text) 45%, transparent) 100%),
     linear-gradient(180deg, color-mix(in srgb, var(--color-on-brand) 14%, transparent), color-mix(in srgb, var(--color-on-brand) 4%, transparent)),
     linear-gradient(
     160deg,
@@ -96,9 +99,9 @@
   align-items: center;
   gap: .45rem;
   padding: .35rem .75rem;
-  border: 1px solid color-mix(in srgb, var(--color-on-brand) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-on-brand) 20%, transparent);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-on-brand) 15%, transparent);
+  background: color-mix(in srgb, var(--color-text) 35%, transparent);
   color: var(--color-surface);
   font-size: .67rem;
   font-weight: 700;
@@ -126,8 +129,8 @@
 .admin-login-logo { width: min(100%, 240px); height: auto; filter: drop-shadow(0 2px 10px color-mix(in srgb, var(--color-text) 55%, transparent)); }
 
 .admin-login-brand-footer { text-align: center; }
-.admin-login-brand-footer p { margin: 0; color: color-mix(in srgb, var(--color-on-brand) 92%, transparent); font-size: .8rem; font-style: italic; font-weight: 600; }
-.admin-login-brand-footer > span { display: block; margin-top: .5rem; color: color-mix(in srgb, var(--color-on-brand) 65%, transparent); font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.admin-login-brand-footer p { margin: 0; color: var(--color-on-brand); font-size: .8rem; font-style: italic; font-weight: 600; }
+.admin-login-brand-footer > span { display: block; margin-top: .5rem; color: var(--color-on-brand); font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 
 .admin-login-form-panel {
   display: flex;
@@ -244,7 +247,7 @@
 
 .admin-login-institution-name { display: flex; align-items: center; gap: .4rem; font-size: .65rem; line-height: 1.35; }
 .admin-login-institution-name svg { flex: 0 0 auto; width: 16px; height: 16px; fill: none; stroke: var(--color-text-muted); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
-.admin-login-department { flex: 0 0 auto; color: var(--color-text-muted); font-size: .65rem; font-weight: 600; }
+.admin-login-department { flex: 0 0 auto; color: var(--color-text-secondary); font-size: .65rem; font-weight: 600; }
 
 .admin-login-page :focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 3px; }
 
@@ -252,7 +255,10 @@
 
 @media (max-width: 720px) {
   .admin-login-page { justify-content: flex-start; gap: 1rem; padding: 1rem; }
-  .admin-login-back { position: static; align-self: flex-start; }
+  .admin-login-back { position: static; align-self: flex-start; min-height: 44px; }
+  .admin-login-input-wrap input { font-size: 1rem; }
+  .admin-login-input-wrap input[name="senha"] { padding-right: 3rem; }
+  .admin-login-password-toggle { right: 0; width: 44px; height: 44px; }
   .admin-login-shell { width: min(100%, 460px); flex-direction: column; min-height: auto; }
   .admin-login-brand, .admin-login-form-panel { width: 100%; }
   .admin-login-brand { min-height: 255px; padding: 1.25rem 1.5rem; }

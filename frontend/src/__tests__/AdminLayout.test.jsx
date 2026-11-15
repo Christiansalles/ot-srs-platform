@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import AdminLayout from '../components/AdminLayout/AdminLayout';
 import AdminLoginPage from '../pages/AdminLoginPage';
 import AdminPage from '../pages/AdminPage';
+import RotaAdministrador from '../components/RotaAdministrador';
 
 function entrarComo(usuario) {
   window.sessionStorage.setItem('ot-srs-token', 'token-valido');
@@ -14,11 +15,15 @@ function renderAdmin(caminho = '/admin') {
   return render(
     <MemoryRouter initialEntries={[caminho]}>
       <Routes>
+        <Route path="/" element={<h1>Página inicial do portal</h1>} />
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminPage />} />
           <Route path="medicoes/nova" element={<h1>Cadastrar medição</h1>} />
           <Route path="relatorios" element={<h1>Relatórios</h1>} />
+          <Route element={<RotaAdministrador />}>
+            <Route path="usuarios" element={<h1>Área de usuários</h1>} />
+          </Route>
         </Route>
       </Routes>
     </MemoryRouter>,
@@ -77,15 +82,19 @@ describe('AdminLayout', () => {
     expect(within(topo).queryByText('Administrador')).not.toBeInTheDocument();
   });
 
-  it('encerra a sessão e volta para o login ao sair', () => {
-    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
+  it.each([
+    ['administrador', 'Admin'],
+    ['editor', 'Editora'],
+  ])('encerra a sessão do %s e volta para a página inicial ao sair', (perfil, nome) => {
+    entrarComo({ id: 2, nome, email: `${perfil}@example.com`, perfil });
 
     renderAdmin();
     fireEvent.click(screen.getByRole('button', { name: 'Sair' }));
 
     expect(window.sessionStorage.getItem('ot-srs-token')).toBeNull();
     expect(window.sessionStorage.getItem('ot-srs-user')).toBeNull();
-    expect(screen.getByRole('heading', { name: 'Acesso Administrativo' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Página inicial do portal' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Acesso Administrativo' })).not.toBeInTheDocument();
   });
 
   it('lista os módulos e marca o item ativo conforme a rota', () => {
@@ -95,7 +104,7 @@ describe('AdminLayout', () => {
 
     const menu = screen.getByRole('navigation', { name: 'Menu administrativo' });
     const links = within(menu).getAllByRole('link');
-    expect(links.map((link) => link.textContent)).toEqual(['Painel de gestão', 'Cadastrar medição', 'Relatórios']);
+    expect(links.map((link) => link.textContent)).toEqual(['Painel de gestão', 'Cadastrar medição', 'Relatórios', 'Usuários']);
     expect(within(menu).getByRole('link', { name: 'Cadastrar medição' })).toHaveAttribute('aria-current', 'page');
     expect(within(menu).getByRole('link', { name: 'Painel de gestão' })).not.toHaveAttribute('aria-current');
 
@@ -104,6 +113,15 @@ describe('AdminLayout', () => {
     expect(screen.getByRole('heading', { name: 'Relatórios' })).toBeInTheDocument();
     expect(within(menu).getByRole('link', { name: 'Relatórios' })).toHaveAttribute('aria-current', 'page');
     expect(within(menu).getByRole('link', { name: 'Cadastrar medição' })).not.toHaveAttribute('aria-current');
+  });
+
+  it('esconde Usuários do editor e redireciona o endereço direto ao painel', () => {
+    entrarComo({ id: 2, nome: 'Editor', email: 'editor@example.com', perfil: 'editor' });
+    renderAdmin('/admin/usuarios');
+
+    expect(screen.queryByRole('link', { name: 'Usuários' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Área de usuários' })).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Indicadores' })).toBeInTheDocument();
   });
 
   it('abre e fecha o menu pelo botão do celular', () => {
@@ -132,5 +150,29 @@ describe('AdminLayout', () => {
     const botao = screen.getByRole('button', { name: 'Abrir menu' });
     expect(botao).toHaveAttribute('aria-expanded', 'false');
     expect(botao).toHaveFocus();
+  });
+
+  it('leva o foco ao primeiro link do menu quando ele abre', () => {
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
+
+    renderAdmin();
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir menu' }));
+
+    const menu = screen.getByRole('navigation', { name: 'Menu administrativo' });
+    expect(within(menu).getByRole('link', { name: 'Painel de gestão' })).toHaveFocus();
+  });
+
+  it('começa por "Pular para o conteúdo", que leva o foco ao conteúdo do painel', () => {
+    entrarComo({ id: 2, nome: 'Admin', email: 'admin@example.com', perfil: 'administrador' });
+
+    const { container } = renderAdmin('/admin/relatorios');
+    const pular = screen.getByRole('link', { name: 'Pular para o conteúdo' });
+    const conteudo = screen.getByRole('main');
+
+    expect(container.querySelector('a')).toBe(pular);
+    expect(pular).toHaveAttribute('href', `#${conteudo.id}`);
+    fireEvent.click(pular);
+    expect(conteudo).toHaveFocus();
+    expect(within(conteudo).getByRole('heading', { name: 'Relatórios' })).toBeInTheDocument();
   });
 });

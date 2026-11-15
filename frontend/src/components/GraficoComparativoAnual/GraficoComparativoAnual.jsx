@@ -121,6 +121,8 @@ function GraficoComparativoAnual({ dados = [] }) {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={dados}
+              title="Gráfico: comparativo anual"
+              desc="Use as setas para percorrer os indicadores. Os valores estão na tabela a seguir."
               margin={{
                 top: 20,
                 right: 10,
@@ -185,6 +187,27 @@ function GraficoComparativoAnual({ dados = [] }) {
             />
             </BarChart>
           </ResponsiveContainer>
+
+          {/* O gráfico em texto, para quem não enxerga as barras (WCAG 1.1.1). */}
+          <table className="sr-only">
+            <caption>Dados do comparativo anual</caption>
+            <thead>
+              <tr>
+                <th scope="col">Indicador</th>
+                <th scope="col">{anoAnterior}</th>
+                <th scope="col">{anoAtual}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dados.map((item) => (
+                <tr key={item.nome}>
+                  <th scope="row">{item.nome}</th>
+                  <td>{formatarValor(item.valorAnterior, item.unidade)}</td>
+                  <td>{formatarValor(item.valorAtual, item.unidade)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </section>

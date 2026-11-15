@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { getUsuarioLogado, logout } from '../../services/auth';
+import PularParaConteudo from '../PularParaConteudo/PularParaConteudo';
 import './AdminLayout.css';
 // Base das páginas do painel (cartão, estados, campos, botões, tabela)
 import './AdminPagina.css';
@@ -31,6 +32,12 @@ const MENU = [
     label: 'Relatórios',
     icon: <><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z" /><path d="M14 3v6h6M8 13h8M8 17h5" /></>,
   },
+  {
+    to: '/admin/usuarios',
+    label: 'Usuários',
+    somenteAdministrador: true,
+    icon: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 7h5M18.5 4.5v5M16 17h5" /></>,
+  },
 ];
 
 function iniciais(nome) {
@@ -41,6 +48,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const [menuAberto, setMenuAberto] = useState(false);
   const botaoMenuRef = useRef(null);
+  const menuRef = useRef(null);
   const usuario = getUsuarioLogado();
 
   useEffect(() => {
@@ -56,17 +64,26 @@ function AdminLayout() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [menuAberto]);
 
+  // O menu vem antes do botão no HTML. Sem levar o foco até ele, o Tab seguia do botão
+  // para "Sair" e para o conteúdo, e os links do menu aberto ficavam fora do teclado.
+  useEffect(() => {
+    if (menuAberto) menuRef.current?.querySelector('a')?.focus();
+  }, [menuAberto]);
+
   if (!usuario) return <Navigate to="/admin/login" replace />;
 
   const perfil = rotuloPerfil(usuario.perfil);
 
   function handleLogout() {
     logout();
-    navigate('/admin/login', { replace: true });
+    // CT-18: quem sai volta ao portal. Com replace, o painel sai do histórico do Voltar.
+    navigate('/', { replace: true });
   }
 
   return (
     <div className={`admin-shell${menuAberto ? ' admin-shell--menu-aberto' : ''}`}>
+      <PularParaConteudo alvo="conteudo-painel" />
+
       <aside className="admin-sidebar" id="admin-menu">
         <div className="admin-brand">
           <span className="admin-brand-emblem" aria-hidden="true">
@@ -78,9 +95,9 @@ function AdminLayout() {
           </div>
         </div>
 
-        <nav className="admin-nav" aria-label="Menu administrativo">
+        <nav className="admin-nav" aria-label="Menu administrativo" ref={menuRef}>
           <p className="admin-nav-title">Módulos de gestão</p>
-          {MENU.map((item) => (
+          {MENU.filter((item) => !item.somenteAdministrador || usuario.perfil === 'administrador').map((item) => (
             <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setMenuAberto(false)}>
               <svg viewBox="0 0 24 24" aria-hidden="true">{item.icon}</svg>
               {item.label}
@@ -127,7 +144,7 @@ function AdminLayout() {
           </div>
         </header>
 
-        <main className="admin-content">
+        <main className="admin-content" id="conteudo-painel" tabIndex={-1} data-alvo-do-pular>
           <Outlet />
         </main>
       </div>

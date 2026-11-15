@@ -12,7 +12,8 @@
     "db:setup": "prisma migrate deploy && prisma db seed",
     "start": "npm run db:setup && node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "test:cobertura": "jest --runInBand --coverage"
   },
   "jest": {
     "setupFiles": ["<rootDir>/tests/setup-env.js"],
@@ -26,6 +27,7 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.4",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.5.0",
     "prisma": "^6.19.3"

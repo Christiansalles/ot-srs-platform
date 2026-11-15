@@ -1,0 +1,30 @@
+.indicadores-rolagem {
+  display: none;
+}
+
+@media (width < 768px) {
+  .indicadores-rolagem {
+    display: block;
+    margin: 0 0 .75rem;
+    color: var(--color-text-secondary);
+    font-size: .875rem;
+  }
+
+  .indicadores-page .table-wrap :is(th, td) {
+    padding-inline: .75rem;
+  }
+
+  .indicadores-page .table-wrap :is(th, td):first-child {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 1;
+    min-width: 8rem;
+    max-width: 8rem;
+    overflow-wrap: anywhere;
+    box-shadow: 1px 0 var(--color-border);
+  }
+
+  .indicadores-page .table-wrap td:first-child {
+    background: var(--color-surface);
+  }
+}

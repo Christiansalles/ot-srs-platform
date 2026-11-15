@@ -48,3 +48,23 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-226](pr-226/README.md) | #226 | #174 | E13 | Publicar e despublicar medições na Tela 6: antes e depois, diálogo de confirmação, sucesso e perfil editor, com mock, em 375 e 1280 px |
 | [pr-227](pr-227/README.md) | #227 | #175 | E13 | Publicar e despublicar relatórios na Tela 8: antes e depois, confirmação, sucesso e perfil editor, mais o foco e a mensagem da Tela 6, com mock, em 375 e 1280 px |
 | [pr-228](pr-228/README.md) | #228 | #155 | Integração | Roteiro da #155 com a API real: medição, `409`, publicar e despublicar até o dashboard, upload, publicação e download de PDF, e o perfil editor com `403`, em 375 e 1280 px |
+
+## Milestone 7
+
+| Pasta | PR | Issue | Entrega | O que mostra |
+|---|---|---|---|---|
+| [pr-281](pr-281/README.md) | #281 | #258 | E18 | Auditoria de acessibilidade: achados marcados em vermelho (contraste, Tab, "Pular para o conteúdo", gráficos, título da aba) e o que passou em verde, com mock, em 390 e 1280 px |
+| [pr-301](pr-301/README.md) | #301 (substitui #292) | #263 | E11 | Gestão de usuários, edição e mensagens com foco; estados da lista e comparação com o painel em celular e desktop |
+| [pr-306](pr-306/README.md) | #306 | #283 | E18 | "Pular para o conteúdo" como primeira parada do Tab no portal e o foco já no conteúdo depois dele, com a API real, em 390 e 1280 px |
+| [pr-290](pr-290/README.md) | #290 | #266 | E18 | Página 404 para endereços inválidos no portal e em `/admin`, em 375 e 1280 px |
+| [pr-291](pr-291/README.md) | #291 | #267 | E18 | Menu do celular aberto e fechado, comparação com a develop e cabeçalho em 768 e 1280 px |
+| [pr-293](pr-293/README.md) | #293 | #285 | E18 | Contraste do departamento no Login antes e depois em 390 e 1280 px |
+| [pr-294](pr-294/README.md) | #294 | #268 | E18 | Tabela de Indicadores com a primeira coluna fixa durante a rolagem em 375 e 390 px |
+| [pr-297](pr-297/README.md) | #297 | #284 | E18 | Contraste dos títulos da tabela de Indicadores antes e depois em 390 e 1280 px |
+| [pr-299](pr-299/README.md) | #299 | #270 | E19 | Resultado do E2E do painel e captura da falha de logout do CT-18 (#298) |
+| [pr-302](pr-302/README.md) | #302 | #269 | E18 | Login, gaveta, formulários e tabelas do painel em 375 px, com conferência em 320, 768 e 1280 px |
+| [pr-304](pr-304/README.md) | #304 | #255 | Dívida | Data de atualização e autoria na Tela 6 e data no dashboard, com API real e estados de carregamento, vazio e erro em 375 e 1280 px |
+| [pr-305](pr-305/README.md) | #305 | #298 | E10 | Sair do painel volta à página inicial do portal, com o editor no celular e o administrador no desktop, com a API real, em 390 e 1280 px |
+| [pr-310](pr-310/README.md) | #310 | #307 | E9 | Indicadores e Dashboard antes e depois da correção para ano sem dados, com a API real, em 390 e 1280 px |
+| [pr-311](pr-311/README.md) | #311 | #261 | E18 | Contraste do Login e da variação dos cards antes e depois, e o "Pular para o conteúdo" do painel, com a API real, em 390 e 1280 px |
+| [pr-313](pr-313/README.md) | #313 | #312 | E18 | Dashboard carregando antes e depois: o rodapé deixa de aparecer no meio da tela, em 390 e 1280 px |

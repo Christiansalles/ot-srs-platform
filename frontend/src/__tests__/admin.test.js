@@ -4,11 +4,14 @@ import {
   alterarStatusRelatorio,
   criarMedicao,
   criarIndicador,
+  criarUsuario,
   editarIndicador,
   editarMedicao,
   enviarRelatorio,
+  getUsuarios,
   listarIndicadoresAdmin,
   listarRelatoriosAdmin,
+  atualizarUsuario,
   resetarMocksAdmin,
 } from '../services/admin';
 import { AUTH_UNAUTHORIZED_EVENT } from '../services/auth';
@@ -37,6 +40,65 @@ describe('serviço administrativo', () => {
       headers: { Authorization: 'Bearer jwt-do-painel' },
       body: undefined,
     });
+  });
+
+  it('envia Bearer e os corpos corretos ao listar, criar e atualizar usuários', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'false');
+    window.sessionStorage.setItem('ot-srs-token', 'jwt-admin');
+    const usuario = { id: 4, nome: 'Nova Editora', email: 'nova@example.com', perfil: 'editor', ativo: true };
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce(resposta(200, [usuario]))
+      .mockResolvedValueOnce(resposta(201, usuario))
+      .mockResolvedValueOnce(resposta(200, { ...usuario, perfil: 'administrador' })));
+
+    expect(await getUsuarios()).toEqual([usuario]);
+    expect(await criarUsuario({ nome: usuario.nome, email: usuario.email, senha: 'senha-inicial', perfil: 'editor' })).toEqual(usuario);
+    expect(await atualizarUsuario(4, { perfil: 'administrador' })).toMatchObject({ perfil: 'administrador' });
+
+    expect(fetch).toHaveBeenNthCalledWith(1, 'http://localhost:3000/api/admin/usuarios', {
+      method: 'GET', headers: { Authorization: 'Bearer jwt-admin' }, body: undefined,
+    });
+    expect(fetch).toHaveBeenNthCalledWith(2, 'http://localhost:3000/api/admin/usuarios', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer jwt-admin', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: usuario.nome, email: usuario.email, senha: 'senha-inicial', perfil: 'editor' }),
+    });
+    expect(fetch).toHaveBeenNthCalledWith(3, 'http://localhost:3000/api/admin/usuarios/4', {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer jwt-admin', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ perfil: 'administrador' }),
+    });
+  });
+
+  it('repassa os erros 400 e 409 da API de usuários', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'false');
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce(resposta(400, { erro: 'E-mail inválido' }))
+      .mockResolvedValueOnce(resposta(409, { erro: 'Já existe um usuário com este e-mail' })));
+
+    await expect(criarUsuario({ email: 'incorreto' })).rejects.toMatchObject({ status: 400, message: 'E-mail inválido' });
+    await expect(criarUsuario({ email: 'admin@observatorio.local' }))
+      .rejects.toMatchObject({ status: 409, message: 'Já existe um usuário com este e-mail' });
+  });
+
+  it('usa mocks com os ids do seed e altera apenas usuários com perfil administrador', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'true');
+    window.sessionStorage.setItem('ot-srs-token', 'jwt-mock');
+    window.sessionStorage.setItem('ot-srs-user', JSON.stringify({ id: 1, perfil: 'administrador' }));
+
+    expect((await getUsuarios()).map((usuario) => usuario.id).sort()).toEqual([1, 2, 3]);
+    const criado = await criarUsuario({ nome: '  Nova Editora  ', email: 'NOVA@EXAMPLE.COM', senha: 'senha-inicial', perfil: 'editor' });
+    expect(criado).toEqual({ id: 4, nome: 'Nova Editora', email: 'nova@example.com', perfil: 'editor', ativo: true });
+    expect(criado).not.toHaveProperty('senha');
+    await expect(criarUsuario({ nome: 'Outra', email: 'nova@example.com', senha: 'senha-inicial', perfil: 'editor' }))
+      .rejects.toMatchObject({ status: 409, message: 'Já existe um usuário com este e-mail' });
+    expect(await atualizarUsuario(4, { ativo: false })).toMatchObject({ id: 4, ativo: false });
+    expect(await atualizarUsuario(4, { perfil: 'administrador' })).toMatchObject({ perfil: 'administrador' });
+    await expect(atualizarUsuario(1, { ativo: false }))
+      .rejects.toMatchObject({ status: 409, message: 'Você não pode desativar nem rebaixar o próprio usuário' });
+
+    window.sessionStorage.setItem('ot-srs-user', JSON.stringify({ id: 2, perfil: 'editor' }));
+    await expect(getUsuarios()).rejects.toMatchObject({ status: 403, message: 'Só o administrador gerencia usuários' });
   });
 
   it.each([
@@ -144,6 +206,17 @@ describe('serviço administrativo', () => {
     expect(idsMedicoes).toEqual(Array.from({ length: 23 }, (_, indice) => indice + 1));
     expect(indicadores.flatMap((indicador) => indicador.medicoes).some((medicao) => medicao.status === 'rascunho')).toBe(true);
     expect((await listarRelatoriosAdmin()).map((relatorio) => relatorio.id)).toEqual([1, 2]);
+  });
+
+  it('traz atualizado_em e lancado_por nas medições do mock e atualiza a data ao mudar o status', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'true');
+    const medicoes = (await listarIndicadoresAdmin()).flatMap((indicador) => indicador.medicoes);
+    expect(medicoes.every((medicao) => medicao.atualizado_em === '2026-11-03T14:20:00.000Z'
+      && medicao.lancado_por === 'Carga inicial')).toBe(true);
+
+    const alterada = await alterarStatusMedicao(medicoes[0].id, 'rascunho');
+    expect(alterada.atualizado_em).not.toBe('2026-11-03T14:20:00.000Z');
+    expect(alterada.lancado_por).toBe('Carga inicial');
   });
 
   it('faz operações de edição/status em modo mock sem expor referências mutáveis', async () => {

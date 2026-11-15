@@ -27,6 +27,7 @@ ot-srs-platform/
 │   └── tests/           testes Jest + Supertest
 ├── frontend/            React + Vite
 │   └── src/             components/, pages/, services/, mocks/, theme/, __tests__/
+├── e2e/                 testes de ponta a ponta com Playwright (ajudantes/, testes/)
 ├── docs/                contrato da API, fluxo, escopo, decisões, mockups e evidências (índice em docs/README.md)
 └── .github/workflows/   CI
 ```
@@ -83,13 +84,14 @@ Para executar o backend fora do Docker, configure as mesmas variáveis em
 `backend/.env`, usando `backend/.env.example` como referência. Nunca use os valores
 de exemplo em ambientes compartilhados ou de produção.
 
-O painel tem três telas:
+O painel tem quatro telas:
 
 | Endereço | Tela |
 | --- | --- |
 | `/admin` | Painel de gestão (Tela 6): lista as medições com o status de cada uma |
 | `/admin/medicoes/nova` e `/admin/medicoes/:id/editar` | Cadastro e edição de medição (Tela 7) |
 | `/admin/relatorios` | Relatórios (Tela 8): upload de PDF e lista dos relatórios com o status |
+| `/admin/usuarios` | Usuários: lista, cadastro e manutenção das contas, só para o administrador |
 
 Todo conteúdo tem um de dois status: `rascunho` ou `publicado`. O portal público
 mostra só o que está `publicado`; rascunho não aparece em listagem, contagem,
@@ -101,6 +103,17 @@ destaque nem download. O que cada perfil pode fazer:
 | Cadastrar e editar indicadores e medições (sempre como rascunho) | Sim | Sim |
 | Enviar um PDF de relatório (sempre como rascunho) | Sim | Sim |
 | Publicar e despublicar medições e relatórios | Sim | Não: os botões não aparecem e a API responde `403` |
+| Criar usuários, alterar perfil, redefinir senha e desativar ou reativar | Sim | Não: o menu não aparece e a rota volta ao painel |
+
+Para criar um usuário, entre como `administrador`, abra **Usuários** no menu do painel,
+preencha nome, e-mail, senha inicial com pelo menos 8 caracteres e escolha o perfil.
+Clique em **Criar usuário**. A pessoa aparece na lista como **Ativo** e pode entrar
+com o e-mail e a senha informados. Se o e-mail já estiver em uso, o formulário mantém
+o que foi digitado para correção. Na mesma lista, o administrador pode alterar o
+perfil, redefinir a senha ou desativar e reativar o acesso. Desativar exige confirmação
+e preserva os dados lançados por essa pessoa. O administrador não pode desativar nem
+rebaixar a própria conta. Redefinir a senha não invalida um token já emitido; para
+cortar o acesso imediatamente, desative a conta.
 
 Uma medição publicada não pode ser editada: despublique antes de editar (a API
 responde `409`).
@@ -176,6 +189,68 @@ docker compose down
 ```
 
 O CI também executa lint e build do frontend (`npm run lint` e `npm run build`).
+
+### Testes de ponta a ponta
+
+Os testes de ponta a ponta ficam em `e2e/`, com Playwright, e abrem o sistema no
+navegador como uma pessoa faria: front em `http://localhost:8080`, API em
+`http://localhost:3000`. Cada teste roda duas vezes, no desktop (1280 px) e no
+celular (390 px).
+
+Suba o sistema num projeto separado (`-p ot-e2e`), para os dados criados pelos
+testes não caírem no banco que você usa no dia a dia. As portas são as mesmas, então
+pare antes o `docker compose` normal, se estiver de pé.
+
+```bash
+docker compose -p ot-e2e up --build -d
+```
+
+Na primeira vez, instale as dependências e o Chromium do Playwright; depois, rode os
+testes:
+
+```bash
+cd e2e
+npm ci
+npx playwright install --with-deps chromium
+npx playwright test
+```
+
+Só um tamanho de tela: `npm run test:desktop` ou `npm run test:celular`. Quando um
+teste falha, o Playwright guarda o print e o trace em `e2e/test-results/`, e
+`npm run relatorio` abre o relatório.
+
+Para rodar apenas o portal público (CT-01 a CT-09 do plano), em `e2e/`, execute
+`npx playwright test testes/portal.spec.js`. Os casos cobrem Home, menu, tabela e
+filtros, Dashboard, 404 e rascunhos fora do portal. Os valores esperados são lidos
+dos JSONs de `backend/prisma/dados/`, sem mock da API. Os testes entram no job
+`compose` existente, nos projetos desktop e celular.
+
+Ao terminar, derrube o sistema e apague o banco de teste, a partir da raiz:
+
+```bash
+cd ..
+docker compose -p ot-e2e down -v
+```
+
+Para escrever um teste novo, use os ajudantes de `e2e/ajudantes/`:
+
+- `entrarComo(page, 'administrador' | 'editor')` (`sessao.js`) entra pela tela de
+  login com os usuários de desenvolvimento do `docker-compose.yml`;
+- `api.js` cria dados pela API (`tokenDe`, `idDoSetor`, `criarIndicador`,
+  `criarMedicao`, `mudarStatusMedicao`, `criarRelatorio`, `baixarArquivoDoRelatorio`).
+  Medição e relatório de teste são sempre de **2031 em diante**
+  (`PRIMEIRO_ANO_DE_TESTE`), um período que a carga não tem, e a medição usa um valor
+  que já está na carga. Dê nomes com `nomeUnico()`, porque o desktop e o celular
+  rodam o mesmo teste no mesmo banco.
+
+O `acessibilidade.spec.js` roda o axe (`@axe-core/playwright`) em cada tela do portal e
+do painel e reprova violação `serious` ou `critical`. Violação que já tem bug aberto
+entra na lista `EXCECOES` do próprio arquivo, com o número do bug; quando o bug for
+corrigido, apague a exceção (o relatório do Playwright mostra a anotação "exceção sem
+uso").
+
+No CI, o job `compose` roda esses testes depois de subir o sistema e, se algum falha,
+guarda o relatório como artefato `relatorio-playwright`.
 
 ### Backend
 

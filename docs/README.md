@@ -29,6 +29,7 @@ Comece pelo [escopo](projeto/escopo.md) e pelas [decisões](projeto/decisoes.md)
 | Arquivo | O que tem |
 |---|---|
 | [planejamento/](planejamento/README.md) | Visões gerais dos milestones IV a VI e o backlog do VII e do VIII. |
+| [testes/plano-de-testes.md](testes/plano-de-testes.md) | Plano de testes do M7: níveis, rodízio, casos `CT-xx`, critério de pronto, bugs e cobertura. |
 | [evidencias/](evidencias/README.md) | Prints e conferências de cada PR, com índice por milestone. |
 | [milestones/](milestones/) | Relatórios entregues em cada milestone (PDF). |
 

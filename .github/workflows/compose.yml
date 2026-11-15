@@ -8,7 +8,7 @@ on:
 jobs:
   compose:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
       - name: Construir e iniciar serviços
@@ -115,6 +115,28 @@ jobs:
             }
             process.exitCode = divergiu ? 1 : 0;
           '
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+      - name: Instalar o Playwright
+        working-directory: e2e
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Testes de ponta a ponta
+        working-directory: e2e
+        run: npx playwright test
+      - name: Guardar o relatório do Playwright
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-playwright
+          path: |
+            e2e/playwright-report/
+            e2e/test-results/
+          retention-days: 14
       - name: Logs e limpeza
         if: always()
         run: |

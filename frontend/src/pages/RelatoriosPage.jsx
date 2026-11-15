@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import FiltrosPainel from '../components/FiltrosPainel/FiltrosPainel';
 import { CATEGORIAS_RELATORIO } from '../config/relatorios';
 import { baixarRelatorio, getRelatorios, urlDownloadRelatorio } from '../services/api';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './RelatoriosPage.css';
 
 function formatarData(data) {
@@ -23,6 +24,8 @@ function nomeArquivoRelatorio(relatorio) {
 }
 
 export default function RelatoriosPage() {
+  useTituloDaPagina('Relatórios');
+
   const [params] = useSearchParams();
   const ano = params.get('ano') ?? '';
   const categoria = params.get('categoria') ?? '';

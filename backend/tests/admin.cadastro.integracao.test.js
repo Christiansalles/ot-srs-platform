@@ -44,6 +44,19 @@ afterAll(async () => {
 
 const autenticada = (requisicao) => requisicao.set('Authorization', `Bearer ${token}`);
 
+// atualizado_em tem precisão de milissegundo; a pausa garante que a próxima
+// alteração caia num instante diferente.
+const esperar = () => new Promise((resolver) => { setTimeout(resolver, 10); });
+
+async function medicaoNoPainel() {
+  const resposta = await autenticada(request(app).get(`/api/admin/indicadores?setor=${setor.id_setor}`));
+  expect(resposta.status).toBe(200);
+  return resposta.body[0].medicoes[0];
+}
+
+let atualizadoNoCadastro;
+let atualizadoNaEdicao;
+
 describe('cadastro e edição de indicador e medição (E12)', () => {
   it('permite ao editor cadastrar e editar um indicador', async () => {
     const cadastroIndicador = await autenticada(request(app).post('/api/admin/indicadores'))
@@ -67,6 +80,15 @@ describe('cadastro e edição de indicador e medição (E12)', () => {
     expect(cadastroMedicao.body).toMatchObject({ ano, semestre: 1, valor: 12, status: 'rascunho' });
     medicao = cadastroMedicao.body;
 
+    const noPainel = await medicaoNoPainel();
+    expect(noPainel).toMatchObject({ id: medicao.id, lancado_por: 'Editora E12' });
+    expect(noPainel.atualizado_em).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+    expect(noPainel).not.toHaveProperty('id_usuario');
+    atualizadoNoCadastro = noPainel.atualizado_em;
+
+    const atualizacaoRascunho = await request(app).get(`/api/indicadores/atualizacao?setor=${setor.id_setor}`);
+    expect(atualizacaoRascunho.body).toEqual({ atualizado_em: null });
+
     const duplicada = await autenticada(request(app).post('/api/admin/medicoes')).send(corpo);
     expect(duplicada.status).toBe(409);
     expect(duplicada.body).toEqual({ erro: `Já existe uma medição deste indicador em ${ano}/1` });
@@ -79,16 +101,29 @@ describe('cadastro e edição de indicador e medição (E12)', () => {
   });
 
   it('permite editar a medição enquanto ela está em rascunho', async () => {
+    await esperar();
     const edicao = await autenticada(request(app).put(`/api/admin/medicoes/${medicao.id}`)).send({ valor: 13 });
     expect(edicao.status).toBe(200);
     expect(edicao.body).toMatchObject({ valor: 13, status: 'rascunho' });
+
+    const noPainel = await medicaoNoPainel();
+    expect(new Date(noPainel.atualizado_em).getTime()).toBeGreaterThan(new Date(atualizadoNoCadastro).getTime());
+    atualizadoNaEdicao = noPainel.atualizado_em;
   });
 
   it('bloqueia edição publicada e expõe a medição e o período após publicar', async () => {
+    await esperar();
     const publicada = await request(app).patch(`/api/admin/medicoes/${medicao.id}/status`)
       .set('Authorization', `Bearer ${tokenAdministrador}`)
       .send({ status: 'publicado' });
     expect(publicada.status).toBe(200);
+
+    // Publicar muda a data, mas quem lançou continua sendo a editora, não o administrador.
+    const noPainel = await medicaoNoPainel();
+    expect(noPainel.lancado_por).toBe('Editora E12');
+    expect(new Date(noPainel.atualizado_em).getTime()).toBeGreaterThan(new Date(atualizadoNaEdicao).getTime());
+    const atualizacaoPublica = await request(app).get(`/api/indicadores/atualizacao?setor=${setor.id_setor}`);
+    expect(atualizacaoPublica.body).toEqual({ atualizado_em: noPainel.atualizado_em });
 
     const edicaoPublicada = await autenticada(request(app).put(`/api/admin/medicoes/${medicao.id}`))
       .send({ valor: 14 });

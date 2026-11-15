@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminCabecalho from '../components/AdminCabecalho/AdminCabecalho';
+import AdminTabelaRolagem from '../components/AdminLayout/AdminTabelaRolagem';
 import DialogoConfirmacao from '../components/DialogoConfirmacao/DialogoConfirmacao';
 import StatusBadge from '../components/StatusBadge/StatusBadge';
 import { getSetores } from '../services/api';
 import { alterarStatusMedicao, listarIndicadoresAdmin } from '../services/admin';
 import { podePublicar } from '../services/auth';
 import { useAlteracaoStatus } from '../hooks/useAlteracaoStatus';
+import { formatarData } from '../utils/formatarData';
 import { formatarValor } from '../utils/formatarValor';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './AdminPage.css';
 
 function normalizarTexto(texto) {
@@ -21,6 +24,8 @@ function criarLinhas(indicadores) {
 }
 
 function AdminPage() {
+  useTituloDaPagina('Indicadores · Painel administrativo');
+
   const [indicadores, setIndicadores] = useState([]);
   const [setores, setSetores] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -217,7 +222,7 @@ function AdminPage() {
         )}
 
         {!carregando && !erro && linhas.length > 0 && (
-          <div className="admin-tabela-rolagem">
+          <AdminTabelaRolagem rotulo="Tabela de indicadores do painel">
             <table className="admin-tabela admin-dashboard__table">
               <thead>
                 <tr>
@@ -226,6 +231,8 @@ function AdminPage() {
                   <th scope="col">Período</th>
                   <th scope="col">Valor</th>
                   <th scope="col">Status</th>
+                  <th scope="col">Atualizado em</th>
+                  <th scope="col">Lançado por</th>
                   <th scope="col"><span className="sr-only">Ações</span></th>
                 </tr>
               </thead>
@@ -246,6 +253,8 @@ function AdminPage() {
                         ? <StatusBadge status={medicao.status} />
                         : <span className="admin-dashboard__no-measurement">Sem medições</span>}
                     </td>
+                    <td className="admin-dashboard__date">{medicao && formatarData(medicao.atualizado_em)}</td>
+                    <td>{medicao?.lancado_por}</td>
                     <td className="admin-tabela__acoes">
                       {mostrarPublicacao && medicao && (
                         <button
@@ -274,7 +283,7 @@ function AdminPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </AdminTabelaRolagem>
         )}
       </section>
 

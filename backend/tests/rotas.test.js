@@ -353,3 +353,49 @@ describe('GET /api/indicadores/destaques', () => {
     expect(dados.buscarIndicadores).not.toHaveBeenCalled();
   });
 });
+
+describe('GET /api/indicadores/atualizacao', () => {
+  beforeEach(() => {
+    dados.buscarAtualizacao.mockResolvedValue(new Date('2026-11-03T14:20:00.000Z'));
+  });
+
+  it('responde 200 com a data em ISO 8601 UTC', async () => {
+    const res = await request(app).get('/api/indicadores/atualizacao');
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ atualizado_em: '2026-11-03T14:20:00.000Z' });
+    expect(dados.buscarAtualizacao).toHaveBeenCalledWith({ setorId: undefined, ano: undefined, semestre: undefined });
+  });
+
+  it('envia setor, ano e semestre para a consulta', async () => {
+    const res = await request(app).get('/api/indicadores/atualizacao?setor=1&ano=2025&semestre=2');
+
+    expect(res.status).toBe(200);
+    expect(dados.buscarAtualizacao).toHaveBeenCalledWith({ setorId: 1, ano: 2025, semestre: 2 });
+  });
+
+  it('filtro sem medição publicada devolve 200 com atualizado_em null', async () => {
+    dados.buscarAtualizacao.mockResolvedValue(null);
+
+    const res = await request(app).get('/api/indicadores/atualizacao?setor=999');
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ atualizado_em: null });
+  });
+
+  it.each([
+    ['ano=abc', 'ano deve ser um número inteiro de 4 dígitos'],
+    ['ano=25', 'ano deve ser um número inteiro de 4 dígitos'],
+    ['ano=2025&semestre=3', 'semestre deve ser 1 ou 2'],
+    ['ano=2025&semestre=0', 'semestre deve ser 1 ou 2'],
+    ['semestre=2', 'semestre exige ano'],
+    ['setor=abc', 'setor deve ser um número inteiro positivo'],
+    ['setor=1&setor=2', 'setor deve ser um número inteiro positivo'],
+  ])('filtro inválido (%s) devolve 400 sem consultar o banco', async (query, erro) => {
+    const res = await request(app).get(`/api/indicadores/atualizacao?${query}`);
+
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ erro });
+    expect(dados.buscarAtualizacao).not.toHaveBeenCalled();
+  });
+});

@@ -1,0 +1,25 @@
+/* Fora da tela até receber o foco do teclado. */
+.pular-para-conteudo {
+  position: absolute;
+  top: .75rem;
+  left: .75rem;
+  z-index: 100;
+  padding: .75rem 1rem;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-on-brand);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.pular-para-conteudo:focus {
+  transform: none;
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+/* O alvo recebe foco só por script; o contorno no bloco inteiro não ajuda ninguém. */
+[data-alvo-do-pular]:focus {
+  outline: none;
+}

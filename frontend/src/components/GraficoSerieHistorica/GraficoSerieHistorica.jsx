@@ -166,6 +166,8 @@ function GraficoSerieHistorica({
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               data={dados}
+              title={`Gráfico: ${tituloGrafico}`}
+              desc="Use as setas para percorrer os períodos. Os valores estão na tabela a seguir."
               margin={{
                 top: 20,
                 right: 20,
@@ -284,6 +286,25 @@ function GraficoSerieHistorica({
               />
             </ComposedChart>
           </ResponsiveContainer>
+
+          {/* O gráfico em texto, para quem não enxerga a linha (WCAG 1.1.1). */}
+          <table className="sr-only">
+            <caption>{`Dados do gráfico: ${tituloGrafico}`}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Período</th>
+                <th scope="col">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dados.map((ponto) => (
+                <tr key={ponto.periodo}>
+                  <th scope="row">{ponto.periodo}</th>
+                  <td>{formatarValor(ponto.valor, ponto.unidade)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </section>

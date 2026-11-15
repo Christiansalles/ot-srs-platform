@@ -1,5 +1,6 @@
 jest.mock('../src/db', () => ({
   indicador: { findMany: jest.fn() },
+  medicao: { aggregate: jest.fn() },
 }));
 
 const prisma = require('../src/db');
@@ -17,7 +18,9 @@ const resultadoPrisma = [
         id_medicao: 22,
         valor: '10.50',
         status: 'rascunho',
+        atualizado_em: new Date('2026-11-03T14:20:00.000Z'),
         periodo: { ano: 2025, semestre: 2 },
+        usuario: { nome: 'Editora' },
       },
     ],
   },
@@ -32,7 +35,9 @@ const resultadoPrisma = [
         id_medicao: 11,
         valor: '8.00',
         status: 'publicado',
+        atualizado_em: new Date('2026-10-21T09:00:00.000Z'),
         periodo: { ano: 2025, semestre: 1 },
+        usuario: { nome: 'Administrador' },
       },
     ],
   },
@@ -51,7 +56,7 @@ describe('buscarIndicadoresAdmin', () => {
       where: {},
       include: {
         setor: true,
-        medicoes: { include: { periodo: true } },
+        medicoes: { include: { periodo: true, usuario: { select: { nome: true } } } },
       },
     });
     expect(indicadores).toEqual([
@@ -61,7 +66,15 @@ describe('buscarIndicadoresAdmin', () => {
         unidade: 'unidades',
         descricao: 'Quantidade',
         setor: { id: 1, nome: 'Meio ambiente' },
-        medicoes: [{ id: 11, ano: 2025, semestre: 1, valor: 8, status: 'publicado' }],
+        medicoes: [{
+          id: 11,
+          ano: 2025,
+          semestre: 1,
+          valor: 8,
+          status: 'publicado',
+          atualizado_em: new Date('2026-10-21T09:00:00.000Z'),
+          lancado_por: 'Administrador',
+        }],
       },
       {
         id: 2,
@@ -69,7 +82,15 @@ describe('buscarIndicadoresAdmin', () => {
         unidade: 'unidades',
         descricao: null,
         setor: { id: 2, nome: 'Outros' },
-        medicoes: [{ id: 22, ano: 2025, semestre: 2, valor: 10.5, status: 'rascunho' }],
+        medicoes: [{
+          id: 22,
+          ano: 2025,
+          semestre: 2,
+          valor: 10.5,
+          status: 'rascunho',
+          atualizado_em: new Date('2026-11-03T14:20:00.000Z'),
+          lancado_por: 'Editora',
+        }],
       },
     ]);
   });
@@ -84,8 +105,57 @@ describe('buscarIndicadoresAdmin', () => {
       },
       include: {
         setor: true,
-        medicoes: { where: { status: 'publicado' }, include: { periodo: true } },
+        medicoes: { where: { status: 'publicado' }, include: { periodo: true, usuario: { select: { nome: true } } } },
       },
     });
+  });
+});
+
+describe('buscarAtualizacao', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('sem filtros, pega o maior atualizado_em só entre as publicadas', async () => {
+    const data = new Date('2026-11-03T14:20:00.000Z');
+    prisma.medicao.aggregate.mockResolvedValue({ _max: { atualizado_em: data } });
+
+    await expect(dados.buscarAtualizacao()).resolves.toEqual(data);
+    expect(prisma.medicao.aggregate).toHaveBeenCalledWith({
+      where: { status: 'publicado' },
+      _max: { atualizado_em: true },
+    });
+  });
+
+  it('aplica setor, ano e semestre na consulta', async () => {
+    prisma.medicao.aggregate.mockResolvedValue({ _max: { atualizado_em: null } });
+
+    await dados.buscarAtualizacao({ setorId: 1, ano: 2025, semestre: 2 });
+
+    expect(prisma.medicao.aggregate).toHaveBeenCalledWith({
+      where: {
+        status: 'publicado',
+        indicador: { is: { id_setor: 1 } },
+        periodo: { is: { ano: 2025, semestre: 2 } },
+      },
+      _max: { atualizado_em: true },
+    });
+  });
+
+  it('só com ano, filtra o ano inteiro', async () => {
+    prisma.medicao.aggregate.mockResolvedValue({ _max: { atualizado_em: null } });
+
+    await dados.buscarAtualizacao({ ano: 2025 });
+
+    expect(prisma.medicao.aggregate).toHaveBeenCalledWith({
+      where: { status: 'publicado', periodo: { is: { ano: 2025 } } },
+      _max: { atualizado_em: true },
+    });
+  });
+
+  it('sem medição publicada nos filtros, devolve null', async () => {
+    prisma.medicao.aggregate.mockResolvedValue({ _max: { atualizado_em: null } });
+
+    await expect(dados.buscarAtualizacao({ setorId: 999 })).resolves.toBeNull();
   });
 });

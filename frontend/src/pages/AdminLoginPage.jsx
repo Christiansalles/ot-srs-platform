@@ -3,9 +3,12 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { getToken, login } from '../services/auth';
 import capaSantaRita from '../assets/capa-santa-rita.jpg';
 import logoObservatorio from '../assets/logos/observatorio-branco.png';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './AdminLoginPage.css';
 
 function AdminLoginPage() {
+  useTituloDaPagina('Acesso administrativo');
+
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');

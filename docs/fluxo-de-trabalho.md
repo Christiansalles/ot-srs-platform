@@ -64,6 +64,18 @@ fix(frontend): corrige formato da variação no card
 - **Revisor:** o da tabela da visão geral do Milestone. Quem revisa roda o código, não só lê.
 - Depois do merge, apague a branch e avise no grupo se a tarefa bloqueava alguém.
 
+## Bugs
+
+Achou um bug (num teste, na revisão de um PR ou usando o sistema)? Abra uma issue pelo modelo **Bug**: no GitHub, **Issues → New issue → Bug**. O modelo já põe o rótulo `bug` e pede:
+
+- como reproduzir, em passos, a partir de um sistema recém-subido;
+- o que era esperado e o que aconteceu;
+- onde: tela ou rota, tamanho da tela, navegador e branch;
+- um print;
+- o caso do plano de testes (`CT-xx`) ou o teste E2E que pegou o bug.
+
+Uma issue por bug. Quem distribui as correções é a triagem do milestone, então não comece a corrigir um bug de outra pessoa sem combinar. Se o bug veio de um teste E2E, o teste fica com `test.fixme` até a correção, com o número da issue no comentário.
+
 ## Regra de "pronto"
 
 Uma tarefa só conta como pronta quando:

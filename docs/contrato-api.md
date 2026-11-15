@@ -137,6 +137,22 @@ variacao_percentual = (valor_atual - valor_anterior) / valor_anterior * 100
 
 Os números acima mostram só o formato. Os da carga (`backend/prisma/dados/hospedagem.json`) são ilustrativos, tirados dos mockups do Milestone III no Stitch, porque o Relatório OT nº 004/2025 não está disponível para o grupo. Os dados oficiais virão depois da Prefeitura (SMCELT), e aí só esse arquivo muda.
 
+### `GET /api/indicadores/atualizacao?setor=1&ano=2025&semestre=2`
+
+Data da última atualização dos dados públicos, para o texto "Atualizado em" do dashboard. Os parâmetros `setor`, `ano` e `semestre` são opcionais e combináveis, com o mesmo significado e os mesmos `400` de `GET /api/indicadores` (inclusive `"semestre exige ano"`).
+
+A resposta é o maior `atualizado_em` entre as medições **publicadas** que passam pelos filtros:
+
+```json
+{ "atualizado_em": "2026-11-03T14:20:00.000Z" }
+```
+
+- Só medições publicadas contam. Um rascunho criado ou editado depois não muda a data, nem com filtro.
+- Sem nenhuma medição publicada para os filtros (setor inexistente, período sem dados), responde `200` com `{ "atualizado_em": null }`, e o front esconde o texto.
+- `atualizado_em` muda quando a medição é editada e quando o status muda. Publicar uma medição, portanto, traz a data para o momento da publicação; despublicar tira a medição da conta, e a data pode voltar para a de outra medição publicada.
+
+O formato da data é o mesmo de `atualizado_em` no painel (veja `GET /api/admin/indicadores`).
+
 ## Distribuição por setor e comparativo anual
 
 Não existem rotas específicas para distribuição por setor ou comparativo anual.
@@ -194,7 +210,22 @@ Erros:
 - `400` quando e-mail ou senha estiverem ausentes, vazios ou não forem texto: `{ "erro": "E-mail e senha são obrigatórios" }`.
 - `400` quando o corpo não for JSON válido: `{ "erro": "JSON inválido" }`.
 - `401` para e-mail inexistente, senha incorreta ou usuário inativo: `{ "erro": "E-mail ou senha inválidos" }`.
+- `429` quando o limite de tentativas erradas for atingido (veja abaixo).
 - `500` se ocorrer uma falha interna, incluindo `JWT_SECRET` não configurada: `{ "erro": "Erro interno do servidor" }`.
+
+#### Limite de tentativas
+
+Vale só para `POST /api/auth/login`. Nenhuma outra rota tem limite.
+
+- Conta as tentativas que **erram** (qualquer resposta `400` ou `401`), por IP, numa janela de `LOGIN_JANELA_MINUTOS` minutos (padrão `15`). Login certo não conta e não zera as erradas.
+- Depois de `LOGIN_MAX_TENTATIVAS` tentativas erradas (padrão `5`), as seguintes respondem `429` até a janela acabar, **mesmo com a senha certa**. Ou seja, com os valores padrão, a sexta tentativa depois de cinco erradas já é `429`.
+- A resposta traz o cabeçalho `Retry-After` com os segundos que faltam para a janela acabar, e o corpo:
+
+```json
+{ "erro": "Muitas tentativas de login. Aguarde alguns minutos e tente de novo." }
+```
+
+`LOGIN_MAX_TENTATIVAS` e `LOGIN_JANELA_MINUTOS` são inteiros positivos lidos do ambiente e aparecem no `.env.example`, no `docker-compose.yml` e no `ci.yml`. Sem valor, valem os padrões. O front chama a API direto na porta 3000 (o Nginx só serve os arquivos), então o IP é o do navegador e o backend não precisa de `trust proxy`.
 
 ### `GET /api/auth/me`
 
@@ -240,7 +271,12 @@ Editor chamando uma rota de status responde `403`:
 
 #### `GET /api/admin/indicadores?setor=1&status=rascunho`
 
-Retorna todos os indicadores, inclusive os sem medições, ordenados por nome. Cada item inclui `id`, `nome`, `unidade`, `descricao`, setor `{ id, nome }` e `medicoes`, com **todas** as medições (rascunho e publicadas), ordenadas por ano e semestre. Cada medição inclui `id`, `ano`, `semestre`, `valor` (número) e `status`. A resposta não expõe `id_usuario`.
+Retorna todos os indicadores, inclusive os sem medições, ordenados por nome. Cada item inclui `id`, `nome`, `unidade`, `descricao`, setor `{ id, nome }` e `medicoes`, com **todas** as medições (rascunho e publicadas), ordenadas por ano e semestre. Cada medição inclui `id`, `ano`, `semestre`, `valor` (número), `status`, `atualizado_em` e `lancado_por`. A resposta não expõe `id_usuario`.
+
+- `atualizado_em`: data e hora da última alteração da medição, em ISO 8601 UTC (`"2026-11-03T14:20:00.000Z"`), vinda da coluna `medicao.atualizado_em` (`@updatedAt`). Muda ao editar e ao publicar ou despublicar. Medições que já existiam antes da migração ficam com a data da migração. O front mostra no fuso de Brasília, como `dd/mm/aaaa`.
+- `lancado_por`: o `nome` do usuário que cadastrou a medição (`medicao.id_usuario`), mesmo que ele esteja desativado hoje. Não muda quando outra pessoa edita ou publica.
+
+A tabela `medicao` também ganha `criado_em` (`DEFAULT now()`), que fica no banco e não sai na API.
 
 Filtros opcionais e combináveis:
 
@@ -256,7 +292,15 @@ Filtros opcionais e combináveis:
     "descricao": null,
     "setor": { "id": 1, "nome": "Hospedagem" },
     "medicoes": [
-      { "id": 7, "ano": 2025, "semestre": 2, "valor": 350, "status": "rascunho" }
+      {
+        "id": 7,
+        "ano": 2025,
+        "semestre": 2,
+        "valor": 350,
+        "status": "rascunho",
+        "atualizado_em": "2026-11-03T14:20:00.000Z",
+        "lancado_por": "Administrador"
+      }
     ]
   }
 ]
@@ -365,16 +409,72 @@ Os PDFs ficam no diretório `uploads/` do backend, persistido no volume Docker `
 
 Só `administrador`. Corpo: `{ "status": "publicado" }` ou `{ "status": "rascunho" }`. Responde `200` com o relatório atualizado. Editor responde `403`; status fora de `rascunho`/`publicado` responde `400` (`"Status inválido"`); id inexistente responde `404`.
 
+### Usuários
+
+Só `administrador`, nas três rotas. Editor responde `403` com uma mensagem própria (o `exigirPerfil` passa a receber a mensagem):
+
+```json
+{ "erro": "Só o administrador gerencia usuários" }
+```
+
+Usuário não se apaga: não existe `DELETE`, e a rota responde `404` (`"Rota não encontrada"`). Para tirar o acesso, o administrador desativa, e assim cada medição e relatório continua apontando para quem lançou.
+
+Nenhuma resposta traz `senha_hash`. Cada usuário sai assim:
+
+```json
+{
+  "id": 2,
+  "nome": "Editor",
+  "email": "editor@observatorio.local",
+  "perfil": "editor",
+  "ativo": true
+}
+```
+
+Regras dos campos, iguais no `POST` e no `PATCH`:
+
+- `nome`: texto, até 80 caracteres, sem espaços nas pontas, não vazio;
+- `email`: texto, até 120 caracteres, com `@` e domínio (`nome@dominio.tld`), guardado sem espaços nas pontas e em minúsculas, como o login faz;
+- `senha`: texto com pelo menos 8 caracteres, guardada com o `senha.js` (scrypt);
+- `perfil`: `administrador` ou `editor`;
+- `ativo` (só no `PATCH`): `true` ou `false`.
+
+#### `GET /api/admin/usuarios`
+
+Lista todos os usuários, ativos e desativados, em ordem alfabética de `nome`.
+
+#### `POST /api/admin/usuarios`
+
+Cria usuário. Corpo: `{ "nome": "Editor", "email": "editor@observatorio.local", "senha": "...", "perfil": "editor" }`, com os quatro campos obrigatórios. O usuário nasce com `ativo: true`. Responde `201` com o usuário criado.
+
+#### `PATCH /api/admin/usuarios/:id`
+
+Altera só os campos enviados, entre `nome`, `email`, `senha`, `perfil` e `ativo`. É por aqui que o administrador troca o perfil, redefine a senha (não existe "esqueci minha senha") e desativa ou reativa alguém. Responde `200` com o usuário atualizado.
+
+- Corpo sem nenhum desses campos responde `400` (`"Campos obrigatórios inválidos"`). Campos fora da lista são ignorados.
+- O administrador não pode desativar o próprio usuário nem trocar o próprio perfil para `editor`, para o sistema nunca ficar sem administrador por engano: `409`.
+- A mudança vale na próxima requisição, porque o `autenticar` lê o usuário do banco a cada vez: quem foi desativado recebe `401` no login e com o token antigo; quem virou editor recebe `403` ao publicar.
+- Redefinir a senha não invalida o token que a pessoa já tem (ele expira em 8 horas). Para cortar o acesso na hora, desative.
+
+Erros das rotas de usuários:
+
+- `400`: `"JSON inválido"`; `"Campos obrigatórios inválidos"` (campo ausente no `POST`, com tipo errado, vazio, acima do limite, corpo do `PATCH` sem campo conhecido); `"E-mail inválido"`; `"A senha deve ter pelo menos 8 caracteres"`; `"Perfil inválido"`.
+- `401`: `"Token inválido ou expirado"`.
+- `403`: `"Só o administrador gerencia usuários"`.
+- `404`: id inexistente ou malformado: `"Recurso não encontrado"`.
+- `409`: e-mail já usado por outro usuário: `"Já existe um usuário com este e-mail"`; desativar ou rebaixar a si mesmo: `"Você não pode desativar nem rebaixar o próprio usuário"`. O e-mail repetido vem do `@unique` do banco, e a rota converte o erro do Prisma em `409`, nunca em `500`.
+
 ### Erros das rotas administrativas e de relatórios
 
 Erros seguem `{ "erro": "mensagem legível" }`.
 
 - `400`: `"JSON inválido"`, `"Campos obrigatórios inválidos"` (campo ausente, com tipo errado ou acima do limite), `"Categoria inválida"`, `"Status inválido"`, `"Arquivo PDF obrigatório"`; filtros `setor` e `ano` com as mesmas mensagens das rotas de indicadores.
 - `401`: token ausente, inválido ou expirado, ou usuário inativo: `"Token inválido ou expirado"`.
-- `403`: editor tentando publicar ou despublicar: `"Seu perfil não pode publicar conteúdo"`.
+- `403`: editor tentando publicar ou despublicar: `"Seu perfil não pode publicar conteúdo"`; editor nas rotas de usuários: `"Só o administrador gerencia usuários"`.
 - `404`: indicador, medição ou relatório inexistente no painel: `"Recurso não encontrado"`; no download público: `"Relatório não encontrado"`.
-- `409`: medição duplicada: `"Já existe uma medição deste indicador em <ano>/<semestre>"`; edição de medição publicada: `"Despublique a medição antes de editar"`.
+- `409`: medição duplicada: `"Já existe uma medição deste indicador em <ano>/<semestre>"`; edição de medição publicada: `"Despublique a medição antes de editar"`; os dois `409` de usuários (veja "Usuários").
 - `413`: upload acima de 10 MiB: `"Arquivo muito grande"`.
+- `429`: só no `POST /api/auth/login`, depois do limite de tentativas erradas: `"Muitas tentativas de login. Aguarde alguns minutos e tente de novo."`, com `Retry-After`.
 
 As rotas públicas de relatório nunca incluem rascunhos. Categoria desconhecida ou ano malformado responde `400`, em vez de ser ignorado.
 

@@ -13,6 +13,30 @@ describe('App', () => {
     vi.unstubAllGlobals();
   });
 
+  it.each(['/endereco-invalido', '/admin/endereco-invalido'])('mostra a página 404 no layout público para %s', (caminho) => {
+    window.sessionStorage.clear();
+    window.history.replaceState({}, '', caminho);
+    render(<App />);
+
+    expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+    const conteudo = within(screen.getByRole('main'));
+    expect(conteudo.getByRole('heading', { name: 'Página não encontrada', level: 1 })).toBeInTheDocument();
+    expect(conteudo.getByRole('link', { name: 'Voltar à página inicial' })).toHaveAttribute('href', '/');
+    expect(window.location.pathname).toBe(caminho);
+  });
+
+  it('volta da página 404 para a Home pelo link', async () => {
+    window.history.replaceState({}, '', '/endereco-invalido');
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('link', { name: 'Voltar à página inicial' }));
+
+    expect(window.location.pathname).toBe('/');
+    expect(await screen.findByRole('heading', { name: /indicadores do turismo/i })).toBeInTheDocument();
+    await screen.findByRole('heading', { name: 'Número de leitos' });
+  });
+
   it.each(['/', '/indicadores', '/dashboard', '/relatorios'])('oferece acesso administrativo no cabeçalho de %s', async (caminho) => {
     window.history.replaceState({}, '', caminho);
     render(<App />);
@@ -20,6 +44,68 @@ describe('App', () => {
     expect(acesso).toHaveAttribute('href', '/admin/login');
     expect(acesso.closest('header')).toHaveClass('topbar');
     // Aguarda as consultas das páginas antes de encerrar o teste.
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it('abre e fecha o menu do celular pelo botão', async () => {
+    render(<App />);
+    const botao = screen.getByRole('button', { name: 'Menu principal' });
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    const menu = document.getElementById(botao.getAttribute('aria-controls'));
+
+    fireEvent.click(botao);
+    expect(botao).toHaveAttribute('aria-expanded', 'true');
+    expect(within(menu).getByRole('link', { name: 'Relatórios' })).toHaveAttribute('href', '/relatorios');
+    expect(within(menu).getByRole('link', { name: 'Acesso Administrativo' })).toHaveAttribute('href', '/admin/login');
+
+    fireEvent.click(botao);
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it.each(['cabeçalho', 'conteúdo'])('fecha o menu com Escape a partir do %s e devolve o foco', async (origem) => {
+    render(<App />);
+    const botao = screen.getByRole('button', { name: 'Menu principal' });
+    fireEvent.click(botao);
+    const link = origem === 'cabeçalho'
+      ? within(screen.getByRole('navigation', { name: 'Navegação principal' })).getByRole('link', { name: 'Home' })
+      : within(screen.getByRole('main')).getByRole('link', { name: /Consultar indicadores/ });
+    link.focus();
+
+    fireEvent.keyDown(link, { key: 'Escape' });
+
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    expect(botao).toHaveFocus();
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it('fecha o menu ao escolher um link do portal', async () => {
+    render(<App />);
+    const botao = screen.getByRole('button', { name: 'Menu principal' });
+    fireEvent.click(botao);
+    const navegacao = screen.getByRole('navigation', { name: 'Navegação principal' });
+
+    fireEvent.click(within(navegacao).getByRole('link', { name: 'Relatórios' }));
+
+    expect(window.location.pathname).toBe('/relatorios');
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+  });
+
+  it('fecha o menu ao voltar pelo histórico do navegador', async () => {
+    render(<App />);
+    const navegacao = screen.getByRole('navigation', { name: 'Navegação principal' });
+    fireEvent.click(within(navegacao).getByRole('link', { name: 'Relatórios' }));
+    expect(window.location.pathname).toBe('/relatorios');
+
+    const botao = screen.getByRole('button', { name: 'Menu principal' });
+    fireEvent.click(botao);
+    expect(botao).toHaveAttribute('aria-expanded', 'true');
+    window.history.back();
+
+    expect(await screen.findByRole('heading', { name: /indicadores do turismo/i })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/');
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
     await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
   });
 

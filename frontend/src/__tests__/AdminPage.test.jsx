@@ -21,8 +21,8 @@ const indicadores = [
     unidade: 'leitos',
     setor: setores[0],
     medicoes: [
-      { id: 1, ano: 2025, semestre: 1, valor: 312, status: 'publicado' },
-      { id: 2, ano: 2025, semestre: 2, valor: 350, status: 'rascunho' },
+      { id: 1, ano: 2025, semestre: 1, valor: 312, status: 'publicado', atualizado_em: '2026-11-03T14:20:00.000Z', lancado_por: 'Administrador' },
+      { id: 2, ano: 2025, semestre: 2, valor: 350, status: 'rascunho', atualizado_em: '2026-11-05T01:30:00.000Z', lancado_por: 'Editor' },
     ],
   },
   {
@@ -31,7 +31,7 @@ const indicadores = [
     descricao: null,
     unidade: 'estabelecimentos',
     setor: setores[1],
-    medicoes: [{ id: 3, ano: 2025, semestre: 2, valor: 40, status: 'publicado' }],
+    medicoes: [{ id: 3, ano: 2025, semestre: 2, valor: 40, status: 'publicado', atualizado_em: null, lancado_por: null }],
   },
   {
     id: 3,
@@ -82,6 +82,33 @@ describe('AdminPage', () => {
     expect(within(semMedicao).getAllByRole('cell').slice(2, 4).map((celula) => celula.textContent)).toEqual(['', '']);
     expect(listarIndicadoresAdmin).toHaveBeenCalledOnce();
     expect(listarIndicadoresAdmin).toHaveBeenCalledWith();
+  });
+
+  it('mostra "Atualizado em" (dd/mm/aaaa, fuso de Brasília) e "Lançado por" em cada medição', async () => {
+    renderPage();
+
+    const tabela = await screen.findByRole('table');
+    expect(within(tabela).getByRole('columnheader', { name: 'Atualizado em' })).toBeInTheDocument();
+    expect(within(tabela).getByRole('columnheader', { name: 'Lançado por' })).toBeInTheDocument();
+
+    const publicada = within(tabela).getByText('2025/1').closest('tr');
+    expect(within(publicada).getByText('03/11/2026')).toBeInTheDocument();
+    expect(within(publicada).getByText('Administrador')).toBeInTheDocument();
+
+    // 05/11 01:30 UTC ainda é dia 04 em Brasília
+    const rascunho = within(tabela).getAllByText('2025/2')[0].closest('tr');
+    expect(within(rascunho).getByText('04/11/2026')).toBeInTheDocument();
+    expect(within(rascunho).getByText('Editor')).toBeInTheDocument();
+  });
+
+  it('deixa as duas colunas em branco quando a medição não tem data nem autor', async () => {
+    renderPage();
+
+    const tabela = await screen.findByRole('table');
+    const linha = within(tabela).getByText('Restaurantes').closest('tr');
+    const celulas = within(linha).getAllByRole('cell');
+    expect(celulas.slice(5, 7).map((celula) => celula.textContent)).toEqual(['', '']);
+    expect(within(linha).queryByText('Invalid Date')).not.toBeInTheDocument();
   });
 
   it('abre a edição da medição existente e o cadastro quando o indicador não tem medição', async () => {

@@ -1,5 +1,5 @@
 ﻿import { vi } from 'vitest';
-import { getSetores, getPeriodos, getIndicadores, getDestaques } from '../services/api';
+import { getSetores, getPeriodos, getIndicadores, getDestaques, getAtualizacao } from '../services/api';
 import { mockIndicadores } from '../mocks/dados';
 
 describe('serviços da API', () => {
@@ -19,6 +19,19 @@ describe('serviços da API', () => {
       'http://localhost:3000/api/indicadores?setor=1',
       'http://localhost:3000/api/indicadores/destaques',
     ]);
+  });
+
+  it('consulta a data de atualização com os filtros e devolve o formato do contrato no mock', async () => {
+    vi.stubEnv('VITE_USE_MOCK', 'false');
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ atualizado_em: null }) });
+    vi.stubGlobal('fetch', fetchMock);
+    await getAtualizacao({ setor: 1, ano: 2025, semestre: 2 });
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost:3000/api/indicadores/atualizacao?setor=1&ano=2025&semestre=2');
+
+    vi.stubEnv('VITE_USE_MOCK', 'true');
+    expect(await getAtualizacao()).toEqual({ atualizado_em: '2026-11-03T14:20:00.000Z' });
+    // Filtro sem medição: null, e o front esconde o texto
+    expect(await getAtualizacao({ ano: 1999 })).toEqual({ atualizado_em: null });
   });
 
   it('não chama a API quando o mock está explicitamente ligado', async () => {

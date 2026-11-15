@@ -8,6 +8,7 @@ import {
   editarMedicao,
   listarIndicadoresAdmin,
 } from '../services/admin';
+import { useTituloDaPagina } from '../hooks/useTituloDaPagina';
 import './AdminMedicaoFormPage.css';
 
 const NOVO_INDICADOR = 'novo';
@@ -19,6 +20,7 @@ function AdminMedicaoFormPage() {
   const idMedicao = idDaRota || idDaQuery;
   const idIndicadorInicial = searchParams.get('indicador') || '';
   const estaEditando = Boolean(idMedicao);
+  useTituloDaPagina(`${estaEditando ? 'Editar medição' : 'Cadastrar medição'} · Painel administrativo`);
 
   const [indicadores, setIndicadores] = useState([]);
   const [setores, setSetores] = useState([]);

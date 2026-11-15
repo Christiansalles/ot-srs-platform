@@ -169,6 +169,40 @@ describe('rotas públicas não devolvem rascunho', () => {
     semRascunho(todos.body);
   });
 
+  it('GET /api/indicadores/atualizacao ignora rascunho mais novo que a publicada', async () => {
+    const publicada = await prisma.medicao.findFirst({
+      where: { id_indicador: misto.id_indicador, status: 'publicado' },
+    });
+    // Data explícita bem à frente: o rascunho fica, sem margem de dúvida, mais novo.
+    const DATA_RASCUNHO = '2099-01-01T00:00:00.000Z';
+    await prisma.medicao.updateMany({
+      where: { id_usuario: usuario.id_usuario, status: 'rascunho' },
+      data: { valor: VALOR_RASCUNHO, atualizado_em: new Date(DATA_RASCUNHO) },
+    });
+
+    const [doSetor, doAno, semFiltro] = await Promise.all([
+      request(app).get(`/api/indicadores/atualizacao?setor=${setor.id_setor}`),
+      request(app).get(`/api/indicadores/atualizacao?setor=${setor.id_setor}&ano=${ANO}`),
+      request(app).get('/api/indicadores/atualizacao'),
+    ]);
+
+    expect(doSetor.status).toBe(200);
+    expect(doSetor.body).toEqual({ atualizado_em: publicada.atualizado_em.toISOString() });
+    expect(doAno.body).toEqual({ atualizado_em: publicada.atualizado_em.toISOString() });
+    expect(semFiltro.status).toBe(200);
+    expect(semFiltro.body.atualizado_em).not.toBe(DATA_RASCUNHO);
+  });
+
+  it.each([
+    ['período que só tem rascunho', `setor=SETOR&ano=${ANO}&semestre=1`],
+    ['período que só tem rascunho, sem setor', `ano=${ANO}&semestre=1`],
+  ])('GET /api/indicadores/atualizacao com %s responde null', async (_caso, consulta) => {
+    const res = await request(app).get(`/api/indicadores/atualizacao?${consulta.replace('SETOR', setor.id_setor)}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ atualizado_em: null });
+  });
+
   it('GET /api/setores não expõe nada de medição', async () => {
     const res = await request(app).get('/api/setores');
 

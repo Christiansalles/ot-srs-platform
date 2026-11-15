@@ -185,4 +185,8 @@
   .admin-relatorios__campos {
     grid-template-columns: 1fr;
   }
+
+  .admin-relatorios__arquivo button {
+    min-height: 44px;
+  }
 }

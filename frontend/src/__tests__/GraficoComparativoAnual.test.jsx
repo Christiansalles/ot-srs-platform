@@ -1,10 +1,11 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { cloneElement } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
 import GraficoComparativoAnual from '../components/GraficoComparativoAnual/GraficoComparativoAnual'
 import { mockIndicadores } from '../mocks/dados'
 import { montarComparativoAnual } from '../utils/montarComparativoAnual'
+import { formatarValor } from '../utils/formatarValor'
 import { INDICADORES } from '../config/indicadores'
 
 vi.mock('recharts', async (importOriginal) => {
@@ -22,6 +23,9 @@ vi.mock('recharts', async (importOriginal) => {
       }),
   }
 })
+
+// O texto do gráfico se repete na tabela de dados para o leitor de tela; aqui interessa o desenho.
+const FORA_DA_TABELA = { ignore: 'script, style, table *' }
 
 const dadosDoMock = montarComparativoAnual(mockIndicadores)
 
@@ -64,8 +68,8 @@ describe('GraficoComparativoAnual', () => {
   it('mostra os dois anos na legenda', () => {
     renderizar()
 
-    expect(screen.getByText('2024')).toBeInTheDocument()
-    expect(screen.getByText('2025')).toBeInTheDocument()
+    expect(screen.getByText('2024', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2025', FORA_DA_TABELA)).toBeInTheDocument()
   })
 
   it('mostra os quatro indicadores do comparativo', () => {
@@ -135,9 +139,38 @@ describe('GraficoComparativoAnual', () => {
 
     expect(screen.getByText('Leitos')).toBeInTheDocument()
 
-    expect(screen.getByText('2024')).toBeInTheDocument()
-    expect(screen.getByText('2025')).toBeInTheDocument()
+    expect(screen.getByText('2024', FORA_DA_TABELA)).toBeInTheDocument()
+    expect(screen.getByText('2025', FORA_DA_TABELA)).toBeInTheDocument()
 
     expect(screen.queryByText('Visitantes')).not.toBeInTheDocument()
+  })
+
+  it('dá nome ao gráfico e repete os valores numa tabela para o leitor de tela', () => {
+    renderizar()
+
+    expect(
+      screen.getByRole('application', { name: 'Gráfico: comparativo anual' }),
+    ).toBeInTheDocument()
+
+    const tabela = screen.getByRole('table', { name: 'Dados do comparativo anual' })
+    const { anoAnterior, anoAtual } = dadosDoMock[0]
+    expect(
+      within(tabela).getAllByRole('columnheader').map((celula) => celula.textContent),
+    ).toEqual(['Indicador', String(anoAnterior), String(anoAtual)])
+
+    for (const item of dadosDoMock) {
+      const linha = within(tabela).getByRole('row', { name: new RegExp(`^${item.nome}`) })
+      expect(within(linha).getAllByRole('cell').map((celula) => celula.textContent)).toEqual([
+        formatarValor(item.valorAnterior, item.unidade),
+        formatarValor(item.valorAtual, item.unidade),
+      ])
+    }
+    expect(within(tabela).getAllByRole('row')).toHaveLength(dadosDoMock.length + 1)
+  })
+
+  it('não monta a tabela de dados quando não há o que comparar', () => {
+    renderizar({ dados: [] })
+
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
   })
 })

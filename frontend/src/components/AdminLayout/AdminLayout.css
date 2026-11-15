@@ -223,6 +223,10 @@
     position: fixed;
     left: 0;
     z-index: 30;
+    width: min(280px, calc(100% - 44px));
+    height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
     box-shadow: var(--shadow-elevated);
     transform: translateX(-100%);
     /* Fechado, o menu sai também da ordem do Tab; o atraso deixa a animação terminar. */
@@ -246,6 +250,18 @@
 
   .admin-menu-toggle {
     display: inline-flex;
+  }
+
+  .admin-menu-toggle,
+  .admin-logout {
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .admin-nav {
+    flex: 1 0 auto;
   }
 
   .admin-topbar {
