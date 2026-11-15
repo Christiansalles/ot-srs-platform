@@ -22,6 +22,8 @@ Cada pessoa revisa os casos da própria área (coluna "Revisa os casos" do [rod�
 
 **Portal público, #264 (13/11):** CT-01 a CT-09 estão em `e2e/testes/portal.spec.js`. Na validação com Docker Compose e API real, 16 execuções passaram e quatro ficaram com `test.fixme` (CT-07, duas páginas em dois tamanhos), vinculadas ao bug #307. As expectativas do vazio foram preservadas. A regressão deliberada no filtro de ano fez o CT-06 falhar em desktop e celular; o código original foi restaurado e os casos ativos voltaram a passar. Veja o [registro da validação](validacao-portal.md).
 
+**Integração, #245 (15/11):** com todos os PRs do M7 na `develop` (`230fa3d`), o E2E do job `compose` passou inteiro: 114 casos, nenhuma falha, nenhum `test.fixme` e 14 pulados por tamanho de tela, cada um com o motivo no `test.skip`. Os roteiros manuais com a API real (cadastrar, duplicada, publicar, ver no dashboard, despublicar; subir PDF, publicar, baixar; criar um editor, entrar, desativar) passaram sem bug novo. Veja o [registro da integração](integracao-m7.md).
+
 O que cada nível **não** faz:
 
 - Teste de unidade e de API não abre o navegador. Se o bug só aparece na tela, ele vira caso E2E.
