@@ -81,7 +81,7 @@
 .admin-mensagem--sucesso {
   border-color: color-mix(in srgb, var(--color-success) 30%, var(--color-surface));
   background: color-mix(in srgb, var(--color-success) 8%, var(--color-surface));
-  color: var(--color-success);
+  color: var(--color-success-strong);
 }
 
 .admin-mensagem--aviso {

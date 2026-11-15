@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { contrasteSobreFundo } from '../ajudantes/contraste.js';
 
 test('o nome do departamento no login tem contraste AA', async ({ page }) => {
   await page.goto('/admin/login');
@@ -34,4 +35,23 @@ test('o nome do departamento no login tem contraste AA', async ({ page }) => {
   });
 
   expect(contraste).toBeGreaterThanOrEqual(4.5);
+});
+
+// CT-38 (#261): textos brancos sobre a foto e o vidro do painel de marca. No celular,
+// a citação e o rodapé do painel ficam escondidos e não entram na conta.
+test('os textos sobre a foto no login têm contraste AA', async ({ page, isMobile }) => {
+  await page.goto('/admin/login');
+  const textos = {
+    'Voltar ao portal': page.getByRole('link', { name: 'Voltar ao portal' }),
+    'Ambiente seguro': page.getByText('Ambiente seguro', { exact: true }),
+  };
+  if (!isMobile) {
+    textos['citação'] = page.getByText(/Gestão de dados para um turismo mais forte/);
+    textos['Vale da Eletrônica'] = page.getByText(/Vale da Eletrônica/);
+  }
+
+  for (const [nome, texto] of Object.entries(textos)) {
+    await expect(texto).toBeVisible();
+    expect(await contrasteSobreFundo(texto), nome).toBeGreaterThanOrEqual(4.5);
+  }
 });

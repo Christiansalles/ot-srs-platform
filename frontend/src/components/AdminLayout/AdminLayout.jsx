@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { getUsuarioLogado, logout } from '../../services/auth';
+import PularParaConteudo from '../PularParaConteudo/PularParaConteudo';
 import './AdminLayout.css';
 // Base das páginas do painel (cartão, estados, campos, botões, tabela)
 import './AdminPagina.css';
@@ -47,6 +48,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const [menuAberto, setMenuAberto] = useState(false);
   const botaoMenuRef = useRef(null);
+  const menuRef = useRef(null);
   const usuario = getUsuarioLogado();
 
   useEffect(() => {
@@ -62,6 +64,12 @@ function AdminLayout() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [menuAberto]);
 
+  // O menu vem antes do botão no HTML. Sem levar o foco até ele, o Tab seguia do botão
+  // para "Sair" e para o conteúdo, e os links do menu aberto ficavam fora do teclado.
+  useEffect(() => {
+    if (menuAberto) menuRef.current?.querySelector('a')?.focus();
+  }, [menuAberto]);
+
   if (!usuario) return <Navigate to="/admin/login" replace />;
 
   const perfil = rotuloPerfil(usuario.perfil);
@@ -74,6 +82,8 @@ function AdminLayout() {
 
   return (
     <div className={`admin-shell${menuAberto ? ' admin-shell--menu-aberto' : ''}`}>
+      <PularParaConteudo alvo="conteudo-painel" />
+
       <aside className="admin-sidebar" id="admin-menu">
         <div className="admin-brand">
           <span className="admin-brand-emblem" aria-hidden="true">
@@ -85,7 +95,7 @@ function AdminLayout() {
           </div>
         </div>
 
-        <nav className="admin-nav" aria-label="Menu administrativo">
+        <nav className="admin-nav" aria-label="Menu administrativo" ref={menuRef}>
           <p className="admin-nav-title">Módulos de gestão</p>
           {MENU.filter((item) => !item.somenteAdministrador || usuario.perfil === 'administrador').map((item) => (
             <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setMenuAberto(false)}>
@@ -134,7 +144,7 @@ function AdminLayout() {
           </div>
         </header>
 
-        <main className="admin-content">
+        <main className="admin-content" id="conteudo-painel" tabIndex={-1} data-alvo-do-pular>
           <Outlet />
         </main>
       </div>
