@@ -26,21 +26,9 @@ const TELAS = [
 // numa anotação, a exceção que não encontrou mais nada.
 // O seletor é uma expressão regular sobre o alvo do axe, e não um trecho de texto:
 // "th" casaria com qualquer "nth-child" e esconderia um problema novo.
-const EXCECOES = [
-  {
-    bug: '#284', regra: 'color-contrast', rotas: ['/indicadores'], seletor: /^th:nth-child\(\d+\)$/,
-    motivo: 'Cabeçalho da tabela de Indicadores a 4,34:1 (achado A-3).',
-  },
-  {
-    bug: '#261', regra: 'color-contrast', rotas: ['/', '/dashboard'],
-    seletor: /\.card-indicador__variation(?![\w-])\S* > strong$/,
-    motivo: 'Variação dos cards em --color-success, a 3,74:1.',
-  },
-  {
-    bug: '#261', regra: 'aria-hidden-focus', rotas: ['/dashboard'], seletor: /^\.grafico-distribuicao__rosca$/,
-    motivo: 'Rosca da distribuição dentro de aria-hidden, mas focável.',
-  },
-];
+// Vazia desde a #261: as violações da auditoria (#258) foram corrigidas.
+// Formato: { bug: '#123', regra: 'color-contrast', rotas: ['/'], seletor: /^th$/, motivo: '...' }
+const EXCECOES = [];
 
 function excecaoDo(regra, rota, alvo) {
   return EXCECOES.find((excecao) => excecao.regra === regra
@@ -95,7 +83,7 @@ for (const tela of TELAS) {
   });
 }
 
-// Parte automática do CT-36 (#283): no portal, a primeira parada do Tab é
+// Parte automática do CT-36 (#283 no portal, #261 no painel): a primeira parada do Tab é
 // "Pular para o conteúdo", que aparece com o foco e leva ao main.
 const TELAS_DO_PORTAL = TELAS.filter((tela) => tela.titulo && !tela.rota.startsWith('/admin'));
 
@@ -119,3 +107,42 @@ for (const tela of TELAS_DO_PORTAL) {
     expect(await page.evaluate(() => document.querySelector('main').contains(document.activeElement))).toBe(true);
   });
 }
+
+for (const tela of TELAS.filter((item) => item.administrador)) {
+  test(`CT-36: ${tela.nome} (${tela.rota}) começa o Tab por "Pular para o conteúdo"`, async ({ page }) => {
+    await entrarComo(page, 'administrador');
+    await page.goto(tela.rota);
+    await expect(page.getByRole('main')).toBeVisible();
+    const pular = page.getByRole('link', { name: 'Pular para o conteúdo' });
+    await expect(pular).not.toBeInViewport();
+
+    await page.keyboard.press('Tab');
+    await expect(pular).toBeFocused();
+    await expect(pular).toBeInViewport();
+
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('main')).toBeFocused();
+    await expect(page).toHaveURL(new URL(tela.rota, page.url()).href);
+  });
+}
+
+// CT-36 no celular (#261): com o menu do painel aberto, o Tab passa pelos links dele.
+test('CT-36: menu do painel no celular recebe o foco ao abrir e o Tab percorre os links', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'O botão do menu só aparece até 900 px.');
+  await entrarComo(page, 'administrador');
+  await page.goto('/admin');
+  const menu = page.getByRole('navigation', { name: 'Menu administrativo' });
+  const links = menu.getByRole('link');
+
+  await page.getByRole('button', { name: 'Abrir menu' }).click();
+  await expect(links).toHaveText(['Painel de gestão', 'Cadastrar medição', 'Relatórios', 'Usuários']);
+  await expect(links.first()).toBeFocused();
+  for (const nome of ['Cadastrar medição', 'Relatórios', 'Usuários', 'Ver Portal Público']) {
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('link', { name: nome, exact: true })).toBeFocused();
+  }
+
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Abrir menu' })).toBeFocused();
+});

@@ -57,7 +57,7 @@
 }
 
 .card-indicador__variation--positive {
-  color: var(--color-success);
+  color: var(--color-success-strong);
 }
 
 .card-indicador__variation--negative {
