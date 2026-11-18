@@ -25,7 +25,7 @@ A Proposta pede só uma "área simples para que a equipe da SMCELT atualize e pu
   - `administrador`: cadastra, edita, sobe PDF, publica e despublica;
   - `editor`: cadastra, edita e sobe PDF, tudo como rascunho. Publicar ou despublicar devolve `403`, e no front os botões nem aparecem.
 - Tudo nasce em `rascunho`. Medição publicada não se edita direto: primeiro se despublica.
-- O seed cria um administrador e um editor de desenvolvimento a partir de `ADMIN_*` e `EDITOR_*`. No M7, o administrador passa a criar, editar e desativar usuários pelo painel (`/api/admin/usuarios`). Usuário não se apaga, só se desativa, para preservar quem lançou cada medição.
+- O seed cria um administrador e um editor de desenvolvimento a partir de `ADMIN_*` e `EDITOR_*`. No M7, o administrador passa a criar, editar e desativar usuários pelo painel (`/api/admin/usuarios`). Usuário não se apaga, só se desativa, para preservar quem lançou cada medição. M7: [m7-visao-geral.md](../planejamento/m7-visao-geral.md).
 
 ## Login
 
@@ -39,6 +39,11 @@ A Proposta pede só uma "área simples para que a equipe da SMCELT atualize e pu
 - Os itens 1 a 5 da Proposta são o escopo essencial. A fase 2 (itens 6 a 8) só entra se sobrar tempo. Das três, a página informativa do Cadastur e da FNRH (item 7) é a mais barata.
 - As telas de [referencias/stitch/fora-do-escopo](../referencias/stitch/README.md#fora-do-escopo) não devem ser implementadas.
 - Também não entram: agenda de eventos, que não está na Proposta, nem coleta autônoma ou inventário antes do escopo essencial estar fechado ([backlog-m7-m8.md](../planejamento/backlog-m7-m8.md)).
+- **Extras do M8**, só depois da E20 e nunca no lugar dela:
+  - busca por título e edição e o botão "Visualizar" na página de relatórios, que já estão na Tela 4 do Stitch. A busca ignora maiúsculas e acentos e nunca acha rascunho; o Visualizar usa a mesma rota de download com `?visualizar=1` (`inline`);
+  - a página informativa do Cadastur e da FNRH Digital (item 7 da fase 2): estática, sem integração, com cada orientação tirada de uma página oficial e o link ao lado. Entra só se estiver mergeada até 24/11.
+
+  M8: [m8-visao-geral.md](../planejamento/m8-visao-geral.md).
 
 ## Código e processo
 
@@ -46,4 +51,7 @@ A Proposta pede só uma "área simples para que a equipe da SMCELT atualize e pu
 - **Uma migração por PR**, com nome claro. Duas pessoas mexendo no `schema.prisma` ao mesmo tempo gera conflito.
 - **Mock só quando pedido.** `VITE_USE_MOCK=true` liga os dados ilustrativos do front. Se a API falhar, o front mostra o erro; o mock não entra automaticamente.
 - **Uploads** (definidos no contrato): só PDF, conferido pelo tipo e pelos bytes `%PDF`, até 10 MiB, com o nome do arquivo gerado pelo servidor. A pasta `uploads` só é acessível pela rota de download, que confere o status. É a parte mais sensível do painel: revise com atenção o código gerado por IA.
+- **Testes de ponta a ponta (M7):** Playwright na pasta `e2e/`, contra o sistema do `docker compose`, sem mock, rodando no CI. Ninguém escreve o teste da própria parte, e quem revisa o PR do teste é quem fez a parte testada. Teste que cria dados usa um período que a carga não tem e não conta "todas as medições" do banco.
+- **"Atualizado em" (M7):** a medição ganhou `criado_em` e `atualizado_em`. As rotas públicas que já existiam não mudam (o CI compara o mock com a API); a data pública sai de `GET /api/indicadores/atualizacao` e só conta o que está publicado.
+- **Documentação final (M8):** o README é para quem programa; a SMCELT recebe o manual do painel (`docs/manual-do-painel.md`, também em PDF), o guia de implantação (`docs/implantacao.md`) e o guia dos dados da carga (`docs/dados-da-carga.md`). Nenhum documento é aprovado por quem o escreveu: outra pessoa o segue do começo ao fim, sem ajuda.
 - **Pronto** é: na `main`, com testes no CI, rodando com `docker compose up --build` e com quem abriu o PR sabendo explicar o código ([fluxo de trabalho](../fluxo-de-trabalho.md)).
