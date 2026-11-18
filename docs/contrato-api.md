@@ -348,9 +348,18 @@ Só `administrador`. Corpo: `{ "status": "publicado" }` ou `{ "status": "rascunh
 
 Categorias válidas (as do mockup da Tela 8): `Perfil de Demanda`, `Setor Hoteleiro`, `Impacto Econômico` e `Diagnóstico Estratégico`. Os filtros e o cadastro aceitam só esses valores, escritos exatamente assim.
 
-#### `GET /api/relatorios?ano=2025&categoria=Setor%20Hoteleiro`
+#### `GET /api/relatorios?ano=2025&categoria=Setor%20Hoteleiro&busca=boletim`
 
-Rota pública. Os filtros `ano` e `categoria` são opcionais e combináveis. `ano` filtra pelo ano de `data_publicacao`, com a mesma validação de quatro dígitos das rotas de indicadores; categoria fora da lista responde `400` (`"Categoria inválida"`). Filtro válido sem resultados responde `200` com `[]`.
+Rota pública. Os filtros `ano`, `categoria` e `busca` são opcionais e combináveis. `ano` filtra pelo ano de `data_publicacao`, com a mesma validação de quatro dígitos das rotas de indicadores; categoria fora da lista responde `400` (`"Categoria inválida"`). Filtro válido sem resultados responde `200` com `[]`.
+
+`busca` procura o texto dentro do `titulo` ou da `edicao`, sem diferenciar maiúsculas, minúsculas e acentos: `relatorio` acha "Relatório" e `HOTELEIRO` acha "Indicadores do setor hoteleiro".
+
+- Espaços nas pontas são ignorados. `busca` vazia ou só com espaços é o mesmo que não mandar o parâmetro.
+- Mais de 100 caracteres (contados depois de tirar os espaços das pontas) ou o parâmetro repetido (`?busca=a&busca=b`) responde `400` com `{ "erro": "Busca inválida" }`.
+- O texto é comparado como está, sem expressão regular nem curinga: `%`, `_` e `.` são caracteres comuns.
+- Só relatórios publicados entram na busca, na mesma ordem da listagem. Busca válida sem resultado responde `200` com `[]`.
+
+A lista de relatórios publicados é pequena, então a API pode filtrar a busca em JavaScript depois de ler os publicados, sem extensão no PostgreSQL e sem migração.
 
 Retorna somente relatórios publicados, do mais recente para o mais antigo (`data_publicacao` decrescente). Relatórios com a mesma data saem pelo `id` decrescente, ou seja, o cadastrado por último vem primeiro:
 
@@ -380,9 +389,11 @@ Content-Type: application/pdf
 Content-Disposition: attachment; filename="<edição>-<título>.pdf"
 ```
 
+Com `?visualizar=1`, a resposta é a mesma, mas com `Content-Disposition: inline; filename="<edição>-<título>.pdf"`, para o navegador abrir o PDF numa aba em vez de baixar. É o que o botão "Visualizar" da página de relatórios usa (`/api/relatorios/1/arquivo?visualizar=1`). Sem o parâmetro, ou com qualquer outro valor, continua `attachment`.
+
 O nome do arquivo é montado a partir de `edicao` e `titulo`, em minúsculas, sem acento e sem espaço (acentos removidos; qualquer caractere fora de `a-z` e `0-9` vira `-`, sem `-` repetido nem nas pontas). Exemplo: edição `2025/2` e título `Boletim ilustrativo de indicadores` → `2025-2-boletim-ilustrativo-de-indicadores.pdf`.
 
-Relatório inexistente, em rascunho ou com o arquivo sumido responde `404` com `{ "erro": "Relatório não encontrado" }`, sem revelar que existe um rascunho.
+Relatório inexistente, em rascunho ou com o arquivo sumido responde `404` com `{ "erro": "Relatório não encontrado" }`, sem revelar que existe um rascunho. Vale igual com e sem `?visualizar=1`.
 
 #### `GET /api/admin/relatorios`
 
@@ -468,7 +479,7 @@ Erros das rotas de usuários:
 
 Erros seguem `{ "erro": "mensagem legível" }`.
 
-- `400`: `"JSON inválido"`, `"Campos obrigatórios inválidos"` (campo ausente, com tipo errado ou acima do limite), `"Categoria inválida"`, `"Status inválido"`, `"Arquivo PDF obrigatório"`; filtros `setor` e `ano` com as mesmas mensagens das rotas de indicadores.
+- `400`: `"JSON inválido"`, `"Campos obrigatórios inválidos"` (campo ausente, com tipo errado ou acima do limite), `"Categoria inválida"`, `"Busca inválida"` (só na listagem pública), `"Status inválido"`, `"Arquivo PDF obrigatório"`; filtros `setor` e `ano` com as mesmas mensagens das rotas de indicadores.
 - `401`: token ausente, inválido ou expirado, ou usuário inativo: `"Token inválido ou expirado"`.
 - `403`: editor tentando publicar ou despublicar: `"Seu perfil não pode publicar conteúdo"`; editor nas rotas de usuários: `"Só o administrador gerencia usuários"`.
 - `404`: indicador, medição ou relatório inexistente no painel: `"Recurso não encontrado"`; no download público: `"Relatório não encontrado"`.
@@ -476,7 +487,7 @@ Erros seguem `{ "erro": "mensagem legível" }`.
 - `413`: upload acima de 10 MiB: `"Arquivo muito grande"`.
 - `429`: só no `POST /api/auth/login`, depois do limite de tentativas erradas: `"Muitas tentativas de login. Aguarde alguns minutos e tente de novo."`, com `Retry-After`.
 
-As rotas públicas de relatório nunca incluem rascunhos. Categoria desconhecida ou ano malformado responde `400`, em vez de ser ignorado.
+As rotas públicas de relatório nunca incluem rascunhos, nem na busca nem no Visualizar. Categoria desconhecida, ano malformado ou busca longa demais responde `400`, em vez de ser ignorado.
 
 ## Erros
 

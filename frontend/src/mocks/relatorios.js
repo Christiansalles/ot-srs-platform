@@ -27,6 +27,21 @@ export const mockRelatorios = [
   },
 ];
 
+export const LIMITE_BUSCA_RELATORIOS = 100;
+
+// Mesma comparação da API: sem diferenciar maiúsculas, minúsculas e acentos.
+function normalizar(texto) {
+  return String(texto).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function lerBusca(params) {
+  const valores = params.getAll('busca');
+  if (valores.length > 1) throw new Error('Busca inválida');
+  const busca = (valores[0] ?? '').trim();
+  if (busca.length > LIMITE_BUSCA_RELATORIOS) throw new Error('Busca inválida');
+  return normalizar(busca);
+}
+
 export function filtrarRelatoriosMock(params) {
   if (params.has('ano') && !/^\d{4}$/.test(params.get('ano'))) {
     throw new Error('ano deve ser um número inteiro de 4 dígitos');
@@ -34,11 +49,13 @@ export function filtrarRelatoriosMock(params) {
   if (params.has('categoria') && !CATEGORIAS_RELATORIO.includes(params.get('categoria'))) {
     throw new Error('Categoria inválida');
   }
+  const busca = lerBusca(params);
 
   return mockRelatorios
     .filter((relatorio) =>
       (!params.has('ano') || relatorio.data_publicacao.slice(0, 4) === params.get('ano')) &&
-      (!params.has('categoria') || relatorio.categoria === params.get('categoria')))
+      (!params.has('categoria') || relatorio.categoria === params.get('categoria')) &&
+      (!busca || [relatorio.titulo, relatorio.edicao].some((campo) => normalizar(campo).includes(busca))))
     // Mesma ordem da API: publicação mais recente e, na mesma data, maior id.
     .sort((a, b) => b.data_publicacao.localeCompare(a.data_publicacao) || b.id - a.id);
 }

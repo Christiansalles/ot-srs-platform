@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { baixarRelatorio, getRelatorios, urlDownloadRelatorio } from '../services/api';
-import { mockRelatorios } from '../mocks/relatorios';
+import { filtrarRelatoriosMock, mockRelatorios } from '../mocks/relatorios';
 import { AUTH_UNAUTHORIZED_EVENT } from '../services/auth';
 
 afterEach(() => {
@@ -194,5 +194,50 @@ describe('mocks de relatórios', () => {
   ])('rejeita filtros inválidos como a API: %j', async (filtros, mensagem) => {
     vi.stubEnv('VITE_USE_MOCK', 'true');
     await expect(getRelatorios(filtros)).rejects.toThrow(mensagem);
+  });
+});
+
+describe('busca no mock de relatórios', () => {
+  const buscar = (query) => filtrarRelatoriosMock(new URLSearchParams(query)).map((relatorio) => relatorio.id);
+
+  it('procura no título sem diferenciar maiúsculas, minúsculas e acentos', () => {
+    expect(buscar('busca=hoteleiro')).toEqual([1]);
+    expect(buscar('busca=HOTELEIRO')).toEqual([1]);
+    expect(buscar('busca=participacao economica')).toEqual([2]);
+    expect(buscar('busca=Participação')).toEqual([2]);
+  });
+
+  it('procura na edição', () => {
+    expect(buscar('busca=ot-ilus-02')).toEqual([2]);
+    expect(buscar('busca=OT-ILUS')).toEqual([2, 1]);
+  });
+
+  it('não junta título e edição numa busca só', () => {
+    expect(buscar('busca=hoteleiro OT-ILUS')).toEqual([]);
+  });
+
+  it('ignora espaços nas pontas e trata busca vazia como sem filtro', () => {
+    expect(buscar('busca=  hoteleiro  ')).toEqual([1]);
+    expect(buscar('busca=')).toEqual([2, 1]);
+    expect(buscar('busca=   ')).toEqual([2, 1]);
+  });
+
+  it('compara o texto como está, sem curinga', () => {
+    expect(buscar('busca=%25')).toEqual([]);
+    expect(buscar('busca=.')).toEqual([]);
+  });
+
+  it('combina com ano e categoria e devolve lista vazia sem resultado', () => {
+    expect(buscar('busca=turismo&ano=2026&categoria=Impacto Econômico')).toEqual([2]);
+    expect(buscar('busca=turismo&categoria=Setor Hoteleiro')).toEqual([]);
+    expect(buscar('busca=turismo&ano=2025')).toEqual([]);
+    expect(buscar('busca=agenda')).toEqual([]);
+  });
+
+  it('aceita 100 caracteres e rejeita 101 ou o parâmetro repetido, como a API', () => {
+    expect(buscar(`busca=${'a'.repeat(100)}`)).toEqual([]);
+    expect(buscar(`busca=  ${'a'.repeat(100)}  `)).toEqual([]);
+    expect(() => buscar(`busca=${'a'.repeat(101)}`)).toThrow('Busca inválida');
+    expect(() => buscar('busca=boletim&busca=turismo')).toThrow('Busca inválida');
   });
 });
