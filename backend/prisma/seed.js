@@ -42,6 +42,13 @@ function lerUsuarioDesenvolvimento(prefixo, nome, perfil) {
   return { nome, email, senha, perfil };
 }
 
+// Numa instalação de verdade não há editor de desenvolvimento: com EDITOR_EMAIL e
+// EDITOR_SENHA vazios, o seed não cria nem reativa o editor. Só um dos dois é erro.
+function lerEditorOpcional() {
+  if (!process.env.EDITOR_EMAIL?.trim() && !process.env.EDITOR_SENHA?.trim()) return null;
+  return lerUsuarioDesenvolvimento('EDITOR', 'Editor', 'editor');
+}
+
 async function carregarUsuarioDesenvolvimento({ nome, email, senha, perfil }) {
   const senhaHash = await gerarHash(senha);
   await prisma.usuario.upsert({
@@ -177,13 +184,17 @@ async function carregarRelatorios(usuario) {
 
 async function main() {
   const admin = lerUsuarioDesenvolvimento('ADMIN', 'Administrador', 'administrador');
-  const editor = lerUsuarioDesenvolvimento('EDITOR', 'Editor', 'editor');
-  if (admin.email === editor.email) {
+  const editor = lerEditorOpcional();
+  if (editor && admin.email === editor.email) {
     throw new Error('ADMIN_EMAIL e EDITOR_EMAIL precisam ser e-mails diferentes.');
   }
 
   await carregarUsuarioDesenvolvimento(admin);
-  await carregarUsuarioDesenvolvimento(editor);
+  if (editor) {
+    await carregarUsuarioDesenvolvimento(editor);
+  } else {
+    console.log('EDITOR_EMAIL e EDITOR_SENHA vazios: o seed não cria o editor de desenvolvimento.');
+  }
 
   const usuario = await prisma.usuario.upsert({
     where: { email: 'carga-inicial@observatorio.local' },
