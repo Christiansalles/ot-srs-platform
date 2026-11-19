@@ -25,7 +25,7 @@ A Proposta pede só uma "área simples para que a equipe da SMCELT atualize e pu
   - `administrador`: cadastra, edita, sobe PDF, publica e despublica;
   - `editor`: cadastra, edita e sobe PDF, tudo como rascunho. Publicar ou despublicar devolve `403`, e no front os botões nem aparecem.
 - Tudo nasce em `rascunho`. Medição publicada não se edita direto: primeiro se despublica.
-- O seed cria um administrador e um editor de desenvolvimento a partir de `ADMIN_*` e `EDITOR_*`. No M7, o administrador passa a criar, editar e desativar usuários pelo painel (`/api/admin/usuarios`). Usuário não se apaga, só se desativa, para preservar quem lançou cada medição.
+- O seed cria um administrador e um editor de desenvolvimento a partir de `ADMIN_*` e `EDITOR_*`. No M8, para a implantação, `EDITOR_EMAIL` e `EDITOR_SENHA` vazios fazem o seed não criar o editor ([guia de implantação](../implantacao.md)). No M7, o administrador passa a criar, editar e desativar usuários pelo painel (`/api/admin/usuarios`). Usuário não se apaga, só se desativa, para preservar quem lançou cada medição.
 
 ## Login
 
