@@ -124,7 +124,8 @@ No Adminer, informe `db` como servidor, `ot` como usuário, `ot` como senha e
 
 O Compose usa um segredo local ilustrativo para assinar tokens de autenticação.
 Em qualquer ambiente compartilhado ou de produção, defina `JWT_SECRET`
-com um valor aleatório e privado antes de iniciar os serviços.
+com um valor aleatório e privado antes de iniciar os serviços. Para instalar num
+servidor, siga o [guia de implantação](docs/implantacao.md).
 
 ### Relatórios em PDF
 
@@ -338,7 +339,7 @@ conjunta dos serviços é feita pelo Docker Compose, documentado acima.
 | `CORS_ORIGIN` | `backend/.env` ou ambiente/`.env` do Compose | Origem permitida para chamadas do navegador; vazio libera todas | `http://localhost:5173` |
 | `ADMIN_EMAIL` | `backend/.env` ou ambiente/`.env` do Compose | E-mail do administrador de desenvolvimento criado pelo seed | `admin@observatorio.local` |
 | `ADMIN_SENHA` | `backend/.env` ou ambiente/`.env` do Compose | Senha local do administrador de desenvolvimento | `senha-admin-local-nao-usar-em-producao` |
-| `EDITOR_EMAIL` | `backend/.env` ou ambiente/`.env` do Compose | E-mail do editor de desenvolvimento criado pelo seed; precisa ser diferente de `ADMIN_EMAIL` | `editor@observatorio.local` |
+| `EDITOR_EMAIL` | `backend/.env` ou ambiente/`.env` do Compose | E-mail do editor de desenvolvimento criado pelo seed; precisa ser diferente de `ADMIN_EMAIL`. Com `EDITOR_EMAIL` e `EDITOR_SENHA` vazios, o seed não cria o editor (é o que o [guia de implantação](docs/implantacao.md) usa) | `editor@observatorio.local` |
 | `EDITOR_SENHA` | `backend/.env` ou ambiente/`.env` do Compose | Senha local do editor de desenvolvimento | `senha-editor-local-nao-usar-em-producao` |
 | `JWT_SECRET` | `backend/.env` ou ambiente/`.env` do Compose | Segredo que assina os tokens de autenticação; use um valor forte fora do desenvolvimento | `jwt-secret-local-nao-usar-em-producao` |
 | `VITE_API_URL` | `frontend/.env` | Endereço público da API, sem `/api` no final | `http://localhost:3000` |

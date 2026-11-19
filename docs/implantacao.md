@@ -139,10 +139,11 @@ Para voltar a um backup (troque `AAAA-MM-DD` pela data dele):
 docker compose stop backend
 docker compose exec -T db pg_restore -U ot -d ot_srs --clean --if-exists < backups/banco-AAAA-MM-DD.dump
 docker compose cp backups/pdfs-AAAA-MM-DD/. backend:/app/uploads/
+docker compose run --rm --no-deps -u root --entrypoint chown backend -R node:node /app/uploads
 docker compose start backend
 ```
 
-A API fica parada durante a restauração, para ninguém gravar no meio. Ao voltar, a carga inicial roda de novo (seção 6). Confira no painel que as medições e os relatórios voltaram e que um PDF baixa.
+A API fica parada durante a restauração, para ninguém gravar no meio. O `chown` devolve os PDFs ao usuário da API: o `docker compose cp` grava os arquivos como `root`, e sem esse passo a carga inicial não consegue regravar os PDFs ilustrativos e a API não sobe. Ao voltar, a carga inicial roda de novo (seção 6). Confira no painel que as medições e os relatórios voltaram e que um PDF baixa.
 
 Num servidor novo, siga as seções 2 a 4 com o mesmo `.env` (inclusive a mesma `POSTGRES_PASSWORD`) e depois restaure.
 
