@@ -145,9 +145,9 @@ Para abrir o sistema no celular, o front precisa ser construído apontando para 
 | Abrir a Home pela rede local | Carregou |
 | Abrir Dashboard pelo menu e arrastar horizontalmente | A página desloca para uma área vazia à direita, bug [#344](https://github.com/Christiansalles/ot-srs-platform/issues/344), com [foto do aparelho](../evidencias/issue-344/README.md) |
 | Baixar e abrir um PDF em Relatórios | Funcionou |
-| Entrar no painel e cadastrar uma medição | Exibiu «Medição cadastrada como rascunho» |
-| Confirmar o ano 2031 da medição cadastrada | Pendente de confirmação |
-| Filtros e rolagem da tabela de Indicadores | Pendente de relato |
+| Entrar no painel e cadastrar uma medição de 2031 | Exibiu «Medição cadastrada como rascunho», ano confirmado por Samuel |
+| Menu de Indicadores e filtros | Funcionaram |
+| Coluna Indicador fixa durante a rolagem horizontal da tabela | Pendente de confirmação |
 | Segundo aparelho, Giovana | Pendente |
 
 A execução continua aberta. Os resultados confirmados acima registram observações no aparelho real, e a #344 segue para a triagem #323.
