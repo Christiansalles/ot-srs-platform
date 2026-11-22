@@ -4,4 +4,4 @@ Foto enviada por Samuel durante o exploratório da #320, em um Galaxy A26 5G com
 
 O frontend estava na `develop` em `1d2247b`, com a API real pela rede local. A foto é de um aparelho real. A largura em pixels CSS do aparelho ainda não foi medida.
 
-Achado registrado na #344 para triagem na #323. O [plano de testes](../../testes/plano-de-testes.md#exploratório) registra os resultados informados por Samuel, incluindo o PDF, os filtros e o cadastro de uma medição de 2031. A confirmação da coluna fixa da tabela e o segundo aparelho continuam pendentes na #320.
+Achado registrado na #344 para triagem na #323. O [plano de testes](../../testes/plano-de-testes.md#exploratório) registra os resultados informados por Samuel, incluindo o PDF, os filtros, a coluna Indicador fixa e visível durante a rolagem e o cadastro de uma medição de 2031. A execução no segundo aparelho, com Giovana, continua pendente na #320.

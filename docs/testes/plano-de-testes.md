@@ -147,7 +147,7 @@ Para abrir o sistema no celular, o front precisa ser construído apontando para 
 | Baixar e abrir um PDF em Relatórios | Funcionou |
 | Entrar no painel e cadastrar uma medição de 2031 | Exibiu «Medição cadastrada como rascunho», ano confirmado por Samuel |
 | Menu de Indicadores e filtros | Funcionaram |
-| Coluna Indicador fixa durante a rolagem horizontal da tabela | Pendente de confirmação |
+| Coluna Indicador fixa durante a rolagem horizontal da tabela | Permaneceu fixa e visível, confirmado por Samuel |
 | Segundo aparelho, Giovana | Pendente |
 
 A execução continua aberta. Os resultados confirmados acima registram observações no aparelho real, e a #344 segue para a triagem #323.
