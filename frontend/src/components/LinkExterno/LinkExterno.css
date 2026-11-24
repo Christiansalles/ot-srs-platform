@@ -1,0 +1,17 @@
+.link-externo {
+  color: var(--color-secondary-strong);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.link-externo__icone {
+  display: inline-block;
+  width: .9em;
+  height: .9em;
+  vertical-align: -.1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
