@@ -138,6 +138,20 @@ Coluna **Nível:** `E2E` (Playwright), `API` (Jest e Supertest), `A11y` (axe ou 
 
 Para abrir o sistema no celular, o front precisa ser construído apontando para o IP do computador (`VITE_API_URL=http://<ip-do-computador>:3000 docker compose -p ot-e2e up --build -d`), e o celular abre `http://<ip-do-computador>:8080`.
 
+**Execução parcial da #320, Samuel (21/11/2026):** Galaxy A26 5G, Samsung Browser 31.0.0.81, com o frontend na `develop` em `1d2247b` e a API real pela rede local. Resultados informados por Samuel durante o teste no aparelho.
+
+| Verificação | Resultado |
+|---|---|
+| Abrir a Home pela rede local | Carregou |
+| Abrir Dashboard pelo menu e arrastar horizontalmente | A página desloca para uma área vazia à direita, bug [#344](https://github.com/Christiansalles/ot-srs-platform/issues/344), com [foto do aparelho](../evidencias/issue-344/README.md) |
+| Baixar e abrir um PDF em Relatórios | Funcionou |
+| Entrar no painel e cadastrar uma medição de 2031 | Exibiu "Medição cadastrada como rascunho", ano confirmado por Samuel |
+| Menu de Indicadores e filtros | Funcionaram |
+| Coluna Indicador fixa durante a rolagem horizontal da tabela | Permaneceu fixa e visível, confirmado por Samuel |
+| Segundo aparelho, Giovana | Pendente |
+
+A execução continua aberta. Os resultados confirmados acima registram observações no aparelho real, e a #344 segue para a triagem #323.
+
 ## Critério de pronto
 
 Os testes do M7 contam como prontos quando:
