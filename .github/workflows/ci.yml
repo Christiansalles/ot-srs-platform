@@ -51,7 +51,18 @@ jobs:
         run: npm run db:setup
       - name: Verificar que migrations e seed podem ser repetidos
         run: npm run db:setup
-      - run: npm test
+      - name: Testes com cobertura
+        run: npm run test:cobertura
+      - name: Resumo da cobertura
+        if: ${{ !cancelled() }}
+        run: node ../.github/scripts/resumo-cobertura.mjs "Backend (Jest)" coverage/coverage-summary.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Publicar o relatório de cobertura
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-backend
+          path: backend/coverage/
+          if-no-files-found: warn
 
   frontend:
     runs-on: ubuntu-latest
@@ -67,5 +78,16 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run lint
-      - run: npm test
+      - name: Testes com cobertura
+        run: npm run test:cobertura
+      - name: Resumo da cobertura
+        if: ${{ !cancelled() }}
+        run: node ../.github/scripts/resumo-cobertura.mjs "Frontend (Vitest)" coverage/coverage-summary.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Publicar o relatório de cobertura
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-frontend
+          path: frontend/coverage/
+          if-no-files-found: warn
       - run: npm run build

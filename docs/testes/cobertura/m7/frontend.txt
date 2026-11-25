@@ -1,0 +1,66 @@
+
+> ot-srs-frontend@0.1.0 test:cobertura
+> vitest run --coverage
+
+
+ RUN  v5.0.1 ot-srs-platform/frontend
+      Coverage enabled with v8
+
+
+ Test Files  38 passed (38)
+      Tests  385 passed (385)
+   Start at  16:35:34
+   Duration  23.77s (environment 61%, tests 18%, setup 10%, import 8%, transform 2%, worker 2%)
+
+Environment  jsdom was created 38 times · 138.80s total, 61% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
+ % Coverage report from v8
+-----------------------------------------|---------|----------|---------|---------|--------------------------------------------------------------
+File                                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-----------------------------------------|---------|----------|---------|---------|--------------------------------------------------------------
+All files                                |   91.92 |    87.06 |   95.46 |   95.02 |
+ src                                     |     100 |    91.66 |     100 |     100 |
+  App.jsx                                |     100 |       90 |     100 |     100 | 40
+ src/components                          |   93.54 |       80 |     100 |     100 |
+  RotaProtegida.jsx                      |   92.85 |    77.77 |     100 |     100 | 25-31,42
+ src/components/AdminLayout              |   94.73 |    95.45 |   93.75 |   96.55 |
+  AdminLayout.jsx                        |   94.59 |    95.45 |   93.33 |   96.42 | 114
+ src/components/CardIndicador            |   88.88 |    93.75 |     100 |     100 |
+  CardIndicador.jsx                      |   88.88 |    93.75 |     100 |     100 | 7
+ src/components/FiltrosPainel            |     100 |    96.36 |     100 |     100 |
+  FiltrosPainel.jsx                      |     100 |    95.12 |     100 |     100 | 28-34
+ src/components/GraficoComparativoAnual  |   81.81 |    66.66 |     100 |      80 |
+  GraficoComparativoAnual.jsx            |   81.81 |    66.66 |     100 |      80 | 29-31
+ src/components/GraficoSerieHistorica    |     100 |    90.47 |     100 |     100 |
+  GraficoSerieHistorica.jsx              |     100 |    90.47 |     100 |     100 | 26-37
+ src/hooks                               |     100 |     87.5 |     100 |     100 |
+  useAlteracaoStatus.js                  |     100 |    83.33 |     100 |     100 | 23
+ src/mocks                               |     100 |    96.42 |     100 |     100 |
+  admin.js                               |     100 |    83.33 |     100 |     100 | 98
+ src/pages                               |   94.91 |    90.08 |   96.38 |   97.02 |
+  AdminLoginPage.jsx                     |     100 |    92.85 |     100 |     100 | 28
+  AdminMedicaoFormPage.jsx               |   94.48 |    88.67 |     100 |   96.52 | 55-56,106,185
+  AdminPage.jsx                          |   98.43 |     98.9 |     100 |     100 | 56
+  AdminRelatoriosPage.jsx                |   87.82 |    86.79 |   86.66 |   92.39 | 37,43,51,168-170,193
+  AdminUsuariosPage.jsx                  |   95.57 |     87.2 |   94.11 |   96.84 | 135,174,266
+  HomePage.jsx                           |     100 |       90 |     100 |     100 | 36
+  IndicadoresPage.jsx                    |   95.83 |       90 |     100 |     100 | 28
+  RelatoriosPage.jsx                     |     100 |    88.52 |     100 |     100 | 21,58-71,85-87
+ src/pages/Dashboard                     |     100 |    95.65 |     100 |     100 |
+  DashboardPage.jsx                      |     100 |    95.65 |     100 |     100 | 150
+ src/services                            |   77.59 |    72.94 |   84.72 |   84.74 |
+  admin.js                               |   72.13 |    63.79 |   77.08 |   82.31 | 78,81,89,103-107,133-142,161,199,205-209,245,248,252,257,297
+  api.js                                 |   98.11 |    98.33 |     100 |   97.82 | 40
+  auth.js                                |   77.77 |    76.19 |     100 |   79.06 | 16,23,31,53,63,70,74,87-88
+ src/utils                               |   98.82 |    98.27 |     100 |     100 |
+  montarComparativoAnual.js              |   97.05 |    94.11 |     100 |     100 | 42
+-----------------------------------------|---------|----------|---------|---------|--------------------------------------------------------------
+
+=============================== Coverage summary ===============================
+Statements   : 91.92% ( 1172/1275 )
+Branches     : 87.06% ( 909/1044 )
+Functions    : 95.46% ( 379/397 )
+Lines        : 95.02% ( 1012/1065 )
+================================================================================
