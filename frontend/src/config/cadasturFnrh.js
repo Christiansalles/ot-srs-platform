@@ -2,7 +2,7 @@
 // Cada trecho resume uma página oficial do governo federal, citada em `fontes`.
 // Não acrescente regra, prazo ou passo que não esteja na página citada: na dúvida, fica só o link.
 
-export const DATA_DA_CONFERENCIA = '24/11/2026';
+export const DATA_DA_CONFERENCIA = '25/11/2026';
 
 const FONTES = {
   servicoCadastur: {
@@ -17,9 +17,9 @@ const FONTES = {
     rotulo: 'Ficha Nacional de Registro de Hóspedes (Ministério do Turismo)',
     url: 'https://www.gov.br/turismo/pt-br/acesso-a-informacao/acoes-e-programas/programas-projetos-acoes-obras-e-atividades/ficha-nacional-de-registro-de-hospedes',
   },
-  noticiaFnrh: {
-    rotulo: 'Brasil adota Ficha Nacional de Registro de Hóspedes Digital (Ministério do Turismo)',
-    url: 'https://www.gov.br/turismo/pt-br/assuntos/noticias/brasil-adota-ficha-nacional-de-registro-de-hospedes-digital-e-aposenta-cadastro-em-papel',
+  perguntasFnrh: {
+    rotulo: 'Perguntas frequentes sobre a FNRH Digital (Ministério do Turismo)',
+    url: 'https://www.gov.br/turismo/pt-br/acesso-a-informacao/acoes-e-programas/programas-projetos-acoes-obras-e-atividades/ficha-nacional-de-registro-de-hospedes/faq',
   },
   obrigatoriedadeFnrh: {
     rotulo: 'Ficha Digital de Hóspedes entra em fase obrigatória (Serpro)',
@@ -80,40 +80,37 @@ export const SECOES = [
       {
         titulo: 'O que é',
         paragrafos: [
-          'A Ficha Nacional de Registro de Hóspedes Digital (FNRH Digital) foi desenvolvida pelo Ministério do Turismo em parceria com o Serpro para substituir a ficha tradicional. Ela tem pré-check-in, check-in e check-out.',
+          'A Ficha Nacional de Registro de Hóspedes Digital (FNRH Digital) foi desenvolvida pelo Serpro para o Ministério do Turismo e substitui o preenchimento da ficha em papel. Ela tem pré-check-in, check-in e check-out.',
         ],
-        fontes: [FONTES.paginaFnrh],
+        fontes: [FONTES.obrigatoriedadeFnrh, FONTES.perguntasFnrh],
       },
       {
         titulo: 'Quem usa',
         paragrafos: [
-          'A ficha digital é obrigatória para os meios de hospedagem de todo o país. O meio de hospedagem entra na plataforma com a conta gov.br e precisa ter cadastro regular no Cadastur.',
+          'A ficha digital é obrigatória para os meios de hospedagem de todo o país. Para usar o sistema, o meio de hospedagem precisa estar regular no Cadastur.',
         ],
-        fontes: [FONTES.noticiaFnrh, FONTES.obrigatoriedadeFnrh],
+        fontes: [FONTES.obrigatoriedadeFnrh, FONTES.perguntasFnrh],
       },
       {
         titulo: 'Com ou sem sistema de gestão',
         paragrafos: [
-          'Hotéis que usam sistema de gestão (PMS) podem integrá-lo à plataforma por API. Quem não tem sistema de gestão pode operar tudo pela própria plataforma.',
+          'Hotéis que usam sistema de gestão (PMS) podem integrá-lo à plataforma por API, com uma chave de acesso gerada no sistema da FNRH. Quem não tem sistema de gestão faz tudo pela própria plataforma, entrando com a conta gov.br da pessoa indicada no Cadastur como responsável pela FNRH.',
         ],
-        fontes: [FONTES.noticiaFnrh],
+        fontes: [FONTES.obrigatoriedadeFnrh, FONTES.perguntasFnrh],
       },
       {
         titulo: 'Para o hóspede',
         paragrafos: [
-          'O hóspede pode fazer o pré-check-in antes de chegar, por QR Code, link compartilhado ou dispositivo do próprio meio de hospedagem. O acesso é pela conta gov.br ou por credenciais da plataforma, e estrangeiros não precisam de conta gov.br.',
+          'O hóspede pode fazer o pré-check-in antes de chegar, por um link enviado pelo meio de hospedagem ou por QR Code. A conta gov.br é o acesso recomendado. Estrangeiros não precisam de CPF nem de conta gov.br: usam o passaporte ou outro documento de identificação.',
         ],
-        fontes: [FONTES.noticiaFnrh],
+        fontes: [FONTES.obrigatoriedadeFnrh, FONTES.perguntasFnrh],
       },
     ],
     links: [
       FONTES.paginaFnrh,
       { rotulo: 'Entrar como meio de hospedagem', url: 'https://fnrh.turismo.serpro.gov.br/FNRH_SRH/Login' },
       { rotulo: 'Entrar como hóspede', url: 'https://fnrh.turismo.serpro.gov.br/FNRH_Hospede/Login' },
-      {
-        rotulo: 'Perguntas frequentes sobre a FNRH Digital',
-        url: 'https://www.gov.br/turismo/pt-br/acesso-a-informacao/acoes-e-programas/programas-projetos-acoes-obras-e-atividades/ficha-nacional-de-registro-de-hospedes/faq',
-      },
+      FONTES.perguntasFnrh,
     ],
   },
 ];
