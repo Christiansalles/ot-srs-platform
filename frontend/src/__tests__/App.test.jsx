@@ -122,6 +122,21 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
   });
 
+  it('abre a página do Cadastur e da FNRH pelo rodapé, sem item no menu principal', async () => {
+    render(<App />);
+    await waitFor(() => expect(screen.queryAllByText(/Carregando/)).toHaveLength(0));
+    const menu = screen.getByRole('navigation', { name: 'Navegação principal' });
+    expect(within(menu).queryByRole('link', { name: /Cadastur/ })).not.toBeInTheDocument();
+
+    fireEvent.click(within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Cadastur e FNRH Digital' }));
+
+    expect(window.location.pathname).toBe('/cadastur-e-fnrh');
+    const conteudo = within(screen.getByRole('main'));
+    expect(conteudo.getByRole('heading', { level: 1, name: 'Cadastur e FNRH Digital' })).toBeInTheDocument();
+    expect(conteudo.getByRole('region', { name: 'Cadastur' })).toBeInTheDocument();
+    expect(conteudo.getByRole('region', { name: 'FNRH Digital' })).toBeInTheDocument();
+  });
+
   it('abre a tela de login pelo acesso administrativo do cabeçalho', async () => {
     window.sessionStorage.clear();
     render(<App />);

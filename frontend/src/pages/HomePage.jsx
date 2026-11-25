@@ -92,6 +92,14 @@ export default function HomePage() {
         <div><p className="eyebrow">Publicações do observatório</p><h2>Relatórios e análises</h2><p>Acompanhe as publicações sobre o turismo local.</p></div>
         <Link to="/relatorios" className="ot-button-secondary">Ver relatórios →</Link>
       </section>
+      <section className="content-section report-teaser">
+        <div>
+          <p className="eyebrow">Para quem trabalha com turismo</p>
+          <h2>Cadastur e FNRH Digital</h2>
+          <p>Orientações e links oficiais sobre o cadastro de prestadores de serviços turísticos e a ficha digital de hóspedes.</p>
+        </div>
+        <Link to="/cadastur-e-fnrh" className="ot-button-secondary">Ver orientações →</Link>
+      </section>
     </div>
   );
 }

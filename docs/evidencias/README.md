@@ -68,3 +68,9 @@ As pastas antigas `issue-<N>` foram nomeadas pela issue; as novas usam sempre o 
 | [pr-310](pr-310/README.md) | #310 | #307 | E9 | Indicadores e Dashboard antes e depois da correção para ano sem dados, com a API real, em 390 e 1280 px |
 | [pr-311](pr-311/README.md) | #311 | #261 | E18 | Contraste do Login e da variação dos cards antes e depois, e o "Pular para o conteúdo" do painel, com a API real, em 390 e 1280 px |
 | [pr-313](pr-313/README.md) | #313 | #312 | E18 | Dashboard carregando antes e depois: o rodapé deixa de aparecer no meio da tela, em 390 e 1280 px |
+
+## Milestone 8
+
+| Pasta | PR | Issue | Entrega | O que mostra |
+|---|---|---|---|---|
+| [pr-346](pr-346/README.md) | #346 | #328 | Fase 2 | Página do Cadastur e da FNRH Digital, com a fonte oficial de cada trecho, o bloco na Home e o link no rodapé, em 390 e 1280 px |

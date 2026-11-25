@@ -38,7 +38,7 @@ describe('Pular para o conteúdo no portal', () => {
     window.history.replaceState({}, '', '/');
   });
 
-  it.each(['/', '/indicadores', '/dashboard', '/relatorios', '/endereco-invalido'])(
+  it.each(['/', '/indicadores', '/dashboard', '/relatorios', '/cadastur-e-fnrh', '/endereco-invalido'])(
     'é a primeira parada do Tab em %s e leva ao main',
     async (caminho) => {
       window.history.replaceState({}, '', caminho);

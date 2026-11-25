@@ -55,6 +55,14 @@ it('mostra o estado sem indicadores quando a resposta não contém destaques da 
   expect(screen.queryByRole('article')).not.toBeInTheDocument();
 });
 
+it('leva à página do Cadastur e da FNRH por um bloco curto', async () => {
+  getDestaques.mockResolvedValue([]);
+  abrir();
+  expect(screen.getByRole('heading', { level: 2, name: 'Cadastur e FNRH Digital' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Ver orientações →' })).toHaveAttribute('href', '/cadastur-e-fnrh');
+  await screen.findByText('Sem indicadores disponíveis no momento.');
+});
+
 it('mostra a foto da cidade como fundo da capa', async () => {
   getDestaques.mockResolvedValue([]);
   const { container } = abrir();

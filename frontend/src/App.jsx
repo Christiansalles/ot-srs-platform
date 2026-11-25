@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import IndicadoresPage from './pages/IndicadoresPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import RelatoriosPage from './pages/RelatoriosPage';
+import CadasturFnrhPage from './pages/CadasturFnrhPage';
 import PaginaNaoEncontrada from './pages/PaginaNaoEncontrada';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminPage from './pages/AdminPage';
@@ -97,7 +98,11 @@ function AppLayout() {
 
       <footer className="footer-bar">
         <div className="footer-brand">
-          <div><img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" /><p>Dados abertos para o desenvolvimento turístico do município.</p></div>
+          <div>
+            <img className="observatorio-logo" src={observatorioLogo} alt="Observatório do Turismo de Santa Rita do Sapucaí" />
+            <p>Dados abertos para o desenvolvimento turístico do município.</p>
+            <Link className="footer-link" to="/cadastur-e-fnrh">Cadastur e FNRH Digital</Link>
+          </div>
         </div>
         <div><strong>Realização e apoio</strong><div className="institutional-logos">
           <img src={prefeituraLogo} alt="Prefeitura Municipal de Santa Rita do Sapucaí" />
@@ -134,6 +139,7 @@ function App() {
           <Route path="/indicadores" element={<IndicadoresPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/relatorios" element={<RelatoriosPage />} />
+          <Route path="/cadastur-e-fnrh" element={<CadasturFnrhPage />} />
           <Route path="*" element={<PaginaNaoEncontrada />} />
         </Route>
       </Routes>
