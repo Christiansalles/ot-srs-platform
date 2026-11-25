@@ -103,10 +103,31 @@ describe('Usuários de desenvolvimento criados pelo seed', () => {
     expect(cargaInicial.ativo).toBe(false);
   });
 
-  it('recusa executar sem as credenciais do editor', () => {
+  it('recusa executar com só uma das credenciais do editor', () => {
     expect(erroDoSeed({ EDITOR_EMAIL: '' }))
       .toContain('EDITOR_EMAIL e EDITOR_SENHA precisam estar configuradas');
+    expect(erroDoSeed({ EDITOR_SENHA: '  ' }))
+      .toContain('EDITOR_EMAIL e EDITOR_SENHA precisam estar configuradas');
   });
+
+  it('não cria nem reativa o editor quando as duas credenciais estão vazias', async () => {
+    const editor = await prisma.usuario.findUnique({ where: { email: emailEditorNormalizado } });
+    await prisma.usuario.update({ where: { id_usuario: editor.id_usuario }, data: { ativo: false } });
+    const editoresAntes = await prisma.usuario.count({ where: { perfil: 'editor' } });
+
+    try {
+      executarSeed({ EDITOR_EMAIL: '', EDITOR_SENHA: ' ' });
+      executarSeed({ EDITOR_EMAIL: '', EDITOR_SENHA: '' });
+
+      expect(await prisma.usuario.findUnique({ where: { email: emailEditorNormalizado } }))
+        .toMatchObject({ ativo: false });
+      expect(await prisma.usuario.count({ where: { perfil: 'editor' } })).toBe(editoresAntes);
+      expect(await prisma.usuario.findUnique({ where: { email: emailAdminNormalizado } }))
+        .toMatchObject({ ativo: true, perfil: 'administrador' });
+    } finally {
+      await prisma.usuario.update({ where: { id_usuario: editor.id_usuario }, data: { ativo: true } });
+    }
+  }, 15000);
 
   it('recusa o mesmo e-mail para admin e editor', () => {
     expect(erroDoSeed({ EDITOR_EMAIL: ` ${emailAdminTeste.toUpperCase()} ` }))
